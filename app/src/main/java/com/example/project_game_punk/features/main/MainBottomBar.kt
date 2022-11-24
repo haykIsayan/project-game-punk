@@ -22,6 +22,7 @@ fun MainBottomNavigation(
     navController: NavController
 ) {
     val items = MainNavigationTab.Items.items
+    Column {
         BottomNavigation(backgroundColor = Color.Black, modifier = Modifier.height(60.dp)) {
             val entry by navController.currentBackStackEntryAsState()
             val currentRoute = entry?.destination?.route
@@ -40,6 +41,6 @@ fun MainBottomNavigation(
                     }
                 )
             }
+        }
     }
-
 }

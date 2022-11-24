@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.project_game_punk.domain.entity.GameProgress
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
 import com.example.project_game_punk.domain.models.GameModel
@@ -82,7 +81,7 @@ private fun FeatureGameLoadedState(
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .height(250.dp)
+                    .height(220.dp)
             )
             trailing.invoke(Modifier.align(Alignment.TopEnd))
             if (game.name != null) {
@@ -91,7 +90,7 @@ private fun FeatureGameLoadedState(
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                Color.Black
+                                Color.Black.copy(alpha = 0.7f)
                             )
                         )
                     )

@@ -24,15 +24,19 @@ data class GameModel(
 
    override val gameProgress: GameProgress
         get() = when (gameProgressStatus) {
-        GameProgressStatus.playing -> GameProgress.PlayingGameProgress
-        GameProgressStatus.stopped -> GameProgress.StoppedGameProgress
-        GameProgressStatus.finished -> GameProgress.FinishedGameProgress
-        GameProgressStatus.replaying -> GameProgress.ReplayingGameProgress
-        else -> GameProgress.PlayingGameProgress
+            GameProgressStatus.playing -> GameProgress.PlayingGameProgress
+            GameProgressStatus.stopped -> GameProgress.StoppedGameProgress
+            GameProgressStatus.finished -> GameProgress.FinishedGameProgress
+            GameProgressStatus.replaying -> GameProgress.ReplayingGameProgress
+            GameProgressStatus.notFollowing -> GameProgress.NotFollowingGameProgress
+            GameProgressStatus.following -> GameProgress.FollowingGameProgress
+        else -> GameProgress.NotFollowingGameProgress
     }
 
     override fun updateGameProgress(gameProgress: GameProgress): GameEntity {
         val status  = when (gameProgress) {
+            GameProgress.FollowingGameProgress -> GameProgressStatus.following
+            GameProgress.NotFollowingGameProgress -> GameProgressStatus.notFollowing
             GameProgress.FinishedGameProgress -> GameProgressStatus.finished
             GameProgress.PlayingGameProgress -> GameProgressStatus.playing
             GameProgress.ReplayingGameProgress -> GameProgressStatus.replaying
@@ -45,22 +49,10 @@ data class GameModel(
 }
 
 enum class GameProgressStatus {
+    following,
+    notFollowing,
     playing,
     stopped,
     finished,
     replaying
 }
-//
-//
-//class GameProgressConverter {
-//    @TypeConverter
-//    fun fromString(value: String?): GameProgressStatus {
-//        if (value == null) return GameProgressStatus.playing
-//       return GameProgressStatus.valueOf(value)
-//    }
-//
-//    @TypeConverter
-//    fun fromGameProgressStatus(gameProgressStatus: GameProgressStatus): String {
-//        return gameProgressStatus.name
-//    }
-//}

@@ -45,22 +45,21 @@ class RecommendedGameViewModel @Inject constructor(
     }
 
 
-    fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
-        if (!game.isAdded) trackUntrackGame(game as GameModel)
+    fun updateGameProgress(game: GameModel, gameProgress: GameProgress) {
         executeIO(Dispatchers.IO,
             onBefore = { updateGames(game.updateGameProgress(gameProgress) as GameModel) },
-            execute = { updateGameProgressInteractor.execute(game.id!!, gameProgress) },
-            onFail = { updateGames(game as GameModel) },
-        )
-    }
-
-    private fun trackUntrackGame(game: GameModel) {
-        executeIO(Dispatchers.IO,
-            onBefore = { updateGames(game.copy(isAdded = !game.isAdded)) },
-            execute = { trackUntrackGameInteractor.execute(game) },
+            execute = { updateGameProgressInteractor.execute(game, gameProgress) },
             onFail = { updateGames(game) },
         )
     }
+
+//    private fun trackUntrackGame(game: GameModel) {
+//        executeIO(Dispatchers.IO,
+//            onBefore = { updateGames(game.copy(isAdded = !game.isAdded)) },
+//            execute = { trackUntrackGameInteractor.execute(game) },
+//            onFail = { updateGames(game) },
+//        )
+//    }
 
 
     private fun updateGames(game: GameModel) {

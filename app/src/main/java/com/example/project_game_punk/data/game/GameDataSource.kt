@@ -11,6 +11,7 @@ class GameDataSource(private val api: RawgApi): GameRepository {
         val ordering = when(gameQuery.sort) {
             GameSort.trending -> "-added"
             GameSort.highestRated -> "-rating"
+            GameSort.none -> null
         }
         val dates = if (gameQuery.dateRangeEnd.isNotEmpty() && gameQuery.dateRangeStart.isNotEmpty()) {
             val x = "${gameQuery.dateRangeStart},${gameQuery.dateRangeEnd}"
@@ -28,9 +29,9 @@ class GameDataSource(private val api: RawgApi): GameRepository {
             ordering = ordering,
             metacritic = metacritic,
             null,
-            true,
+            false,
             excludeAdditions = true,
-            searchExact = true,
+            searchExact = false,
             ids = ids
         )
         return response.results

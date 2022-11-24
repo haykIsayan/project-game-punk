@@ -26,11 +26,13 @@ fun <ItemType> ItemPagerCarousel(
         ) { index ->
             itemComposer.invoke(items[index])
         }
-        HorizontalPagerIndicator(
-            pagerState = state,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(16.dp),
-        )
+        if (items.isNotEmpty() && items.size > 1) {
+            HorizontalPagerIndicator(
+                pagerState = state,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp),
+            )
+        }
     }
 }

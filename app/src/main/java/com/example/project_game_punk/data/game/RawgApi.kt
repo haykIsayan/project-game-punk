@@ -8,7 +8,7 @@ interface RawgApi {
     suspend fun getGames(
         @Query("search") search: String,
         @Query("dates") dates: String,
-        @Query("ordering") ordering: String,
+        @Query("ordering") ordering: String? = null,
         @Query("metacritic") metacritic: String,
         @Query("added") added: String? = null,
         @Query("search_precise") searchPrecise: Boolean = true,

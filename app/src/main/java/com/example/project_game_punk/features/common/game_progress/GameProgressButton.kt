@@ -1,8 +1,8 @@
 package com.example.project_game_punk.features.common.game_progress
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -23,10 +23,21 @@ fun GameProgressButton(
     onProgressSelected: (GameModel, GameProgress) -> Unit
 ) {
     val context = LocalContext.current
-    val color = if (!game.isAdded) Color.Black.copy(alpha = 0.6f) else colorResource(game.gameProgress.color).copy(alpha = 0.6f)
+    val color = colorResource(game.gameProgress.color).copy(alpha = 0.6f)
     val textColor = Color.White
     val borderColor =  Color.White
-    val text = if (!game.isAdded) "follow".uppercase() else context.getString(game.gameProgress.text).uppercase()
+    val text = context.getString(game.gameProgress.displayText).uppercase()
+
+    val onClick = {
+        if (game.gameProgress == GameProgress.NotFollowingGameProgress) {
+            onProgressSelected.invoke(game, GameProgress.FollowingGameProgress)
+        } else {
+            controller.displayBottomSheet(game) { gameProgress ->
+                onProgressSelected.invoke(game, gameProgress)
+            }
+        }
+    }
+
     Button(
         border = BorderStroke(
             width = 1.dp,
@@ -34,15 +45,11 @@ fun GameProgressButton(
 
         ),
         shape = RoundedCornerShape(20.dp),
-        onClick = {
-            controller.displayBottomSheet { gameProgress ->
-                onProgressSelected.invoke(game, gameProgress)
-            }
-                  },
+        onClick = onClick,
         colors = ButtonDefaults.outlinedButtonColors(
             backgroundColor = color,
         ),
-        modifier = modifier
+        modifier = modifier.height(30.dp)
     ) {
         Text(
             modifier = Modifier.background(Color.Transparent),
@@ -51,5 +58,4 @@ fun GameProgressButton(
             color = textColor
         )
     }
-
 }

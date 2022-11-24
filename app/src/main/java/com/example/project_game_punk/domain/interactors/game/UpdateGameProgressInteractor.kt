@@ -3,18 +3,69 @@ package com.example.project_game_punk.domain.interactors.game
 import com.example.project_game_punk.domain.TrackedGamesCache
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
+import com.example.project_game_punk.domain.interactors.game_collection.AddGameToGameCollectionInteractor
+import com.example.project_game_punk.domain.interactors.game_collection.RemoveGameFromGameCollectionInteractor
 import com.example.project_game_punk.domain.interfaces.GameCollectionRepository
+import com.example.project_game_punk.domain.models.GameCollectionModel
 import com.example.project_game_punk.domain.models.GameModel
 import com.example.project_game_punk.features.common.update
 
 class UpdateGameProgressInteractor(
     private val gameCollectionRepository: GameCollectionRepository,
+    private val addGameToGameCollectionInteractor: AddGameToGameCollectionInteractor,
+    private val removeGameFromGameCollectionInteractor: RemoveGameFromGameCollectionInteractor,
     private val trackedGamesCache: TrackedGamesCache
 ) {
-    suspend fun execute(gameId: String, gameProgress: GameProgress): GameEntity? {
+    suspend fun execute(game: GameModel, gameProgress: GameProgress): GameEntity? {
         val mainGameCollection = trackedGamesCache.getMainGameCollection()
+        return when (gameProgress) {
+            GameProgress.FollowingGameProgress -> {
+                addToMainCollection(game, gameProgress, mainGameCollection)
+            }
+            GameProgress.NotFollowingGameProgress -> {
+                removeToMainCollection(game, gameProgress, mainGameCollection)
+            }
+            else -> {
+                updateProgress(game, gameProgress, mainGameCollection)
+            }
+        }
+    }
+
+    private suspend fun addToMainCollection(
+        game: GameModel,
+        gameProgress: GameProgress,
+        mainGameCollection: GameCollectionModel
+    ): GameEntity {
+        val updatedGame = game.updateGameProgress(gameProgress) as GameModel
+        val updatedMainGameCollection = addGameToGameCollectionInteractor.execute(
+            updatedGame,
+            mainGameCollection
+        )
+        trackedGamesCache.updateCache(updatedMainGameCollection)
+        return updatedGame
+    }
+
+    private suspend fun removeToMainCollection(
+        game: GameModel,
+        gameProgress: GameProgress,
+        mainGameCollection: GameCollectionModel,
+    ): GameEntity {
+        val updatedGame = game.updateGameProgress(gameProgress) as GameModel
+        val updatedMainGameCollection = removeGameFromGameCollectionInteractor.execute(
+            game,
+            mainGameCollection
+        )
+        trackedGamesCache.updateCache(updatedMainGameCollection)
+        return updatedGame
+    }
+
+    private suspend fun updateProgress(
+        game: GameModel,
+        gameProgress: GameProgress,
+        mainGameCollection: GameCollectionModel
+    ): GameEntity? {
         val mainGames = mainGameCollection.games
-        val gameToUpdate = mainGames.find { it.id == gameId } ?: return null
+        val gameToUpdate = mainGames.find { it.id == game.id } ?: return null
         val updatedGame = gameToUpdate.updateGameProgress(gameProgress) as? GameModel ?: return null
         val updatedGames = mainGames.toMutableList().apply { update(updatedGame) }
         val updatedCollection = mainGameCollection.copy(games = updatedGames)

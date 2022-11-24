@@ -2,6 +2,12 @@
     <string name="app_name">project-game-punk</string>
     <string name="rawg_api_base_url">https://api.rawg.io/api/</string>
 
+    <string name="following_game_progress">Following</string>
+
+    <string name="unfollow">Unfollow</string>
+
+    <string name="not_following_game_progress">Follow</string>
+
     <string name="playing_game_progress">Playing</string>
 
     <string name="stopped_game_progress">Stopped</string>
@@ -9,8 +15,6 @@
     <string name="finished_game_progress">Finished</string>
 
     <string name="replaying_game_progress">Replaying</string>
-
-
 
     <string name="search_cta_text">Search</string>
     <string name="discover_nav_title">Discover</string>

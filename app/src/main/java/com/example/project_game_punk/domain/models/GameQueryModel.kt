@@ -2,7 +2,7 @@ package com.example.project_game_punk.domain.models
 
 data class GameQueryModel(
     val query: String = "",
-    val sort: GameSort = GameSort.trending,
+    val sort: GameSort = GameSort.none,
     val dateRangeStart: String = "",
     val dateRangeEnd: String = "",
     val isHighestRated: Boolean = false,

@@ -21,7 +21,7 @@ fun ProfileScreen(searchViewModel: ProfileViewModel) {
         loadingState = { DiscoverGameCarouselLoading() },
     ) { gameCollection ->
         Column {
-            SectionTitle(title = "Profile")
+            SectionTitle(title = "Your games")
             LazyColumn {
                 items(gameCollection.games) { item ->
                     Column {
