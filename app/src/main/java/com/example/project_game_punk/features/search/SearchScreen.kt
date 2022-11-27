@@ -19,7 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.example.project_game_punk.domain.interactors.game.GetGameQueryWithRecentDatesInteractor
 import com.example.project_game_punk.domain.models.GameQueryModel
+import com.example.project_game_punk.domain.models.GameSort
 import com.example.project_game_punk.features.common.composables.GameListItem
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
@@ -33,7 +35,7 @@ fun SearchScreen(
     val state = searchResultsViewModel.getState().observeAsState().value
     Column {
         SearchField { text ->
-            searchResultsViewModel.searchGames(GameQueryModel(text))
+            searchResultsViewModel.searchGames(GetGameQueryWithRecentDatesInteractor().execute().copy(query = text, sort = GameSort.none))
         }
         LoadableStateWrapper(
             state = state,

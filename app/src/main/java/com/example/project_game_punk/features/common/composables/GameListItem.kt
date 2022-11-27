@@ -11,8 +11,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.project_game_punk.domain.models.GameModel
-import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
-import com.example.project_game_punk.features.common.game_progress.GameProgressButton
 
 @Composable
 fun GameListItem(
@@ -37,7 +35,7 @@ fun GameListItem(
             Text(
                 text = game.name ?: "",
                 modifier = Modifier
-                    .padding(8.dp),
+                    .padding(16.dp),
                 fontSize = 18.sp
             )
         }

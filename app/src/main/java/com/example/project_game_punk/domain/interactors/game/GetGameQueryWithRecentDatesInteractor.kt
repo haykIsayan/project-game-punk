@@ -2,6 +2,7 @@ package com.example.project_game_punk.domain.interactors.game
 
 import android.os.Build
 import com.example.project_game_punk.domain.models.GameQueryModel
+import com.example.project_game_punk.domain.models.GameSort
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -18,6 +19,7 @@ class GetGameQueryWithRecentDatesInteractor {
             Pair("","")
         }
         return GameQueryModel(
+            sort = GameSort.trending,
             dateRangeStart = dateStartEndPair.first,
             dateRangeEnd = dateStartEndPair.second
         )

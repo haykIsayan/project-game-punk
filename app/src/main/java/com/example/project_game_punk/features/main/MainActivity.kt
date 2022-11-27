@@ -8,11 +8,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.example.project_game_punk.domain.entity.GameProgress
+import com.example.project_game_punk.domain.models.GameModel
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressModalBottomSheet
 import com.example.project_game_punk.ui.theme.ProjectGamePunkTheme
@@ -52,13 +55,21 @@ private fun MainGameProgressBottomSheet(controller: GameProgressBottomSheetContr
 
     var onGameProgressSelected: (((GameProgress) -> Unit))? = null
 
-    controller.onPropagate {
+    val onGameProgressSelectedState = remember { mutableStateOf<(((GameProgress) -> Unit))?>(null) }
+    val gameState = remember { mutableStateOf<GameModel?>(null)}
+
+    controller.onPropagate { game, onProgressSelected ->
         scope.launch { state.animateTo(ModalBottomSheetValue.Expanded) }
-        onGameProgressSelected = it
+//        onGameProgressSelected = onProgressSelected
+        onGameProgressSelectedState.value = onProgressSelected
+        gameState.value = game
     }
 
-    GameProgressModalBottomSheet(state, scope) { gameProgress ->
-        onGameProgressSelected?.invoke(gameProgress)
-        onGameProgressSelected = null
+    gameState.value?.let {
+        GameProgressModalBottomSheet(state, scope, it, controller) { gameProgress ->
+            onGameProgressSelectedState.value?.invoke(gameProgress)
+            onGameProgressSelectedState.value = null
+            gameState.value = null
+        }
     }
 }

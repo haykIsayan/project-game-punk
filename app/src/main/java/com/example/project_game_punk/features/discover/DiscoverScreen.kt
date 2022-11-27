@@ -1,8 +1,7 @@
 package com.example.project_game_punk.features.discover
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,7 +25,6 @@ import com.example.project_game_punk.features.discover.recent.RecommendedGameVie
 import com.example.project_game_punk.features.discover.trending.TrendingGamesSection
 import com.example.project_game_punk.features.discover.trending.TrendingGamesViewModel
 import com.example.project_game_punk.features.main.MainNavigationTab
-import com.example.project_game_punk.features.search.SearchActivity
 
 @Composable
 fun DiscoverScreen(
@@ -70,6 +68,10 @@ fun DiscoverScreen(
                     sheetController
                 )
             }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
         }
 
     }

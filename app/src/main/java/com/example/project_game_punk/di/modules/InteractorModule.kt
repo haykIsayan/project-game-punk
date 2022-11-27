@@ -137,9 +137,16 @@ object InteractorModule {
     @Singleton
     fun providesUpdateGameProgressInteractor(
         gameCollectionRepository: GameCollectionRepository,
+        addGameToGameCollectionInteractor: AddGameToGameCollectionInteractor,
+        removeGameFromGameCollectionInteractor: RemoveGameFromGameCollectionInteractor,
         trackedGamesCache: TrackedGamesCache,
     ): UpdateGameProgressInteractor {
-        return  UpdateGameProgressInteractor(gameCollectionRepository, trackedGamesCache)
+        return  UpdateGameProgressInteractor(
+            gameCollectionRepository,
+            addGameToGameCollectionInteractor,
+            removeGameFromGameCollectionInteractor,
+            trackedGamesCache
+        )
     }
 
     @Provides
