@@ -16,7 +16,7 @@ class UpdateGameProgressInteractor(
     private val removeGameFromGameCollectionInteractor: RemoveGameFromGameCollectionInteractor,
     private val trackedGamesCache: TrackedGamesCache
 ) {
-    suspend fun execute(game: GameModel, gameProgress: GameProgress): GameEntity? {
+    suspend fun execute(game: GameEntity, gameProgress: GameProgress): GameEntity? {
         val mainGameCollection = trackedGamesCache.getMainGameCollection()
         return when (gameProgress) {
             GameProgress.FollowingGameProgress -> {
@@ -32,7 +32,7 @@ class UpdateGameProgressInteractor(
     }
 
     private suspend fun addToMainCollection(
-        game: GameModel,
+        game: GameEntity,
         gameProgress: GameProgress,
         mainGameCollection: GameCollectionModel
     ): GameEntity {
@@ -46,7 +46,7 @@ class UpdateGameProgressInteractor(
     }
 
     private suspend fun removeFromMainCollection(
-        game: GameModel,
+        game: GameEntity,
         gameProgress: GameProgress,
         mainGameCollection: GameCollectionModel,
     ): GameEntity {
@@ -60,7 +60,7 @@ class UpdateGameProgressInteractor(
     }
 
     private suspend fun updateProgress(
-        game: GameModel,
+        game: GameEntity,
         gameProgress: GameProgress,
         mainGameCollection: GameCollectionModel
     ): GameEntity? {

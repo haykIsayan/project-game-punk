@@ -15,8 +15,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
-import com.example.project_game_punk.domain.models.GameModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -25,8 +25,7 @@ import kotlinx.coroutines.launch
 fun GameProgressModalBottomSheet(
     state: ModalBottomSheetState,
     scope: CoroutineScope,
-    game: GameModel,
-    controller: GameProgressBottomSheetController,
+    game: GameEntity,
     onGameProgressSelected: (GameProgress) -> Unit
 ) {
 

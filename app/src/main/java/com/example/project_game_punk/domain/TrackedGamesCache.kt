@@ -1,8 +1,9 @@
 package com.example.project_game_punk.domain
 
+import com.example.project_game_punk.domain.entity.GameEntity
+import com.example.project_game_punk.domain.entity.GameProgress
 import com.example.project_game_punk.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
 import com.example.project_game_punk.domain.models.GameCollectionModel
-import com.example.project_game_punk.domain.models.GameModel
 
 class TrackedGamesCache(
     private val getTrackedGamesInteractor: GetTrackedGamesInteractor,
@@ -19,20 +20,22 @@ class TrackedGamesCache(
         return loadMainGameCollection()
     }
 
-    suspend fun applyCache(games: List<GameModel>): List<GameModel> {
+    suspend fun applyCache(games: List<GameEntity>): List<GameEntity> {
         val mainGameCollection = getMainGameCollection()
         val updatedGames = games.map { game ->
             val cachedGame = mainGameCollection.games.find { it.id == game.id }
-            if (cachedGame != null) game.copy(isAdded = true, gameProgressStatus = cachedGame.gameProgressStatus) else game
+            if (cachedGame != null) game.updateGameProgress(cachedGame.gameProgress) else game
         }
         return updatedGames
     }
 
-    suspend fun applyCache(game: GameModel): GameModel {
+    suspend fun applyCache(game: GameEntity): GameEntity {
         val mainGameCollection = getMainGameCollection()
         val trackedGames = mainGameCollection.games
-        val isAdded = trackedGames.find { it.id == game.id } != null
-        return game.copy(isAdded = isAdded)
+        val cachedGame = trackedGames.find { it.id == game.id }
+        return game.updateGameProgress(
+            cachedGame?.gameProgress ?: GameProgress.NotFollowingGameProgress
+        )
     }
 
     private suspend fun loadMainGameCollection(): GameCollectionModel {

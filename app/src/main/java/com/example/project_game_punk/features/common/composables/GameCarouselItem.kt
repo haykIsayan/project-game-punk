@@ -17,17 +17,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
-import com.example.project_game_punk.domain.models.GameModel
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
 
 @Composable
 fun GameCarouselItem(
-    game: GameModel,
+    game: GameEntity,
     sheetController: GameProgressBottomSheetController?,
     trailing: @Composable () -> Unit = {},
-    onProgressSelected: (GameModel, GameProgress) -> Unit
+    onProgressSelected: (GameEntity, GameProgress) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -75,7 +75,7 @@ fun GameCarouselItem(
                         .align(Alignment.BottomCenter)
                 ) {
                     Text(
-                        text = game.name,
+                        text = game.name ?: "",
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier

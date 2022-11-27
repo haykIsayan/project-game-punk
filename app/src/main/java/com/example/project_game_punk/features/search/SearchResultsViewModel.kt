@@ -20,7 +20,7 @@ class SearchResultsViewModel @Inject constructor(
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
     private val getTrendingGamesInteractor: GetTrendingGamesInteractor,
     private val getGamesInteractor: GetGamesInteractor,
-): StateViewModel<List<GameModel>, GameQueryModel>() {
+): StateViewModel<List<GameEntity>, GameQueryModel>() {
 
     fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
         executeIO(
@@ -37,7 +37,7 @@ class SearchResultsViewModel @Inject constructor(
         updatedGames?.apply { emit(GameSuccessState(updatedGames)) }
     }
 
-    override suspend fun loadData(param: GameQueryModel?): List<GameModel> {
+    override suspend fun loadData(param: GameQueryModel?): List<GameEntity> {
         if (param == null) return emptyList()
         return getGamesInteractor.execute(param)
     }

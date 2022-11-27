@@ -2,9 +2,7 @@ package com.example.project_game_punk.domain.entity
 
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
-import androidx.room.Entity
 import com.example.project_game_punk.R
-import com.example.project_game_punk.domain.models.GameModel
 
 sealed class GameProgress(
     @StringRes
@@ -60,7 +58,7 @@ sealed class GameProgress(
 
     companion object {
         fun gameProgressItems(
-            game: GameModel?
+            game: GameEntity?
         ): List<GameProgress> {
             val items = listOf(
                 FollowingGameProgress,

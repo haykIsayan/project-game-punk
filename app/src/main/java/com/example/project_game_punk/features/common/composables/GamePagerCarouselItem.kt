@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.project_game_punk.domain.models.GameModel
+import com.example.project_game_punk.domain.entity.GameEntity
 
 @Composable
-fun GamePagerCarouselItem(game: GameModel) {
+fun GamePagerCarouselItem(game: GameEntity) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(160.dp)
@@ -48,7 +48,7 @@ fun GamePagerCarouselItem(game: GameModel) {
                     ) .fillMaxWidth().align(Alignment.BottomCenter)
             ) {
                 Text(
-                    text = game.name,
+                    text = game.name ?: "",
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(8.dp)

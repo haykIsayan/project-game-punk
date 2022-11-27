@@ -1,13 +1,14 @@
 package com.example.project_game_punk.data.game
 
 import android.util.Log
+import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.interfaces.GameRepository
 import com.example.project_game_punk.domain.models.GameModel
 import com.example.project_game_punk.domain.models.GameQueryModel
 import com.example.project_game_punk.domain.models.GameSort
 
 class GameDataSource(private val api: RawgApi): GameRepository {
-    override suspend fun getGames(gameQuery: GameQueryModel): List<GameModel> {
+    override suspend fun getGames(gameQuery: GameQueryModel): List<GameEntity> {
         val ordering = when(gameQuery.sort) {
             GameSort.trending -> "-added"
             GameSort.highestRated -> "-rating"
@@ -37,7 +38,7 @@ class GameDataSource(private val api: RawgApi): GameRepository {
         return response.results
     }
 
-    override suspend fun getGame(id: String): GameModel {
+    override suspend fun getGame(id: String): GameEntity {
         return GameModel(id = "asdf", name = "sgsdfg")
     }
 }

@@ -17,7 +17,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val trackedGamesCache: TrackedGamesCache,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
-): StateViewModel<List<GameModel>, Unit>() {
+): StateViewModel<List<GameEntity>, Unit>() {
 
     init {
         loadState()

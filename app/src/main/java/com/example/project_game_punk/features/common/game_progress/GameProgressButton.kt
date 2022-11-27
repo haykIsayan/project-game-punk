@@ -12,15 +12,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
-import com.example.project_game_punk.domain.models.GameModel
 
 @Composable
 fun GameProgressButton(
-    game: GameModel,
+    game: GameEntity,
     modifier: Modifier,
     controller: GameProgressBottomSheetController,
-    onProgressSelected: (GameModel, GameProgress) -> Unit
+    onProgressSelected: (GameEntity, GameProgress) -> Unit
 ) {
     val context = LocalContext.current
     val color = colorResource(game.gameProgress.color).copy(alpha = 0.6f)

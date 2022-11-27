@@ -1,11 +1,10 @@
 package com.example.project_game_punk.features.discover.recent
 
+import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.domain.interactors.game.GetRecommendedGamesInteractor
 import com.example.project_game_punk.domain.interactors.game.UpdateGameProgressInteractor
-import com.example.project_game_punk.domain.interactors.game_collection.tracking.TrackUntrackGameInteractor
-import com.example.project_game_punk.domain.models.GameModel
 import com.example.project_game_punk.features.common.ViewModelState
 import com.example.project_game_punk.features.common.executeIO
 import com.example.project_game_punk.features.common.update
@@ -13,7 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-class GameSuccessState(data: List<GameModel>): ViewModelState.SuccessState<List<GameModel>>(data) {
+class GameSuccessState(data: List<GameEntity>): ViewModelState.SuccessState<List<GameEntity>>(data) {
     override fun equals(other: Any?): Boolean {
         if (other !is GameSuccessState) return false
         val otherData = other.data
@@ -35,31 +34,30 @@ class GameSuccessState(data: List<GameModel>): ViewModelState.SuccessState<List<
 @HiltViewModel
 class RecommendedGameViewModel @Inject constructor(
     private val getRecommendedGamesInteractor: GetRecommendedGamesInteractor,
-    private val trackUntrackGameInteractor: TrackUntrackGameInteractor,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor
-): StateViewModel<List<GameModel>, Unit>() {
+): StateViewModel<List<GameEntity>, Unit>() {
 
     init {
         loadState()
     }
 
 
-    fun updateGameProgress(game: GameModel, gameProgress: GameProgress) {
+    fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
         executeIO(Dispatchers.IO,
-            onBefore = { updateGames(game.updateGameProgress(gameProgress) as GameModel) },
+            onBefore = { updateGames(game.updateGameProgress(gameProgress)) },
             execute = { updateGameProgressInteractor.execute(game, gameProgress) },
             onFail = { updateGames(game) },
         )
     }
 
-    private fun updateGames(game: GameModel) {
+    private fun updateGames(game: GameEntity) {
         val games = getData()
         val updatedGames = games?.toMutableList()?.apply { update(game) }?.toList()
         updatedGames?.apply { emit(GameSuccessState(updatedGames)) }
     }
 
 
-    override suspend fun loadData(param: Unit?): List<GameModel> {
+    override suspend fun loadData(param: Unit?): List<GameEntity> {
         return getRecommendedGamesInteractor.execute()
     }
 }
