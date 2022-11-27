@@ -1,9 +1,6 @@
 package com.example.project_game_punk.data.game_collection
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.example.project_game_punk.domain.models.GameCollectionModel
 
 @Dao
@@ -15,6 +12,6 @@ interface GameCollectionDao {
     @Update
     fun updateGameCollection(gameCollection: GameCollectionModel)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun createGameCollection(gameCollection: GameCollectionModel)
 }

@@ -1,9 +1,9 @@
 package com.example.project_game_punk.features.profile
 
+import com.example.project_game_punk.domain.TrackedGamesCache
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
 import com.example.project_game_punk.domain.interactors.game.UpdateGameProgressInteractor
-import com.example.project_game_punk.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
 import com.example.project_game_punk.domain.models.GameModel
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.features.common.executeIO
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val gameMainGameCollectionInteractor: GetTrackedGamesInteractor,
+    private val trackedGamesCache: TrackedGamesCache,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
 ): StateViewModel<List<GameModel>, Unit>() {
 
@@ -40,7 +40,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     override suspend fun loadData(param: Unit?): List<GameModel> {
-        return gameMainGameCollectionInteractor.execute().games
+        return trackedGamesCache.getMainGameCollection().games
     }
 
 }

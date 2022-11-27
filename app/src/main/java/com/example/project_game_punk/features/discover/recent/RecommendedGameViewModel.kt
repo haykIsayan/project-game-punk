@@ -1,6 +1,5 @@
 package com.example.project_game_punk.features.discover.recent
 
-import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.domain.interactors.game.GetRecommendedGamesInteractor
@@ -52,15 +51,6 @@ class RecommendedGameViewModel @Inject constructor(
             onFail = { updateGames(game) },
         )
     }
-
-//    private fun trackUntrackGame(game: GameModel) {
-//        executeIO(Dispatchers.IO,
-//            onBefore = { updateGames(game.copy(isAdded = !game.isAdded)) },
-//            execute = { trackUntrackGameInteractor.execute(game) },
-//            onFail = { updateGames(game) },
-//        )
-//    }
-
 
     private fun updateGames(game: GameModel) {
         val games = getData()
