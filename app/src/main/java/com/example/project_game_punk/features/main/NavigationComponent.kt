@@ -34,7 +34,10 @@ fun NavigationComponent(
             )
         }
         composable(route = MainNavigationTab.ProfileMainNavigationTab.route) {
-            ProfileScreen(searchViewModel = hiltViewModel())
+            ProfileScreen(
+                profileViewModel = hiltViewModel(),
+                controller = sheetController
+            )
         }
 
         composable(route = MainNavigationTab.SearchMainNavigationTab.route) {

@@ -35,7 +35,7 @@ fun SearchScreen(
     val state = searchResultsViewModel.getState().observeAsState().value
     Column {
         SearchField { text ->
-            searchResultsViewModel.searchGames(GetGameQueryWithRecentDatesInteractor().execute().copy(query = text))
+            searchResultsViewModel.searchGames(GetGameQueryWithRecentDatesInteractor().execute().copy(query = text, sort = GameSort.none))
         }
         LoadableStateWrapper(
             state = state,
@@ -61,7 +61,7 @@ fun SearchScreen(
                                 modifier = Modifier.padding(8.dp),
                                 controller = sheetController,
                                 onProgressSelected = { game, gameProgress ->
-//                                    searchResultsViewModel.updateGameProgress(game, gameProgress)
+                                    searchResultsViewModel.updateGameProgress(game, gameProgress)
                                 }
                             )
                         }

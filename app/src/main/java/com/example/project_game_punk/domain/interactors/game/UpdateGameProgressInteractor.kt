@@ -23,7 +23,7 @@ class UpdateGameProgressInteractor(
                 addToMainCollection(game, gameProgress, mainGameCollection)
             }
             GameProgress.NotFollowingGameProgress -> {
-                removeToMainCollection(game, gameProgress, mainGameCollection)
+                removeFromMainCollection(game, gameProgress, mainGameCollection)
             }
             else -> {
                 updateProgress(game, gameProgress, mainGameCollection)
@@ -45,7 +45,7 @@ class UpdateGameProgressInteractor(
         return updatedGame
     }
 
-    private suspend fun removeToMainCollection(
+    private suspend fun removeFromMainCollection(
         game: GameModel,
         gameProgress: GameProgress,
         mainGameCollection: GameCollectionModel,
