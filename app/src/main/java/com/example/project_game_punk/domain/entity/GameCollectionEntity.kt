@@ -1,0 +1,9 @@
+package com.example.project_game_punk.domain.entity
+
+interface GameCollectionEntity {
+    val id: String?
+    val name: String?
+    val games: List<GameEntity>
+
+    fun withGames(games: List<GameEntity>): GameCollectionEntity
+}

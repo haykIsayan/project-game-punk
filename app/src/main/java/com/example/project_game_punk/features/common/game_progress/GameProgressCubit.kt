@@ -3,14 +3,12 @@ package com.example.project_game_punk.features.common.game_progress
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
 import com.example.project_game_punk.domain.interactors.game.UpdateGameProgressInteractor
-import com.example.project_game_punk.domain.interactors.game_collection.tracking.TrackUntrackGameInteractor
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class GameProgressCubit(
-    private val trackUntrackGameInteractor: TrackUntrackGameInteractor,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor
 ) {
 

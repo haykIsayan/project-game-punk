@@ -3,13 +3,8 @@ package com.example.project_game_punk.features.discover.featured
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.domain.interactors.game.GetFeaturedGameInteractor
-import com.example.project_game_punk.domain.interactors.game_collection.tracking.TrackUntrackGameInteractor
-import com.example.project_game_punk.domain.models.GameModel
 import com.example.project_game_punk.features.common.ViewModelState
-import com.example.project_game_punk.features.common.executeIO
-import com.example.project_game_punk.features.discover.recent.GameSuccessState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class FeaturedGameSuccessState(game: GameEntity): ViewModelState.SuccessState<GameEntity>(game) {
@@ -21,7 +16,6 @@ class FeaturedGameSuccessState(game: GameEntity): ViewModelState.SuccessState<Ga
 
 @HiltViewModel
 class FeaturedGameViewModel @Inject constructor(
-    private val trackUntrackGameInteractor: TrackUntrackGameInteractor,
     private val getFeaturedGameInteractor: GetFeaturedGameInteractor
 ): StateViewModel<GameEntity, Unit>() {
 

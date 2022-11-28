@@ -1,13 +1,13 @@
 package com.example.project_game_punk.domain.interfaces
 
-import com.example.project_game_punk.domain.models.GameCollectionModel
+import com.example.project_game_punk.domain.entity.GameCollectionEntity
 
 interface GameCollectionRepository {
-    suspend fun updateGameCollection(gameCollection: GameCollectionModel)
+    suspend fun updateGameCollection(gameCollection: GameCollectionEntity)
 
-    suspend fun createGameCollection(gameCollection: GameCollectionModel)
+    suspend fun createGameCollection(gameCollection: GameCollectionEntity)
 
-    suspend fun getGameCollections(): List<GameCollectionModel>
+    suspend fun getGameCollections(): List<GameCollectionEntity>
 
-    suspend fun getGameCollection(id: String): GameCollectionModel?
+    suspend fun getGameCollection(id: String): GameCollectionEntity?
 }

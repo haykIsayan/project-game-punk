@@ -4,7 +4,7 @@ import com.example.project_game_punk.domain.TrackedGamesCache
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
 import com.example.project_game_punk.domain.interactors.game.UpdateGameProgressInteractor
-import com.example.project_game_punk.domain.models.GameModel
+import com.example.project_game_punk.data.models.GameModel
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.features.common.executeIO
 import com.example.project_game_punk.features.common.update
@@ -23,7 +23,6 @@ class ProfileViewModel @Inject constructor(
         loadState()
     }
 
-
     fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
         executeIO(
             Dispatchers.IO,
@@ -39,7 +38,7 @@ class ProfileViewModel @Inject constructor(
         updatedGames?.apply { emit(GameSuccessState(updatedGames)) }
     }
 
-    override suspend fun loadData(param: Unit?): List<GameModel> {
+    override suspend fun loadData(param: Unit?): List<GameEntity> {
         return trackedGamesCache.getMainGameCollection().games
     }
 

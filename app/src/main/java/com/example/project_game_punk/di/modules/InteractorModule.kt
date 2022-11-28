@@ -6,10 +6,10 @@ import com.example.project_game_punk.domain.interactors.game_collection.AddGameT
 import com.example.project_game_punk.domain.interactors.game_collection.CreateGameCollectionInteractor
 import com.example.project_game_punk.domain.interactors.game_collection.GetGameCollectionInteractor
 import com.example.project_game_punk.domain.interactors.game_collection.RemoveGameFromGameCollectionInteractor
-import com.example.project_game_punk.domain.interactors.game_collection.tracking.TrackUntrackGameInteractor
 import com.example.project_game_punk.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
 import com.example.project_game_punk.domain.interfaces.GameCollectionRepository
 import com.example.project_game_punk.domain.interfaces.GameRepository
+import com.example.project_game_punk.data.models.GameCollectionFactoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -89,6 +89,7 @@ object InteractorModule {
         createGameCollectionInteractor: CreateGameCollectionInteractor,
     ): GetTrackedGamesInteractor {
         return GetTrackedGamesInteractor(
+            GameCollectionFactoryImpl(),
             getGameCollectionInteractor,
             createGameCollectionInteractor
         )
@@ -108,20 +109,6 @@ object InteractorModule {
         gameCollectionRepository: GameCollectionRepository
     ): RemoveGameFromGameCollectionInteractor {
         return RemoveGameFromGameCollectionInteractor(gameCollectionRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAddGameToMainGameCollectionInteractor(
-        trackedGamesCache: TrackedGamesCache,
-        addGameToGameCollectionInteractor: AddGameToGameCollectionInteractor,
-        removeGameFromGameCollectionInteractor: RemoveGameFromGameCollectionInteractor
-    ): TrackUntrackGameInteractor {
-        return TrackUntrackGameInteractor(
-            trackedGamesCache,
-            addGameToGameCollectionInteractor,
-            removeGameFromGameCollectionInteractor
-        )
     }
 
     @Provides

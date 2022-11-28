@@ -1,23 +1,22 @@
 package com.example.project_game_punk.domain
 
+import com.example.project_game_punk.domain.entity.GameCollectionEntity
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
 import com.example.project_game_punk.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
-import com.example.project_game_punk.domain.models.GameCollectionModel
 
 class TrackedGamesCache(
     private val getTrackedGamesInteractor: GetTrackedGamesInteractor,
 ) {
 
-    private var gameCollection: GameCollectionModel? = null
+    private var gameCollection: GameCollectionEntity? = null
 
-    fun updateCache(updatedMainGameCollection: GameCollectionModel) {
+    fun updateCache(updatedMainGameCollection: GameCollectionEntity) {
         this.gameCollection = updatedMainGameCollection
     }
 
-    suspend fun getMainGameCollection(): GameCollectionModel {
-        if (gameCollection != null) return gameCollection as GameCollectionModel
-        return loadMainGameCollection()
+    suspend fun getMainGameCollection(): GameCollectionEntity {
+        return gameCollection ?: loadMainGameCollection()
     }
 
     suspend fun applyCache(games: List<GameEntity>): List<GameEntity> {
@@ -38,7 +37,7 @@ class TrackedGamesCache(
         )
     }
 
-    private suspend fun loadMainGameCollection(): GameCollectionModel {
+    private suspend fun loadMainGameCollection(): GameCollectionEntity {
         val gameCollection = getTrackedGamesInteractor.execute()
         this.gameCollection = gameCollection
         return gameCollection

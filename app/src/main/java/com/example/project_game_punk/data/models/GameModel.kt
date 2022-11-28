@@ -1,4 +1,4 @@
-package com.example.project_game_punk.domain.models
+package com.example.project_game_punk.data.models
 
 import androidx.room.*
 import com.example.project_game_punk.domain.entity.GameEntity

@@ -3,7 +3,7 @@ package com.example.project_game_punk.data.game
 import android.util.Log
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.interfaces.GameRepository
-import com.example.project_game_punk.domain.models.GameModel
+import com.example.project_game_punk.data.models.GameModel
 import com.example.project_game_punk.domain.models.GameQueryModel
 import com.example.project_game_punk.domain.models.GameSort
 

@@ -2,7 +2,7 @@ package com.example.project_game_punk.features.common.composables.grids
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import com.example.project_game_punk.domain.models.GameModel
+import com.example.project_game_punk.data.models.GameModel
 
 @Composable
 fun GamePunkGrid(items: List<GameModel>) {
