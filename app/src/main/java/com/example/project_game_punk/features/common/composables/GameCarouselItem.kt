@@ -1,5 +1,6 @@
 package com.example.project_game_punk.features.common.composables
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,12 +30,17 @@ fun GameCarouselItem(
     trailing: @Composable () -> Unit = {},
     onProgressSelected: (GameEntity, GameProgress) -> Unit
 ) {
+    Log.d("Haykk", game.backgroundImage ?: "")
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(modifier = Modifier
-            .size(220.dp, 160.dp)
+            .size(
+                150.dp,
+                200.dp
+            )
+//            .padding(start = 6.dp, top = 6.dp, end = 6.dp)
             .padding(6.dp)
             .clip(RoundedCornerShape(10.dp))
         ) {
@@ -56,33 +62,33 @@ fun GameCarouselItem(
                         .crossfade(true)
                         .build(),
                     contentDescription = "",
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.FillHeight,
                 )
             }
             if (game.name != null) {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            brush = Brush.verticalGradient(
-
-                                colors = listOf(
-                                    Color.Transparent,
-                                    Color.Black.copy(alpha = 0.7f)
-                                )
-                            )
-                        )
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                ) {
-                    Text(
-                        text = game.name ?: "",
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp)
-                    )
-                }
+//                Box(
+//                    modifier = Modifier
+//                        .background(
+//                            brush = Brush.verticalGradient(
+//
+//                                colors = listOf(
+//                                    Color.Transparent,
+//                                    Color.Black.copy(alpha = 0.7f)
+//                                )
+//                            )
+//                        )
+//                        .fillMaxWidth()
+//                        .align(Alignment.BottomCenter)
+//                ) {
+//                    Text(
+//                        text = game.name ?: "",
+//                        fontSize = 20.sp,
+//                        textAlign = TextAlign.Center,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(4.dp)
+//                    )
+//                }
             }
             trailing.invoke()
         }
@@ -90,7 +96,8 @@ fun GameCarouselItem(
             GameProgressButton(
                 game = game,
                 modifier = Modifier
-                    .padding(2.dp)
+                    .width(150.dp)
+                    .padding(6.dp)
                     .fillMaxWidth(),
                 onProgressSelected = onProgressSelected,
                 controller = sheetController

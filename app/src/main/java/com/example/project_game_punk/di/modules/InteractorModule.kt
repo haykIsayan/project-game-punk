@@ -9,7 +9,7 @@ import com.example.project_game_punk.domain.interactors.game_collection.RemoveGa
 import com.example.project_game_punk.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
 import com.example.project_game_punk.domain.interfaces.GameCollectionRepository
 import com.example.project_game_punk.domain.interfaces.GameRepository
-import com.example.project_game_punk.data.models.GameCollectionFactoryImpl
+import com.example.project_game_punk.data.game.rawg.models.GameCollectionFactoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

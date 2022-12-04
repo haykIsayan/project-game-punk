@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">project-game-punk</string>
+
+    <string name="idgb_auth_api_base_url">https://id.twitch.tv/oauth2/</string>
+    <string name="idgb_api_base_url">https://api.igdb.com/v4/</string>
     <string name="rawg_api_base_url">https://api.rawg.io/api/</string>
 
     <string name="following_game_progress">Following</string>

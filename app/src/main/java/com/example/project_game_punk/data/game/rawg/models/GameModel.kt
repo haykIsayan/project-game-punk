@@ -1,4 +1,4 @@
-package com.example.project_game_punk.data.models
+package com.example.project_game_punk.data.game.rawg.models
 
 import androidx.room.*
 import com.example.project_game_punk.domain.entity.GameEntity
@@ -10,6 +10,9 @@ data class GameModel(
     @Ignore override val id: String? = null,
     @Ignore override val name: String? = null,
     @Ignore val background_image: String? = null,
+    @Ignore val screenshots: List<String>? = null,
+    @Ignore val artworks: List<String>? = null,
+    @Ignore val cover: String? = null,
     @Ignore val added: Int = 0,
     @Ignore override val metaCriticScore: Int = 0,
     @Ignore override val isAdded: Boolean = false,
@@ -19,8 +22,14 @@ data class GameModel(
     override val numAdded: Int
         get() = added
 
+    override val banners: List<String>?
+        get() = screenshots
+
+    override val gameArtworks: List<String>?
+        get() = artworks
+
     override val backgroundImage: String?
-        get() = background_image
+        get() = cover
 
    override val gameProgress: GameProgress
         get() = when (gameProgressStatus) {

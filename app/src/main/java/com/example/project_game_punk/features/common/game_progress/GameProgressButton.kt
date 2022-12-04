@@ -44,7 +44,7 @@ fun GameProgressButton(
             color = borderColor,
 
         ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(10.dp),
         onClick = onClick,
         colors = ButtonDefaults.outlinedButtonColors(
             backgroundColor = color,

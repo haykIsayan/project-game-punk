@@ -4,6 +4,8 @@ interface GameEntity {
     val id: String?
     val name: String?
     val backgroundImage: String?
+    val banners: List<String>?
+    val gameArtworks: List<String>?
     val numAdded: Int
     val metaCriticScore: Int
     val isAdded: Boolean

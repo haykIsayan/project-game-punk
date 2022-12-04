@@ -1,4 +1,4 @@
-package com.example.project_game_punk.data.game
+package com.example.project_game_punk.data.game.rawg
 
 import retrofit2.http.GET
 import retrofit2.http.Query

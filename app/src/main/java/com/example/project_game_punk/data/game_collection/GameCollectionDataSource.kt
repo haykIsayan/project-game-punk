@@ -3,7 +3,7 @@ package com.example.project_game_punk.data.game_collection
 import com.example.project_game_punk.domain.entity.GameCollectionEntity
 import com.example.project_game_punk.domain.interfaces.GameCollectionRepository
 import com.example.project_game_punk.domain.interfaces.GameRepository
-import com.example.project_game_punk.data.models.GameCollectionModel
+import com.example.project_game_punk.data.game.rawg.models.GameCollectionModel
 
 class GameCollectionDataSource(
     private val gameCollectionDatabase: GameCollectionDatabase,
