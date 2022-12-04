@@ -1,4 +1,4 @@
-package com.example.project_game_punk.data.models
+package com.example.project_game_punk.data.game.rawg.models
 
 import com.example.project_game_punk.domain.entity.GameCollectionEntity
 import com.example.project_game_punk.domain.entity.GameCollectionFactory

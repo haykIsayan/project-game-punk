@@ -1,5 +1,6 @@
 package com.example.project_game_punk.features.common.composables
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ fun GameListItem(
     game: GameEntity,
     trailingButton: @Composable () -> Unit = {},
 ) {
+    Log.d(game.name, game.backgroundImage ?: "bruh")
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween

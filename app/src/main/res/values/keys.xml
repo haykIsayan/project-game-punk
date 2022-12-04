@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="rawg_api_key">295c8f6246f7447380d79929bce8c69c</string>
+    <string name="idgb_client_id">p5hc6s0x688ra4hbx1zphxlkgpospf</string>
+    <string name="idgb_client_secret">8ih0yt9kb3qgppu5bqurz27yqz1d3s</string>
 </resources>

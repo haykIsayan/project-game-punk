@@ -13,12 +13,6 @@ class GetTrendingGamesInteractor constructor(
         val games = getGamesInteractor.execute(gameQuery.copy(sort = GameSort.trending, isHighestRated = false))
 
 
-
-        games.forEach {
-            Log.d("Haykk", it.id.toString())
-        }
-
-
         return games.filter {
             it.numAdded >= 1000
         }

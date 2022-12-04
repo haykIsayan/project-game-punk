@@ -1,4 +1,4 @@
-package com.example.project_game_punk.data.game
+package com.example.project_game_punk.data.game.rawg
 
 import okhttp3.Interceptor
 import okhttp3.Response

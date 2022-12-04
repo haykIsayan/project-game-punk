@@ -2,8 +2,8 @@ package com.example.project_game_punk.data.game_collection
 
 import androidx.room.TypeConverter
 import com.example.project_game_punk.domain.entity.GameEntity
-import com.example.project_game_punk.data.models.GameModel
-import com.example.project_game_punk.data.models.GameProgressStatus
+import com.example.project_game_punk.data.game.rawg.models.GameModel
+import com.example.project_game_punk.data.game.rawg.models.GameProgressStatus
 import com.google.gson.Gson
 
 import com.google.gson.reflect.TypeToken

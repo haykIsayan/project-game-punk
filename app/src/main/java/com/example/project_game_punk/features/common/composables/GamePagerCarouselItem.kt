@@ -25,11 +25,12 @@ fun GamePagerCarouselItem(game: GameEntity) {
         .fillMaxWidth()
         .height(160.dp)
         .padding(6.dp)
+
         .clip(RoundedCornerShape(10.dp))
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(game.backgroundImage)
+                .data(game.banners?.first() ?: game.gameArtworks?.first())
                 .crossfade(true)
                 .build(),
             contentDescription = "",

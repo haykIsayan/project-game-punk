@@ -2,7 +2,7 @@ package com.example.project_game_punk.domain.interactors.game_collection
 
 import com.example.project_game_punk.domain.entity.GameCollectionEntity
 import com.example.project_game_punk.domain.interfaces.GameCollectionRepository
-import com.example.project_game_punk.data.models.GameModel
+import com.example.project_game_punk.data.game.rawg.models.GameModel
 
 class AddGameToGameCollectionInteractor(
     private val gameCollectionRepository: GameCollectionRepository
