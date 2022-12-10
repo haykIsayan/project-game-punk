@@ -7,7 +7,7 @@ class GetRecommendedGamesInteractor(
     private val getGamesInteractor: GetGamesInteractor
 ) {
     suspend fun execute(): List<GameEntity> {
-        val gameQuery = gameUserGameQueryInteractor.execute()
+        val gameQuery = gameUserGameQueryInteractor.execute().copy(query = "Assassin's Creed")
         return getGamesInteractor.execute(gameQuery)
     }
 }

@@ -6,5 +6,7 @@ import com.example.project_game_punk.domain.models.GameQueryModel
 interface GameRepository {
     suspend fun getGames(gameQuery: GameQueryModel): List<GameEntity>
 
+    suspend fun applyBanners(games: List<GameEntity>): List<GameEntity>
+
     suspend fun getGame(id: String): GameEntity
 }

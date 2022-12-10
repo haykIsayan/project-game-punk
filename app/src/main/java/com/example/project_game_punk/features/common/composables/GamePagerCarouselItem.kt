@@ -23,33 +23,33 @@ import com.example.project_game_punk.domain.entity.GameEntity
 fun GamePagerCarouselItem(game: GameEntity) {
     Box(modifier = Modifier
         .fillMaxWidth()
-        .height(160.dp)
+        .height(220.dp)
         .padding(6.dp)
 
         .clip(RoundedCornerShape(10.dp))
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(game.banners?.first() ?: game.gameArtworks?.first())
+                .data(game.banner)
                 .crossfade(true)
                 .build(),
             contentDescription = "",
             contentScale = ContentScale.Crop,
         )
-        if (game.name != null) {
+        game.name?.let {
             Box(
                 modifier = Modifier
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                Color.Black.copy(alpha = 0.7f)
+                                Color.Black.copy(alpha = 0.8f)
                             )
                         )
                     ) .fillMaxWidth().align(Alignment.BottomCenter)
             ) {
                 Text(
-                    text = game.name ?: "",
+                    text = it,
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(8.dp)

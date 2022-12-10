@@ -84,11 +84,21 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesApplyGameMetaInteractor(
+        gameRepository: GameRepository
+    ): ApplyGameMetaInteractor {
+        return ApplyGameMetaInteractor(gameRepository)
+    }
+
+    @Provides
+    @Singleton
     fun providesGetMainGameCollectionInteractor(
+        applyGameMetaInteractor: ApplyGameMetaInteractor,
         getGameCollectionInteractor: GetGameCollectionInteractor,
         createGameCollectionInteractor: CreateGameCollectionInteractor,
     ): GetTrackedGamesInteractor {
         return GetTrackedGamesInteractor(
+            applyGameMetaInteractor,
             GameCollectionFactoryImpl(),
             getGameCollectionInteractor,
             createGameCollectionInteractor

@@ -37,6 +37,10 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
         return response.results
     }
 
+    override suspend fun applyBanners(games: List<GameEntity>): List<GameEntity> {
+        return games
+    }
+
     override suspend fun getGame(id: String): GameEntity {
         return GameModel(id = "asdf", name = "sgsdfg")
     }

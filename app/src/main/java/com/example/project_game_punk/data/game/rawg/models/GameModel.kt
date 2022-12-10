@@ -8,8 +8,10 @@ import com.example.project_game_punk.domain.entity.GameProgress
 data class GameModel(
     @PrimaryKey(autoGenerate = true) var uuid: Long = 0,
     @Ignore override val id: String? = null,
+    @Ignore val slug: String? = null,
     @Ignore override val name: String? = null,
     @Ignore val background_image: String? = null,
+    @Ignore override val banner: String? = null,
     @Ignore val screenshots: List<String>? = null,
     @Ignore val artworks: List<String>? = null,
     @Ignore val cover: String? = null,
