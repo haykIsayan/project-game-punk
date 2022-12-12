@@ -1,6 +1,5 @@
 package com.example.project_game_punk.data.game.idgb
 
-import android.util.Log
 import com.example.project_game_punk.data.game.idgb.api.IDGBApi
 import com.example.project_game_punk.data.game.idgb.api.IDGBAuthApi
 import com.example.project_game_punk.data.game.rawg.RawgApi
@@ -65,7 +64,10 @@ class GameIDGBDataSource(
         }
         return games.map { game ->
             val cover = covers.find { it.game == game.id }
-            val updatedCover = "https:" + cover?.url?.replace("t_thumb","t_720p")
+            val updatedCover = "https:" + cover?.url?.replace(
+                "t_thumb",
+                "t_720p"
+            )
             game.copy(cover = updatedCover)
         }
     }
@@ -86,7 +88,10 @@ class GameIDGBDataSource(
         }
         return games.map { game ->
             val screenshot = screenshots.find { it.game == game.id }
-            val updatedScreenshot = "https:" + screenshot?.url?.replace("t_thumb","t_720p")
+            val updatedScreenshot = "https:" + screenshot?.url?.replace(
+                "t_thumb",
+                "t_720p"
+            )
             game.copy(screenshots = listOf(updatedScreenshot))
         }
     }
@@ -115,41 +120,18 @@ class GameIDGBDataSource(
     }
 
      override suspend fun applyBanners(games: List<GameEntity>): List<GameEntity> {
-        val slugs =
-//            "tomb-raider"
-            games.joinToString(postfix = ",") { (it as GameModel).slug ?: "" }.let { it
-            it.substring(0, it.length - 1)
-        }
-
-
-
         val resultsAll = games.map {
             scope.async { rawgApi.getGames(search = (it as GameModel).slug) }
         }.awaitAll().map { it.results }
-
         val results = resultsAll.flatten()
-
         val gamesWithBanners = games.map { game ->
             val gameSlug = (game as GameModel).slug
-            val banner = results.find { it.slug == gameSlug || (gameSlug != null && it.slug?.contains(gameSlug) == true) }?.background_image
+            val banner = results.find {
+                it.slug == gameSlug
+                        || (gameSlug != null && it.slug?.contains(gameSlug) == true)
+            }?.background_image
             game.copy(banner = banner)
         }
-
-//
-//        val gamesWithBanner = games.map {
-////
-////            async {
-////
-////            }
-//
-//            val response = rawgApi.getGames(search = it.slug)
-//            it.copy(banner = response.results.first().background_image)
-//        }
-
-//
-        Log.d("Haykk",  slugs + results + gamesWithBanners + resultsAll)
-
-
         return gamesWithBanners
     }
 
@@ -159,7 +141,6 @@ class GameIDGBDataSource(
 
     private suspend fun <T> withAuthenticatedHeaders(
         onHeadersCreated: suspend (Map<String, String>) -> T,
-
     ): T {
         val idgbAuth = getAuthModel()
         val headers = mutableMapOf<String, String>().apply {

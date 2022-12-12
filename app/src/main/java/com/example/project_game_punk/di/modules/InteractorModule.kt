@@ -149,9 +149,13 @@ object InteractorModule {
     @Provides
     @Singleton
     fun providesGetNowPlayingInteractor(
+        applyGameMetaInteractor: ApplyGameMetaInteractor,
         trackedGamesCache: TrackedGamesCache
     ): GetNowPlayingGamesInteractor {
-        return GetNowPlayingGamesInteractor(trackedGamesCache)
+        return GetNowPlayingGamesInteractor(
+            applyGameMetaInteractor,
+            trackedGamesCache
+        )
     }
 }
 
