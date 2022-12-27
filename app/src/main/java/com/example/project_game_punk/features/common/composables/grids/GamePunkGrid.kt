@@ -13,7 +13,14 @@ fun GamePunkGrid(items: List<GameModel>) {
         splits.add(section)
         indess += 3
     }
-    LazyColumn {
 
-    }
+
+
+//LazyVerticalGrid(
+//columns = GridCells.Adaptive(minSize = 128.dp)
+//) {
+//    items(photos) { photo ->
+//        PhotoItem(photo)
+//    }
+//}
 }

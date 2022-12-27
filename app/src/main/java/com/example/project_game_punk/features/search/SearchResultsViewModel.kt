@@ -12,7 +12,7 @@ import com.example.project_game_punk.domain.models.GameQueryModel
 import com.example.project_game_punk.domain.models.GameSort
 import com.example.project_game_punk.features.common.executeIO
 import com.example.project_game_punk.features.common.update
-import com.example.project_game_punk.features.discover.recent.GameSuccessState
+import com.example.project_game_punk.features.discover.recommended.GameSuccessState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -49,8 +49,11 @@ class SearchResultsViewModel @Inject constructor(
     }
 
     override suspend fun loadData(param: GameQueryModel?): List<GameEntity> {
-        if (param == null) return emptyList()
-        return getGamesInteractor.execute(param)
+        return when {
+            param == null -> emptyList()
+            param.query.isEmpty() -> getTrendingGamesInteractor.execute()
+            else -> getGamesInteractor.execute(param)
+        }
     }
 
     fun searchGames(query: GameQueryModel) {

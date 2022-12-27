@@ -25,7 +25,6 @@ abstract class StateViewModel<DataType, Param>: ViewModel() {
             try {
                 state.value = ViewModelState.PendingState()
                 val data = withContext(Dispatchers.IO) { loadData(param) }
-//                throw Exception()
                 state.value = ViewModelState.SuccessState(data)
             } catch (e: Exception) {
                 Log.d("Haykk", e.localizedMessage ?: "")
@@ -33,8 +32,6 @@ abstract class StateViewModel<DataType, Param>: ViewModel() {
             }
         }
     }
-
-//    fun emit(data: DataType)
 
     protected abstract suspend fun loadData(param: Param? = null): DataType
 }

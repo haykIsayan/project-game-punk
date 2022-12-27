@@ -1,16 +1,8 @@
-package com.example.project_game_punk.features.discover.trending
+package com.example.project_game_punk.features.discover.recommended
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.example.project_game_punk.features.common.composables.GameCarouselItem
 import com.example.project_game_punk.features.common.composables.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
@@ -20,25 +12,13 @@ import com.example.project_game_punk.features.discover.DiscoverGameCarouselLoadi
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
 
 @Composable
-fun TrendingGamesSection(
-    viewModel: TrendingGamesViewModel,
-    sheetController: GameProgressBottomSheetController,
+fun RecommendedGamesSection(
+    viewModel: RecommendedGamesViewModel,
+    sheetController: GameProgressBottomSheetController
 ) {
     val state = viewModel.getState().observeAsState().value
     Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SectionTitle(title = "Trending Games")
-            IconButton(modifier = Modifier.size(50.dp, 50.dp),
-                onClick = {
-
-                }) {
-                Icon(Icons.Filled.KeyboardArrowRight, "", tint = Color.White)
-            }
-        }
+        SectionTitle(title = "Games for you")
         LoadableStateWrapper(
             state = state,
             failState = { errorMessage -> DiscoverGameFailState(errorMessage) { viewModel.loadState() } },

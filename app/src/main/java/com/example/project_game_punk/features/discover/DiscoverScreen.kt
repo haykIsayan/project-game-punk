@@ -12,16 +12,15 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
-import com.example.project_game_punk.features.discover.featured.FeaturedGameSection
-import com.example.project_game_punk.features.discover.featured.FeaturedGameViewModel
 import com.example.project_game_punk.features.discover.playing.NowPlayingSection
 import com.example.project_game_punk.features.discover.playing.NowPlayingViewModel
-import com.example.project_game_punk.features.discover.recent.RecommendedGameSection
-import com.example.project_game_punk.features.discover.recent.RecommendedGameViewModel
+import com.example.project_game_punk.features.discover.recent.RecentGamesSection
+import com.example.project_game_punk.features.discover.recent.RecentGamesViewModel
+import com.example.project_game_punk.features.discover.recommended.RecommendedGamesSection
+import com.example.project_game_punk.features.discover.recommended.RecommendedGamesViewModel
 import com.example.project_game_punk.features.discover.trending.TrendingGamesSection
 import com.example.project_game_punk.features.discover.trending.TrendingGamesViewModel
 import com.example.project_game_punk.features.main.MainNavigationTab
@@ -29,9 +28,10 @@ import com.example.project_game_punk.features.main.MainNavigationTab
 @Composable
 fun DiscoverScreen(
     nowPlayingViewModel: NowPlayingViewModel?,
-    featuredGameViewModel: FeaturedGameViewModel?,
     trendingGamesViewModel: TrendingGamesViewModel?,
-    recommendedGameViewModel: RecommendedGameViewModel?,
+    recentGamesViewModel: RecentGamesViewModel?,
+    recommendedGamesViewModel: RecommendedGamesViewModel?,
+
     navController: NavHostController,
     sheetController: GameProgressBottomSheetController
 ) {
@@ -42,38 +42,36 @@ fun DiscoverScreen(
                 NowPlayingSection(nowPlayingViewModel)
             }
         }
-
-        if (featuredGameViewModel != null) {
-            item {
-                FeaturedGameSection(
-                    featuredGameViewModel,
-                    sheetController
-                )
-            }
-        }
-
         item {
             SearchCta(navController)
         }
-
         if (trendingGamesViewModel != null) {
             item {
-                TrendingGamesSection(trendingGamesViewModel)
+                TrendingGamesSection(
+                    trendingGamesViewModel,
+                    sheetController,
+                )
             }
         }
-        if (recommendedGameViewModel != null) {
+//        if (recentGamesViewModel != null) {
+//            item {
+//                RecentGamesSection(
+//                    recentGamesViewModel,
+//                    sheetController,
+//                )
+//            }
+//        }
+        if (recommendedGamesViewModel != null) {
             item {
-                RecommendedGameSection(
-                    recommendedGameViewModel,
+                RecommendedGamesSection(
+                    recommendedGamesViewModel,
                     sheetController
                 )
             }
         }
-
         item {
             Spacer(modifier = Modifier.height(20.dp))
         }
-
     }
 }
 

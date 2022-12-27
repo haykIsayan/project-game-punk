@@ -16,6 +16,6 @@ class NowPlayingViewModel @Inject constructor(
     }
 
     override suspend fun loadData(param: Unit?): List<GameEntity> {
-        return getNowPlayingGamesInteractor.execute()
+        return getNowPlayingGamesInteractor.execute().reversed()
     }
 }

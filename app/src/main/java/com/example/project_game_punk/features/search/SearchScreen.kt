@@ -16,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.project_game_punk.domain.interactors.game.GetGameQueryWithRecentDatesInteractor
+import com.example.project_game_punk.domain.models.GameQueryModel
 import com.example.project_game_punk.domain.models.GameSort
 import com.example.project_game_punk.features.common.composables.GameListItem
+import com.example.project_game_punk.features.common.composables.GamePunkDivider
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
@@ -30,7 +32,7 @@ fun SearchScreen(
     val state = searchResultsViewModel.getState().observeAsState().value
     Column {
         SearchField { text ->
-            searchResultsViewModel.searchGames(GetGameQueryWithRecentDatesInteractor().execute().copy(query = text, sort = GameSort.none))
+            searchResultsViewModel.searchGames(GameQueryModel(query = text, sort = GameSort.none))
         }
         LoadableStateWrapper(
             state = state,
@@ -61,6 +63,7 @@ fun SearchScreen(
                             )
                         }
                     )
+                    GamePunkDivider()
                 }
             }
         }

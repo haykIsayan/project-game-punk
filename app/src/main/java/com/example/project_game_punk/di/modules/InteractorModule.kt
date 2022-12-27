@@ -64,6 +64,18 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesGetRecentGamesInteractor(
+        getGameQueryWithRecentDatesInteractor: GetGameQueryWithRecentDatesInteractor,
+        getGamesInteractor: GetGamesInteractor,
+    ): GetRecentGamesInteractor {
+        return GetRecentGamesInteractor(
+            getGameQueryWithRecentDatesInteractor,
+            getGamesInteractor,
+        )
+    }
+
+    @Provides
+    @Singleton
     fun providesGetRecommendedGamesInteractor(
         getUserGameQueryInteractor: GetUserGameQueryInteractor,
         getGamesInteractor: GetGamesInteractor,
@@ -93,12 +105,10 @@ object InteractorModule {
     @Provides
     @Singleton
     fun providesGetMainGameCollectionInteractor(
-        applyGameMetaInteractor: ApplyGameMetaInteractor,
         getGameCollectionInteractor: GetGameCollectionInteractor,
         createGameCollectionInteractor: CreateGameCollectionInteractor,
     ): GetTrackedGamesInteractor {
         return GetTrackedGamesInteractor(
-            applyGameMetaInteractor,
             GameCollectionFactoryImpl(),
             getGameCollectionInteractor,
             createGameCollectionInteractor

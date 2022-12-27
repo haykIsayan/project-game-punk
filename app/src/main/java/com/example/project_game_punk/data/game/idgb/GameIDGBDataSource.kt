@@ -2,14 +2,20 @@ package com.example.project_game_punk.data.game.idgb
 
 import com.example.project_game_punk.data.game.idgb.api.IDGBApi
 import com.example.project_game_punk.data.game.idgb.api.IDGBAuthApi
+import com.example.project_game_punk.data.game.idgb.api.TwitchApi
 import com.example.project_game_punk.data.game.rawg.RawgApi
 import com.example.project_game_punk.data.game.rawg.models.GameModel
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.interfaces.GameRepository
+import com.example.project_game_punk.domain.models.GameFilter
 import com.example.project_game_punk.domain.models.GameQueryModel
+import com.example.project_game_punk.domain.models.GameSort
+import com.example.project_game_punk.features.common.commaSeparated
+import com.example.project_game_punk.features.common.dateToUnix
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import java.util.*
 
 class GameIDGBDataSource(
     private val clientId: String,
@@ -17,6 +23,7 @@ class GameIDGBDataSource(
     private val idgbApi: IDGBApi,
     private val rawgApi: RawgApi,
     private val idgbAuthApi: IDGBAuthApi,
+    private val twitchApi: TwitchApi,
     private val scope: CoroutineScope
     ): GameRepository {
 
@@ -31,13 +38,42 @@ class GameIDGBDataSource(
 
     override suspend fun getGames(gameQuery: GameQueryModel): List<GameEntity> {
         val games = withAuthenticatedHeaders { headers ->
-
-            val fields = StringBuilder()
+             val fields = StringBuilder()
+            val ids = when {
+                gameQuery.filter == GameFilter.trending -> {
+                    val twitchResponse = twitchApi.getTopGamesOnTwitch(headers)
+                    twitchResponse.data.filter { !it.igdb_id.isNullOrEmpty() }
+                        .commaSeparated {
+                            it.igdb_id ?: ""
+                        }
+                }
+                gameQuery.ids.isNotEmpty() -> {
+                    gameQuery.ids.commaSeparated { it }
+                }
+                else -> {
+                    null
+                }
+            }
             if (gameQuery.query.isNotEmpty()) {
                 fields.append("search \"${gameQuery.query}\";")
             }
-            fields.append("fields name,cover,screenshots,artworks,slug;")
-            fields.append("where category = 0;")
+            fields.append("fields name,cover,slug,follows,rating;")
+            fields.append(
+                "where category = 0 " +
+                        (if (!ids.isNullOrEmpty())  "& id = ($ids)" else "" ) +
+                        "${if (gameQuery.filter == GameFilter.highestRated) "& rating > 40" else ""} " +
+                        (if (gameQuery.dateRangeStart.isNotEmpty()) "& first_release_date >= 16405920000" else "") +
+                        (if (gameQuery.dateRangeEnd.isNotEmpty()) "& first_release_date <= ${gameQuery.dateRangeEnd.dateToUnix()}" else "") +
+                        ";"
+            )
+            when (gameQuery.sort) {
+                GameSort.trending -> "follows"
+                GameSort.highestRated -> "rating"
+                GameSort.recent -> "first_release_date"
+                else -> null
+            }?.let { sort ->
+                fields.append("sort $sort desc;")
+            }
 
             idgbApi.getGames(
                 headers,
@@ -129,6 +165,7 @@ class GameIDGBDataSource(
             val banner = results.find {
                 it.slug == gameSlug
                         || (gameSlug != null && it.slug?.contains(gameSlug) == true)
+                        || gameSlug?.contains(it.slug ?: "") == true
             }?.background_image
             game.copy(banner = banner)
         }
