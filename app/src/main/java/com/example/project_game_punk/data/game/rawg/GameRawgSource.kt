@@ -13,6 +13,7 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
             GameSort.trending -> "-added"
             GameSort.highestRated -> "-rating"
             GameSort.none -> null
+            GameSort.recent -> null
         }
         val dates = if (gameQuery.dateRangeEnd.isNotEmpty() && gameQuery.dateRangeStart.isNotEmpty()) {
             val x = "${gameQuery.dateRangeStart},${gameQuery.dateRangeEnd}"
@@ -20,7 +21,7 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
         } else {
             "2021-10-30,2022-10-30"
         }
-        val metacritic = if (gameQuery.isHighestRated) "70,100" else ""
+        val metacritic = /*if (gameQuery.isHighestRated) "70,100" else*/ ""
 //        val ids = "650608,274758,58618"
         val ids = null
         val response = api.getGames(

@@ -12,14 +12,13 @@ class GetNowPlayingGamesInteractor(
     suspend fun execute(): List<GameEntity> {
         val collection = trackedGamesCache.getMainGameCollection()
         val games = collection.games
-        val gamesWithMeta = applyGameMetaInteractor.execute(
-            games,
-            GameMetaQueryModel(banner = true)
-        )
-        return gamesWithMeta.filter {
+        val nowPlayingGames = games.filter {
             it.gameProgress == GameProgress.PlayingGameProgress
                     || it.gameProgress == GameProgress.ReplayingGameProgress
         }
-
+        return applyGameMetaInteractor.execute(
+            nowPlayingGames,
+            GameMetaQueryModel(banner = true)
+        )
     }
 }

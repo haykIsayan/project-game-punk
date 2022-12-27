@@ -6,6 +6,7 @@ import com.example.project_game_punk.R
 import com.example.project_game_punk.data.game.idgb.GameIDGBDataSource
 import com.example.project_game_punk.data.game.idgb.api.IDGBApi
 import com.example.project_game_punk.data.game.idgb.api.IDGBAuthApi
+import com.example.project_game_punk.data.game.idgb.api.TwitchApi
 import com.example.project_game_punk.data.game.rawg.RawgApi
 import com.example.project_game_punk.data.game.rawg.RawgClientInterceptor
 import com.example.project_game_punk.data.game_collection.GameCollectionDataSource
@@ -32,8 +33,13 @@ object DataModule {
     @Singleton
     fun providesGameRepository(@ApplicationContext context: Context): GameRepository {
 
-
         val key = context.getString(R.string.rawg_api_key)
+
+        val twitchApi = Retrofit.Builder()
+            .client(OkHttpClient.Builder().build())
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(context.getString(R.string.twitch_api_base_url)).build()
+            .create(TwitchApi::class.java)
 
         val idgbAuthApi = Retrofit.Builder()
             .client(OkHttpClient.Builder().build())
@@ -42,9 +48,7 @@ object DataModule {
             .create(IDGBAuthApi::class.java)
 
         val idgbApi = Retrofit.Builder()
-            .client(OkHttpClient.Builder()
-//                .addInterceptor(RawgClientInterceptor(key))
-                .build())
+            .client(OkHttpClient.Builder().build())
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(context.getString(R.string.idgb_api_base_url)).build()
@@ -64,18 +68,9 @@ object DataModule {
             idgbApi,
             rawgApi,
             idgbAuthApi,
+            twitchApi,
             GlobalScope
         )
-
-//        val key = context.getString(R.string.rawg_api_key)
-//        val rawgApi = Retrofit.Builder()
-//            .client(OkHttpClient.Builder()
-//                .addInterceptor(RawgClientInterceptor(key))
-//                .build())
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .baseUrl(context.getString(R.string.rawg_api_base_url)).build()
-//            .create(RawgApi::class.java)
-//        return GameRawgSource(rawgApi)
     }
 
     @Provides

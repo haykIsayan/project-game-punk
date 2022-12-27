@@ -1,4 +1,4 @@
-package com.example.project_game_punk.features.discover.recent
+package com.example.project_game_punk.features.discover.recommended
 
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.entity.GameProgress
@@ -32,7 +32,7 @@ class GameSuccessState(data: List<GameEntity>): ViewModelState.SuccessState<List
 }
 
 @HiltViewModel
-class RecommendedGameViewModel @Inject constructor(
+class RecommendedGamesViewModel @Inject constructor(
     private val getRecommendedGamesInteractor: GetRecommendedGamesInteractor,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor
 ): StateViewModel<List<GameEntity>, Unit>() {
