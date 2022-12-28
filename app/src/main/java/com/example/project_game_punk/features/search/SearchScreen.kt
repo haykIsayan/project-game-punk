@@ -43,7 +43,7 @@ fun SearchScreen(
                 Box(contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(250.dp)
+                        .fillMaxHeight()
                         .padding(6.dp)) {
                     CircularProgressIndicator()
                 }

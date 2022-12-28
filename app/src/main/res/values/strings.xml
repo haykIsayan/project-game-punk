@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">project-game-punk</string>
+    <string name="app_name">Gamepunk</string>
 
     <string name="twitch_api_base_url">https://api.twitch.tv/helix/</string>
     <string name="idgb_auth_api_base_url">https://id.twitch.tv/oauth2/</string>
