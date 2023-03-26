@@ -1,5 +1,7 @@
 package com.example.project_game_punk.features.common.composables
 
+import android.content.Intent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -12,14 +14,29 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.project_game_punk.domain.entity.GameEntity
+import com.example.project_game_punk.features.game_details.GameDetailsActivity
 
 @Composable
 fun GameListItem(
     game: GameEntity,
     trailingButton: @Composable () -> Unit = {},
 ) {
+    val context = LocalContext.current
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .clickable {
+                context.startActivity(
+                    Intent(
+                        context,
+                        GameDetailsActivity::class.java
+                    ).apply {
+                        putExtra(
+                            GameDetailsActivity.GAME_ID_INTENT_EXTRA,
+                            game.id
+                        )
+                    }
+                )
+            },
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
             AsyncImage(

@@ -1,6 +1,8 @@
 package com.example.project_game_punk.domain.interfaces
 
 import com.example.project_game_punk.domain.entity.GameEntity
+import com.example.project_game_punk.domain.entity.GameMetaQueryModel
+import com.example.project_game_punk.domain.entity.GamePlatformEntity
 import com.example.project_game_punk.domain.models.GameQueryModel
 
 interface GameRepository {
@@ -8,5 +10,11 @@ interface GameRepository {
 
     suspend fun applyBanners(games: List<GameEntity>): List<GameEntity>
 
-    suspend fun getGame(id: String): GameEntity
+    suspend fun getGamePlatforms(id: String): List<GamePlatformEntity>
+
+    suspend fun getScreenshots(id: String): List<String>
+
+    suspend fun getGameImages(id: String): List<String>
+
+    suspend fun getGame(id: String, gameMetaQuery: GameMetaQueryModel): GameEntity
 }

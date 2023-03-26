@@ -2,6 +2,7 @@ package com.example.project_game_punk.data.game.rawg.models
 
 import androidx.room.*
 import com.example.project_game_punk.domain.entity.GameEntity
+import com.example.project_game_punk.domain.entity.GamePlatformEntity
 import com.example.project_game_punk.domain.entity.GameProgress
 
 @Entity
@@ -14,14 +15,20 @@ data class GameModel(
     @Ignore override val banner: String? = null,
     @Ignore val screenshots: List<String>? = null,
     @Ignore val artworks: List<String>? = null,
+    @Ignore val platforms: List<String>? = null,
     @Ignore val cover: String? = null,
     @Ignore val follows: Int? = null,
     @Ignore val added: Int = 0,
     @Ignore val rating: Float? = null,
     @Ignore override val metaCriticScore: Int = 0,
     @Ignore override val isAdded: Boolean = false,
+    @Ignore override val gamePlatforms: List<GamePlatformEntity>? = null,
+    @Ignore val summary: String? = null,
     @ColumnInfo(name = "game_progress_status") var gameProgressStatus: GameProgressStatus? = null,
 ): GameEntity {
+
+    override val description: String?
+        get() = summary
 
     override val numAdded: Int
         get() = added

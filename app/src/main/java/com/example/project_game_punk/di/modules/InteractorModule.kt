@@ -167,5 +167,37 @@ object InteractorModule {
             trackedGamesCache
         )
     }
+
+    @Provides
+    @Singleton
+    fun providesGetGameInteractor(
+        applyGameMetaInteractor: ApplyGameMetaInteractor,
+        gameRepository: GameRepository,
+        trackedGamesCache: TrackedGamesCache
+    ): GetGameInteractor {
+        return GetGameInteractor(
+            applyGameMetaInteractor,
+            gameRepository,
+            trackedGamesCache
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetGamePlatformsInteractor(
+        gameRepository: GameRepository
+    ): GetGamePlatformsInteractor {
+        return GetGamePlatformsInteractor(
+            gameRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetGameScreenshotsInteractor(
+        gameRepository: GameRepository
+    ): GetGameScreenshotsInteractor {
+        return GetGameScreenshotsInteractor(gameRepository)
+    }
 }
 

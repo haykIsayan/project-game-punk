@@ -24,4 +24,5 @@
     <string name="discover_nav_title">Discover</string>
     <string name="profile_nav_title">Profile</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_game_details">GameDetailsActivity</string>
 </resources>

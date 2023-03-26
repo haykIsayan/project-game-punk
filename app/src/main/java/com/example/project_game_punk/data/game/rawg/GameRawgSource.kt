@@ -1,9 +1,9 @@
 package com.example.project_game_punk.data.game.rawg
 
-import android.util.Log
 import com.example.project_game_punk.domain.entity.GameEntity
 import com.example.project_game_punk.domain.interfaces.GameRepository
-import com.example.project_game_punk.data.game.rawg.models.GameModel
+import com.example.project_game_punk.domain.entity.GameMetaQueryModel
+import com.example.project_game_punk.domain.entity.GamePlatformEntity
 import com.example.project_game_punk.domain.models.GameQueryModel
 import com.example.project_game_punk.domain.models.GameSort
 
@@ -35,14 +35,26 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
             searchExact = false,
             ids = ids
         )
-        return response.results
+        return emptyList()
     }
 
     override suspend fun applyBanners(games: List<GameEntity>): List<GameEntity> {
         return games
     }
 
-    override suspend fun getGame(id: String): GameEntity {
-        return GameModel(id = "asdf", name = "sgsdfg")
+    override suspend fun getGamePlatforms(id: String): List<GamePlatformEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getScreenshots(id: String): List<String> {
+        return emptyList()
+    }
+
+    override suspend fun getGameImages(id: String): List<String> {
+        return emptyList()
+    }
+
+    override suspend fun getGame(id: String, gameMetaQuery: GameMetaQueryModel): GameEntity {
+        TODO("Not yet implemented")
     }
 }
