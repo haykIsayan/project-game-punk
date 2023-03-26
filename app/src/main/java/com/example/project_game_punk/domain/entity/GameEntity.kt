@@ -3,6 +3,7 @@ package com.example.project_game_punk.domain.entity
 interface GameEntity {
     val id: String?
     val name: String?
+    val description: String?
     val backgroundImage: String?
     val banner: String?
     val banners: List<String>?
@@ -11,6 +12,7 @@ interface GameEntity {
     val metaCriticScore: Int
     val isAdded: Boolean
     val gameProgress: GameProgress
+    val gamePlatforms: List<GamePlatformEntity>?
 
     fun updateGameProgress(gameProgress: GameProgress): GameEntity
 }
