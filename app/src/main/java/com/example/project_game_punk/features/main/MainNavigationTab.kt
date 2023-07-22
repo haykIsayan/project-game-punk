@@ -34,8 +34,8 @@ sealed class MainNavigationTab(
 
     object Items {
         val items = listOf(
-            SearchMainNavigationTab,
             DiscoverMainNavigationTab,
+            SearchMainNavigationTab,
             ProfileMainNavigationTab
         )
     }

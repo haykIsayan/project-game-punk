@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.project_game_punk.domain.entity.GamePlatformEntity
+import com.example.game_punk_domain.domain.entity.GamePlatformEntity
 import com.example.project_game_punk.features.common.composables.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 

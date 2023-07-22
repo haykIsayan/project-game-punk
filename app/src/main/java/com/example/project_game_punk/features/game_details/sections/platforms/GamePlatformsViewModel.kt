@@ -1,7 +1,7 @@
 package com.example.project_game_punk.features.game_details.sections.platforms
 
-import com.example.project_game_punk.domain.entity.GamePlatformEntity
-import com.example.project_game_punk.domain.interactors.game.GetGamePlatformsInteractor
+import com.example.game_punk_domain.domain.entity.GamePlatformEntity
+import com.example.game_punk_domain.domain.interactors.game.GetGamePlatformsInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

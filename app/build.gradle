@@ -51,6 +51,10 @@ dependencies {
     implementation 'androidx.compose.material3:material3:1.0.0-alpha01'
 
 
+
+    implementation project(path: ":game_punk_game_data")
+    implementation project(path: ":game_punk_domain")
+
     // Room
     def room_version = "2.3.0"
 

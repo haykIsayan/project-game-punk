@@ -1,7 +1,7 @@
 package com.example.project_game_punk.di.modules
 
-import com.example.project_game_punk.domain.TrackedGamesCache
-import com.example.project_game_punk.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
+import com.example.game_punk_domain.domain.TrackedGamesCache
+import com.example.game_punk_domain.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

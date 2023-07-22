@@ -1,15 +1,14 @@
 package com.example.project_game_punk.features.search
 
-import com.example.project_game_punk.domain.entity.GameEntity
-import com.example.project_game_punk.domain.entity.GameProgress
-import com.example.project_game_punk.domain.interactors.game.GetGameQueryWithRecentDatesInteractor
+import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.interactors.game.GetGameQueryWithRecentDatesInteractor
 import com.example.project_game_punk.features.common.StateViewModel
-import com.example.project_game_punk.domain.interactors.game.GetGamesInteractor
-import com.example.project_game_punk.domain.interactors.game.GetTrendingGamesInteractor
-import com.example.project_game_punk.domain.interactors.game.UpdateGameProgressInteractor
-import com.example.project_game_punk.data.game.rawg.models.GameModel
-import com.example.project_game_punk.domain.models.GameQueryModel
-import com.example.project_game_punk.domain.models.GameSort
+import com.example.game_punk_domain.domain.interactors.game.GetGamesInteractor
+import com.example.game_punk_domain.domain.interactors.game.GetTrendingGamesInteractor
+import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
+import com.example.game_punk_domain.domain.models.GameQueryModel
+import com.example.game_punk_domain.domain.models.GameSort
 import com.example.project_game_punk.features.common.executeIO
 import com.example.project_game_punk.features.common.update
 import com.example.project_game_punk.features.discover.recommended.GameSuccessState
@@ -36,13 +35,13 @@ class SearchResultsViewModel @Inject constructor(
     fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
         executeIO(
             Dispatchers.IO,
-            onBefore = { updateGames(game.updateGameProgress(gameProgress) as GameModel) },
-            execute = { updateGameProgressInteractor.execute(game as GameModel, gameProgress) },
-            onFail = { updateGames(game as GameModel) },
+            onBefore = { updateGames(game.updateGameProgress(gameProgress)) },
+            execute = { updateGameProgressInteractor.execute(game, gameProgress) },
+            onFail = { updateGames(game) },
         )
     }
 
-    private fun updateGames(game: GameModel) {
+    private fun updateGames(game: GameEntity) {
         val games = getData()
         val updatedGames = games?.toMutableList()?.apply { update(game) }?.toList()
         updatedGames?.apply { emit(GameSuccessState(updatedGames)) }

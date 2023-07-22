@@ -10,10 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.project_game_punk.domain.entity.GameEntity
-import com.example.project_game_punk.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameProgress
 
 @Composable
 fun GameProgressButton(
@@ -23,10 +24,11 @@ fun GameProgressButton(
     onProgressSelected: (GameEntity, GameProgress) -> Unit
 ) {
     val context = LocalContext.current
-    val color = colorResource(game.gameProgress.color).copy(alpha = 0.6f)
-    val textColor = Color.White
+    val gameProgress = game.gameProgress
+    val color = colorResource(GameProgressMapper.color(gameProgress)).copy(alpha = 0.6f)
+    val textColor = colorResource(GameProgressMapper.displayTextColor(gameProgress))
     val borderColor =  Color.White
-    val text = context.getString(game.gameProgress.displayText).uppercase()
+    val text = stringResource(GameProgressMapper.displayText(gameProgress = gameProgress)).uppercase()
 
     val onClick = {
         if (game.gameProgress == GameProgress.NotFollowingGameProgress) {

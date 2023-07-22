@@ -1,15 +1,15 @@
 package com.example.project_game_punk.di.modules
 
-import com.example.project_game_punk.domain.TrackedGamesCache
-import com.example.project_game_punk.domain.interactors.game.*
-import com.example.project_game_punk.domain.interactors.game_collection.AddGameToGameCollectionInteractor
-import com.example.project_game_punk.domain.interactors.game_collection.CreateGameCollectionInteractor
-import com.example.project_game_punk.domain.interactors.game_collection.GetGameCollectionInteractor
-import com.example.project_game_punk.domain.interactors.game_collection.RemoveGameFromGameCollectionInteractor
-import com.example.project_game_punk.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
-import com.example.project_game_punk.domain.interfaces.GameCollectionRepository
-import com.example.project_game_punk.domain.interfaces.GameRepository
-import com.example.project_game_punk.data.game.rawg.models.GameCollectionFactoryImpl
+import com.example.game_punk_collection_data.data.game.rawg.models.GameCollectionFactoryImpl
+import com.example.game_punk_domain.domain.TrackedGamesCache
+import com.example.game_punk_domain.domain.interactors.game.*
+import com.example.game_punk_domain.domain.interactors.game_collection.AddGameToGameCollectionInteractor
+import com.example.game_punk_domain.domain.interactors.game_collection.CreateGameCollectionInteractor
+import com.example.game_punk_domain.domain.interactors.game_collection.GetGameCollectionInteractor
+import com.example.game_punk_domain.domain.interactors.game_collection.RemoveGameFromGameCollectionInteractor
+import com.example.game_punk_domain.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
+import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
+import com.example.game_punk_domain.domain.interfaces.GameRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
