@@ -1,12 +1,11 @@
 package com.example.project_game_punk.features.common.composables.grids
 
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import com.example.project_game_punk.data.game.rawg.models.GameModel
+import com.example.game_punk_domain.domain.entity.GameEntity
 
 @Composable
-fun GamePunkGrid(items: List<GameModel>) {
-    val splits = mutableListOf<List<GameModel>>()
+fun GamePunkGrid(items: List<GameEntity>) {
+    val splits = mutableListOf<List<GameEntity>>()
     var indess = 0
     while (indess <= items.size) {
         val section = items.subList(indess, indess + 3)

@@ -1,10 +1,10 @@
 package com.example.project_game_punk.features.discover.recommended
 
-import com.example.project_game_punk.domain.entity.GameEntity
-import com.example.project_game_punk.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameProgress
 import com.example.project_game_punk.features.common.StateViewModel
-import com.example.project_game_punk.domain.interactors.game.GetRecommendedGamesInteractor
-import com.example.project_game_punk.domain.interactors.game.UpdateGameProgressInteractor
+import com.example.game_punk_domain.domain.interactors.game.GetRecommendedGamesInteractor
+import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
 import com.example.project_game_punk.features.common.ViewModelState
 import com.example.project_game_punk.features.common.executeIO
 import com.example.project_game_punk.features.common.update

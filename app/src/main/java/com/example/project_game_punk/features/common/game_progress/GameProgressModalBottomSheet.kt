@@ -12,11 +12,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.project_game_punk.domain.entity.GameEntity
-import com.example.project_game_punk.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.project_game_punk.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -45,18 +47,18 @@ fun GameProgressModalBottomSheet(
                 .padding(2.dp)
                 .clip(RoundedCornerShape(10.dp)),
             colors = ButtonDefaults.outlinedButtonColors(
-                backgroundColor = colorResource(gameProgress.color),
+                backgroundColor = colorResource(GameProgressMapper.color(gameProgress)),
             ),
             border = BorderStroke(
                 width = 1.dp,
-                color = colorResource(gameProgress.textColor),
+                color = colorResource(R.color.white),
             ),
             onClick = {
             onGameProgressItemTapped.invoke(gameProgress)
         }) {
             Text(
-                text = context.getString(gameProgress.actionText),
-                color = colorResource(gameProgress.textColor)
+                text = stringResource(GameProgressMapper.actionText(gameProgress)),
+                color = colorResource(GameProgressMapper.displayTextColor(gameProgress))
             )
         }
     }

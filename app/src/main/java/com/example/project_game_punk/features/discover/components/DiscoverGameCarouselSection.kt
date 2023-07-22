@@ -3,7 +3,7 @@ package com.example.project_game_punk.features.discover.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import com.example.project_game_punk.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.features.common.composables.GameCarouselItem
 import com.example.project_game_punk.features.common.composables.ItemCarousel

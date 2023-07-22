@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "project-game-punk"
 include ':app'
+include ':game_punk_domain'
+include ':game_punk_game_data'

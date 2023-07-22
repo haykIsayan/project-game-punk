@@ -1,6 +1,6 @@
 package com.example.project_game_punk.features.game_details.sections.screenshots
 
-import com.example.project_game_punk.domain.interactors.game.GetGameScreenshotsInteractor
+import com.example.game_punk_domain.domain.interactors.game.GetGameScreenshotsInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

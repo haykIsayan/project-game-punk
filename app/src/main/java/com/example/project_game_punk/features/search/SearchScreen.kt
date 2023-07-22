@@ -15,9 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.project_game_punk.domain.interactors.game.GetGameQueryWithRecentDatesInteractor
-import com.example.project_game_punk.domain.models.GameQueryModel
-import com.example.project_game_punk.domain.models.GameSort
+import com.example.game_punk_domain.domain.models.GameQueryModel
+import com.example.game_punk_domain.domain.models.GameSort
 import com.example.project_game_punk.features.common.composables.GameListItem
 import com.example.project_game_punk.features.common.composables.GamePunkDivider
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper

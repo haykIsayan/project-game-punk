@@ -2,17 +2,17 @@ package com.example.project_game_punk.di.modules
 
 import android.content.Context
 import androidx.room.Room
+import com.example.game_punk_collection_data.data.game.idgb.GameIDGBDataSource
+import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
+import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
+import com.example.game_punk_collection_data.data.game.idgb.api.TwitchApi
+import com.example.game_punk_collection_data.data.game.rawg.RawgApi
+import com.example.game_punk_collection_data.data.game.rawg.RawgClientInterceptor
+import com.example.game_punk_collection_data.data.game_collection.GameCollectionDataSource
+import com.example.game_punk_collection_data.data.game_collection.GameCollectionDatabase
 import com.example.project_game_punk.R
-import com.example.project_game_punk.data.game.idgb.GameIDGBDataSource
-import com.example.project_game_punk.data.game.idgb.api.IDGBApi
-import com.example.project_game_punk.data.game.idgb.api.IDGBAuthApi
-import com.example.project_game_punk.data.game.idgb.api.TwitchApi
-import com.example.project_game_punk.data.game.rawg.RawgApi
-import com.example.project_game_punk.data.game.rawg.RawgClientInterceptor
-import com.example.project_game_punk.data.game_collection.GameCollectionDataSource
-import com.example.project_game_punk.data.game_collection.GameCollectionDatabase
-import com.example.project_game_punk.domain.interfaces.GameCollectionRepository
-import com.example.project_game_punk.domain.interfaces.GameRepository
+import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
+import com.example.game_punk_domain.domain.interfaces.GameRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

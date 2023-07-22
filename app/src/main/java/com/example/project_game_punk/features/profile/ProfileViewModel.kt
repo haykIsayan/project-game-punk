@@ -1,10 +1,9 @@
 package com.example.project_game_punk.features.profile
 
-import com.example.project_game_punk.domain.TrackedGamesCache
-import com.example.project_game_punk.domain.entity.GameEntity
-import com.example.project_game_punk.domain.entity.GameProgress
-import com.example.project_game_punk.domain.interactors.game.UpdateGameProgressInteractor
-import com.example.project_game_punk.data.game.rawg.models.GameModel
+import com.example.game_punk_domain.domain.TrackedGamesCache
+import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.features.common.executeIO
 import com.example.project_game_punk.features.common.update
@@ -26,13 +25,13 @@ class ProfileViewModel @Inject constructor(
     fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
         executeIO(
             Dispatchers.IO,
-            onBefore = { updateGames(game.updateGameProgress(gameProgress) as GameModel) },
-            execute = { updateGameProgressInteractor.execute(game as GameModel, gameProgress) },
-            onFail = { updateGames(game as GameModel) },
+            onBefore = { updateGames(game.updateGameProgress(gameProgress)) },
+            execute = { updateGameProgressInteractor.execute(game, gameProgress) },
+            onFail = { updateGames(game) },
         )
     }
 
-    private fun updateGames(game: GameModel) {
+    private fun updateGames(game: GameEntity) {
         val games = getData()
         val updatedGames = games?.toMutableList()?.apply { update(game) }?.toList()
         updatedGames?.apply { emit(GameSuccessState(updatedGames)) }
