@@ -36,7 +36,7 @@ fun GameHeaderBackgroundSection(screenshots: List<String>) {
         scope.launch(Dispatchers.IO) {
             while (state.currentPage < state.pageCount) {
                 // Call scroll to on pagerState
-                delay(3000)
+                delay(5000)
                 withContext(Dispatchers.Main) {
                     if (state.currentPage == state.pageCount - 1) {
                         state.animateScrollToPage(0, )

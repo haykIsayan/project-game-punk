@@ -111,12 +111,10 @@ private fun GameTitle(gameDetailsViewModel: GameDetailsViewModel) {
             .height(60.dp)
         )
     }) { game ->
-
         game?.name?.let {
             Box(
                 modifier = Modifier
                     .height(60.dp)
-                    .background(Color.DarkGray)
                     .fillMaxWidth()
             ) {
                 Text(
