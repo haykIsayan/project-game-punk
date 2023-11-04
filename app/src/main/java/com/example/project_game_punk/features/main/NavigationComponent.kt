@@ -25,6 +25,7 @@ fun NavigationComponent(
     ) {
         composable(route = MainNavigationTab.DiscoverMainNavigationTab.route) {
             DiscoverScreen(
+                gameNewsViewModel = hiltViewModel(),
                 nowPlayingViewModel = hiltViewModel(),
                 trendingGamesViewModel = hiltViewModel(),
                 recentGamesViewModel = null,

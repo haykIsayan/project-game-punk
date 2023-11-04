@@ -54,6 +54,10 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
         return emptyList()
     }
 
+    override suspend fun getGameSteamId(gameId: String): String {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getGame(id: String, gameMetaQuery: GameMetaQueryModel): GameEntity {
         TODO("Not yet implemented")
     }

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Gamepunk</string>
 
+    <string name="steam_api_base_url">https://api.steampowered.com/</string>
     <string name="twitch_api_base_url">https://api.twitch.tv/helix/</string>
     <string name="idgb_auth_api_base_url">https://id.twitch.tv/oauth2/</string>
     <string name="idgb_api_base_url">https://api.igdb.com/v4/</string>

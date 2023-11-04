@@ -27,7 +27,9 @@ data class GameModel(
     @Ignore override val isAdded: Boolean = false,
     @Ignore override val gamePlatforms: List<GamePlatformEntity>? = null,
     @Ignore val summary: String? = null,
+    @Ignore val websites: List<String>? = null,
     @ColumnInfo(name = "game_progress_status") var gameProgressStatus: GameProgressStatus? = null,
+    @Ignore override val steamId: String? = null,
 ): GameEntity {
 
     override val description: String?

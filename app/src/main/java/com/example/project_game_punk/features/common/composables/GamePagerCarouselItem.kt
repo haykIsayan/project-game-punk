@@ -43,7 +43,7 @@ fun GamePagerCarouselItem(game: GameEntity) {
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                Color.Black.copy(alpha = 0.8f)
+                                Color.Black.copy(alpha = 0.9f)
                             )
                         )
                     ) .fillMaxWidth().align(Alignment.BottomCenter)

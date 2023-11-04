@@ -6,4 +6,5 @@ data class GameMetaQueryModel(
     val platforms: Boolean = false,
     val screenshots: Boolean = false,
     val synopsis: Boolean = false,
+    val steamId: Boolean = false
 )
