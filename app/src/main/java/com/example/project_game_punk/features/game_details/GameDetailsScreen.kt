@@ -5,6 +5,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.project_game_punk.features.game_details.sections.GameDetailsHeader
 import com.example.project_game_punk.features.game_details.sections.GameSynopsisSection
+import com.example.project_game_punk.features.game_details.sections.news.GameDetailsNewsSection
+import com.example.project_game_punk.features.game_details.sections.news.GameDetailsNewsViewModel
 import com.example.project_game_punk.features.game_details.sections.platforms.GamePlatformsSection
 import com.example.project_game_punk.features.game_details.sections.platforms.GamePlatformsViewModel
 import com.example.project_game_punk.features.game_details.sections.screenshots.GameScreenshotsViewModel
@@ -13,6 +15,7 @@ import com.example.project_game_punk.features.game_details.sections.screenshots.
 fun GameDetailsScreen(
     gameId: String?,
     gameDetailsViewModel: GameDetailsViewModel,
+    gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel
 ) {
@@ -22,9 +25,11 @@ fun GameDetailsScreen(
             gameDetailsViewModel.loadGame(id = gameId)
             gamePlatformsViewModel.loadState(param = gameId)
             gameScreenshotsViewModel.loadState(param = gameId)
+            gameDetailsNewsViewModel.loadState(param = gameId)
             GameDetailsScreenContent(
                 gameDetailsViewModel = gameDetailsViewModel,
                 gamePlatformsViewModel = gamePlatformsViewModel,
+                gameDetailsNewsViewModel = gameDetailsNewsViewModel,
                 gameScreenshotsViewModel = gameScreenshotsViewModel
             )
         }
@@ -40,6 +45,7 @@ private fun NoGameIdState() {
 private fun GameDetailsScreenContent(
     gameDetailsViewModel: GameDetailsViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
+    gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel
 ) {
 
@@ -61,6 +67,10 @@ private fun GameDetailsScreenContent(
 
         item {
             GameSynopsisSection(gameDetailsViewModel = gameDetailsViewModel)
+        }
+
+        item {
+            GameDetailsNewsSection(gameNewsViewModel = gameDetailsNewsViewModel)
         }
     }
 }

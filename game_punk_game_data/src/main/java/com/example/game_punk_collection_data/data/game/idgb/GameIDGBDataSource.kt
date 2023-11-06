@@ -6,6 +6,7 @@ import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
+import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
 import com.example.game_punk_domain.domain.entity.GamePlatformEntity
@@ -187,7 +188,7 @@ class GameIDGBDataSource(
             idgbApi.getPlatformLogos(
                 headers, fields.toString())
         }
-        return platforms.map { platform ->
+        return platforms.filter { isProperPlatform(it) }.map { platform ->
             object : GamePlatformEntity {
                 override val name: String
                     get() = platform.name
@@ -198,6 +199,8 @@ class GameIDGBDataSource(
             }
         }
     }
+
+    private fun isProperPlatform(platform: PlatformModel) = platform.id != "16"
 
     override suspend fun getGameSteamId(gameId: String): String {
         val fields = StringBuilder()

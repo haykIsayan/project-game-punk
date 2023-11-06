@@ -38,11 +38,11 @@ fun DiscoverScreen(
 ) {
     LazyColumn {
         
-        gameNewsViewModel?.let {
-            item {
-                GameNewsSection(gameNewsViewModel = it)
-            }
-        }
+//        gameNewsViewModel?.let {
+//            item {
+//                GameNewsSection(gameNewsViewModel = it)
+//            }
+//        }
 
         nowPlayingViewModel?.let {
             item {

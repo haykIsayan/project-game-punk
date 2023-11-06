@@ -2,7 +2,7 @@ package com.example.project_game_punk.features.discover.news
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -34,41 +34,40 @@ fun GameNewsSection(gameNewsViewModel: GameNewsViewModel) {
             failState = { errorMessage -> DiscoverGameFailState(errorMessage) { gameNewsViewModel.loadState(param = "500") } },
             loadingState = { DiscoverGameCarouselLoading() },
         ) { gameNewsState ->
-
-            ItemPagerCarousel(gameNewsState.gameNews) { gameNews ->
-            GameNewsCarouselItem(gameNews = gameNews, gameNewsState.game)
-        }
-
+            GameNewsCarouselItem(
+                gameNewsList = gameNewsState.gameNews,
+                gameNewsState.game
+            )
         }
     }
 }
 
 @Composable
-fun GameNewsCarouselItem(gameNews: GameNewsEntity, game: GameEntity) {
+fun GameNewsCarouselItem(gameNewsList: List<GameNewsEntity>, game: GameEntity) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(220.dp)
         .padding(6.dp)
         .clip(RoundedCornerShape(10.dp))
     ) {
-        Row {
-            Box(modifier = Modifier.size(150.dp, 220.dp)) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(game.backgroundImage)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                )
-            }
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(game.banner)
+                .crossfade(true)
+                .build(),
+            contentDescription = "",
+            contentScale = ContentScale.Crop,
+        )
+        ItemPagerCarousel(
+            gameNewsList
+        ) { gameNews ->
             Text(
                 text = gameNews.title,
                 modifier = Modifier.fillMaxWidth().height(220.dp).padding(8.dp),
-                        fontSize = 18.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.Start,
-                    fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color.White,
+                textAlign = TextAlign.Start,
+                fontWeight = FontWeight.Bold,
             )
         }
     }

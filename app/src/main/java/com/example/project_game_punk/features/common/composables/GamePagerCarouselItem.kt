@@ -25,7 +25,6 @@ fun GamePagerCarouselItem(game: GameEntity) {
         .fillMaxWidth()
         .height(220.dp)
         .padding(6.dp)
-
         .clip(RoundedCornerShape(10.dp))
     ) {
         AsyncImage(
