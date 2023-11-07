@@ -13,6 +13,7 @@ data class SteamAppNewsModel(
 data class SteamNewsItemModel(
     val contents: String? = null,
     override val title: String,
+    override val url: String,
 ): GameNewsEntity {
     override val description: String
         get() = contents ?: ""

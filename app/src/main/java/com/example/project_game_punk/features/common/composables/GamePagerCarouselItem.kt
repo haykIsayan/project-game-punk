@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,9 +50,10 @@ fun GamePagerCarouselItem(game: GameEntity) {
             ) {
                 Text(
                     text = it,
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    fontWeight = FontWeight.Bold
                 )
             }
         }

@@ -1,7 +1,10 @@
 package com.example.project_game_punk.features.game_details.sections.news
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -12,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,6 +25,8 @@ import com.example.game_punk_domain.domain.entity.GameNewsEntity
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
+import com.example.project_game_punk.features.game_details.GameDetailsActivity
+import com.example.project_game_punk.features.game_details.GameWebViewActivity
 
 @Composable
 fun GameDetailsNewsSection(gameNewsViewModel: GameDetailsNewsViewModel) {
@@ -64,9 +70,13 @@ private fun GameDetailsNewsSectionLoadedState(gameNewsList: List<GameNewsEntity>
 
 @Composable
 private fun GameDetailsNewsSectionItem(gameNews: GameNewsEntity) {
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .padding(12.dp)
+            .clickable {
+                onGameDetailsNewsItemClicked(context, gameNews)
+            }
             .clip(RoundedCornerShape(10.dp))
     ) {
         Text(
@@ -88,4 +98,18 @@ private fun GameDetailsNewsSectionItem(gameNews: GameNewsEntity) {
             overflow = TextOverflow.Ellipsis,
         )
     }
+}
+
+private fun onGameDetailsNewsItemClicked(context: Context, gameNews: GameNewsEntity) {
+    context.startActivity(
+        Intent(
+            context,
+            GameWebViewActivity::class.java
+        ).apply {
+            putExtra(
+                GameWebViewActivity.URL_INTENT_EXTRA,
+                gameNews.url
+            )
+        }
+    )
 }
