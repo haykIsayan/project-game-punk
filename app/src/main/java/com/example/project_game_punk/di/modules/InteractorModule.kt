@@ -8,7 +8,9 @@ import com.example.game_punk_domain.domain.interactors.game_collection.CreateGam
 import com.example.game_punk_domain.domain.interactors.game_collection.GetGameCollectionInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.RemoveGameFromGameCollectionInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
+import com.example.game_punk_domain.domain.interactors.news.GetNewsForGameInteractor
 import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
+import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import dagger.Module
 import dagger.Provides
@@ -19,6 +21,18 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object InteractorModule {
+
+    @Provides
+    @Singleton
+    fun providesGetNewsForGameInteractor(
+        gameNewsRepository: GameNewsRepository
+    ): GetNewsForGameInteractor {
+        return GetNewsForGameInteractor(
+            gameNewsRepository
+        )
+    }
+
+
     @Provides
     @Singleton
     fun providesGetFeaturedGameInteractor(

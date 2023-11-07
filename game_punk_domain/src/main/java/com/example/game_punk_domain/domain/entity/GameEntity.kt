@@ -13,6 +13,7 @@ interface GameEntity {
     val isAdded: Boolean
     val gameProgress: GameProgress
     val gamePlatforms: List<GamePlatformEntity>?
+    val steamId: String?
 
     fun updateGameProgress(gameProgress: GameProgress): GameEntity
 }

@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,7 +26,6 @@ fun GamePagerCarouselItem(game: GameEntity) {
         .fillMaxWidth()
         .height(220.dp)
         .padding(6.dp)
-
         .clip(RoundedCornerShape(10.dp))
     ) {
         AsyncImage(
@@ -43,16 +43,17 @@ fun GamePagerCarouselItem(game: GameEntity) {
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                Color.Black.copy(alpha = 0.8f)
+                                Color.Black.copy(alpha = 0.9f)
                             )
                         )
                     ) .fillMaxWidth().align(Alignment.BottomCenter)
             ) {
                 Text(
                     text = it,
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    fontWeight = FontWeight.Bold
                 )
             }
         }

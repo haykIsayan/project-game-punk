@@ -18,7 +18,6 @@ fun <ItemType> ItemPagerCarousel(
     itemComposer: @Composable (item: ItemType) -> Unit
 ) {
     val state = rememberPagerState()
-
     Column {
         HorizontalPager(
             count = items.size,

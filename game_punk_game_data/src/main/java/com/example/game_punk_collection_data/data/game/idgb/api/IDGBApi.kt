@@ -1,9 +1,6 @@
 package com.example.game_punk_collection_data.data.game.idgb.api
 
-import com.example.game_punk_collection_data.data.game.rawg.models.GameCoverModel
-import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
-import com.example.game_punk_collection_data.data.game.rawg.models.PlatformLogoModel
-import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
+import com.example.game_punk_collection_data.data.game.rawg.models.*
 import retrofit2.http.Body
 import retrofit2.http.HeaderMap
 import retrofit2.http.POST
@@ -21,6 +18,12 @@ interface IDGBApi {
         @HeaderMap headers: Map<String, String>,
         @Body fields: String
     ): List<GameCoverModel>
+
+    @POST("websites")
+    suspend fun getWebsites(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<WebsiteModel>
 
     @POST("screenshots")
     suspend fun getScreenshots(

@@ -15,9 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
+import com.example.project_game_punk.features.discover.news.GameNewsSection
+import com.example.project_game_punk.features.discover.news.GameNewsViewModel
 import com.example.project_game_punk.features.discover.playing.NowPlayingSection
 import com.example.project_game_punk.features.discover.playing.NowPlayingViewModel
-import com.example.project_game_punk.features.discover.recent.RecentGamesSection
 import com.example.project_game_punk.features.discover.recent.RecentGamesViewModel
 import com.example.project_game_punk.features.discover.recommended.RecommendedGamesSection
 import com.example.project_game_punk.features.discover.recommended.RecommendedGamesViewModel
@@ -27,25 +28,33 @@ import com.example.project_game_punk.features.main.MainNavigationTab
 
 @Composable
 fun DiscoverScreen(
-    nowPlayingViewModel: NowPlayingViewModel?,
-    trendingGamesViewModel: TrendingGamesViewModel?,
-    recentGamesViewModel: RecentGamesViewModel?,
-    recommendedGamesViewModel: RecommendedGamesViewModel?,
-
+    gameNewsViewModel: GameNewsViewModel? = null,
+    nowPlayingViewModel: NowPlayingViewModel? = null,
+    trendingGamesViewModel: TrendingGamesViewModel? = null,
+    recentGamesViewModel: RecentGamesViewModel? = null,
+    recommendedGamesViewModel: RecommendedGamesViewModel? = null,
     navController: NavHostController,
     sheetController: GameProgressBottomSheetController
 ) {
     LazyColumn {
+        
+//        gameNewsViewModel?.let {
+//            item {
+//                GameNewsSection(gameNewsViewModel = it)
+//            }
+//        }
 
-        if (nowPlayingViewModel != null) {
+        nowPlayingViewModel?.let {
             item {
                 NowPlayingSection(nowPlayingViewModel)
             }
         }
+
         item {
             SearchCta(navController)
         }
-        if (trendingGamesViewModel != null) {
+
+        trendingGamesViewModel?.let {
             item {
                 TrendingGamesSection(
                     trendingGamesViewModel,
@@ -61,7 +70,7 @@ fun DiscoverScreen(
 //                )
 //            }
 //        }
-        if (recommendedGamesViewModel != null) {
+        recommendedGamesViewModel?.let {
             item {
                 RecommendedGamesSection(
                     recommendedGamesViewModel,

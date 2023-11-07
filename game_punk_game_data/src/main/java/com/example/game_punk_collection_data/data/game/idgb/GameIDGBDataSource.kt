@@ -3,9 +3,10 @@ package com.example.game_punk_collection_data.data.game.idgb
 import android.os.Build
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
-import com.example.game_punk_collection_data.data.game.idgb.api.TwitchApi
+import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
+import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
 import com.example.game_punk_domain.domain.entity.GamePlatformEntity
@@ -61,7 +62,7 @@ class GameIDGBDataSource(
             if (gameQuery.query.isNotEmpty()) {
                 fields.append("search \"${gameQuery.query}\";")
             }
-            fields.append("fields name,cover,slug,follows,rating${if (gameQuery.gameMetaQuery.synopsis) ",summary" else ""}${if (gameQuery.gameMetaQuery.platforms) ",platforms" else ""}${if (gameQuery.gameMetaQuery.screenshots) ",screenshots" else ""};")
+            fields.append("fields name,cover,slug,follows,rating${if (gameQuery.gameMetaQuery.synopsis) ",summary" else ""}${if (gameQuery.gameMetaQuery.platforms) ",platforms" else ""}${if (gameQuery.gameMetaQuery.screenshots) ",screenshots" else ""}${if (gameQuery.gameMetaQuery.steamId) ",websites" else ""};")
             fields.append(
                 "where category = 0 " +
                         (if (!ids.isNullOrEmpty())  "& id = ($ids)" else "" ) +
@@ -87,10 +88,17 @@ class GameIDGBDataSource(
         return applyCovers(games)
     }
 
+    private fun extractSteamId(steamWebsite: String): String {
+        return steamWebsite.let {
+            val elements = it.split("/")
+            val i = elements.indexOf("app")
+            elements[i + 1]
+        }
+    }
 
     private suspend fun applyCovers(games: List<GameModel>): List<GameModel> {
         val ids = games
-            .joinToString(postfix = ",") { it.id ?: "" }.let { it
+            .joinToString(postfix = ",") { it.id ?: "" }.let {
             it.substring(0, it.length - 1)
         }
         val fields = StringBuilder()
@@ -114,7 +122,7 @@ class GameIDGBDataSource(
 
     private suspend fun applyScreenshots(games: List<GameModel>): List<GameModel> {
         val ids = games
-            .joinToString(postfix = ",") { it.id ?: "" }.let { it
+            .joinToString(postfix = ",") { it.id ?: "" }.let {
                 it.substring(0, it.length - 1)
             }
         val fields = StringBuilder()
@@ -133,29 +141,6 @@ class GameIDGBDataSource(
                 "t_720p"
             )
             game.copy(screenshots = listOf(updatedScreenshot))
-        }
-    }
-
-    private suspend fun applyArtworks(games: List<GameModel>): List<GameModel> {
-        val ids =
-            games
-            .joinToString(postfix = ",") { it.id ?: "" }.let { it
-                it.substring(0, it.length - 1)
-            }
-        val fields = StringBuilder()
-        fields.append("fields url,game,image_id;")
-        fields.append("where game = ($ids);")
-        fields.append("limit 20;")
-        val artworks = withAuthenticatedHeaders { headers ->
-            idgbApi.getArtworks(
-                headers,
-                fields.toString()
-            )
-        }
-        return games.map { game ->
-            val screenshot = artworks.find { it.game == game.id }
-            val updatedScreenshot = "https:" + screenshot?.url?.replace("t_thumb","t_720p")
-            game.copy(artworks = listOf(updatedScreenshot))
         }
     }
 
@@ -184,14 +169,14 @@ class GameIDGBDataSource(
             )
         ) as GameModel
 
-        val platformIds = game.platforms?.joinToString(",").let { it
+        val platformIds = game.platforms?.joinToString(",").let {
             it?.substring(0, it.length - 1)
         }
         val platforms = withAuthenticatedHeaders { headers ->
             idgbApi.getPlatforms(headers, "fields platform_logo, name, slug; where id = ($platformIds);")
         }
 
-        val platformLogoIds = platforms.filter { it.platform_logo != null }.joinToString { platform -> platform.platform_logo ?: "" }.let { it
+        val platformLogoIds = platforms.filter { it.platform_logo != null }.joinToString { platform -> platform.platform_logo ?: "" }.let {
             it.substring(0, it.length - 1)
         }
 
@@ -203,7 +188,7 @@ class GameIDGBDataSource(
             idgbApi.getPlatformLogos(
                 headers, fields.toString())
         }
-        return platforms.map { platform ->
+        return platforms.filter { isProperPlatform(it) }.map { platform ->
             object : GamePlatformEntity {
                 override val name: String
                     get() = platform.name
@@ -213,6 +198,38 @@ class GameIDGBDataSource(
                     }?.url ?: ""
             }
         }
+    }
+
+    private fun isProperPlatform(platform: PlatformModel) = platform.id != "16"
+
+    override suspend fun getGameSteamId(gameId: String): String {
+        val fields = StringBuilder()
+        fields.append("fields websites;")
+        fields.append("where id = $gameId;")
+        val game = withAuthenticatedHeaders { headers ->
+            idgbApi.getGames(headers, fields.toString())
+        }
+        val websiteIds = game.first().websites
+        val websites = getGameWebsites(websiteIds ?: emptyList())
+        val steamWebsite = websites.find { it.contains("steam") } ?: return ""
+        return extractSteamId(steamWebsite)
+    }
+
+    private suspend fun getGameWebsites(websiteIds: List<String>): List<String> {
+        if (websiteIds.isEmpty()) return emptyList()
+        val ids = websiteIds.joinToString(postfix = ",").let {
+            it.substring(0, it.length - 1)
+        }
+        val fields = StringBuilder()
+        fields.append("fields url,game;")
+        fields.append("where id = ($ids);")
+        val websites = withAuthenticatedHeaders { headers ->
+            idgbApi.getWebsites(
+                headers,
+                fields.toString()
+            )
+        }
+        return websites.map { website -> website.url }
     }
 
     override suspend fun getScreenshots(id: String): List<String> {
@@ -227,7 +244,7 @@ class GameIDGBDataSource(
         }
 
         return screenshots.map { screenshot -> screenshot.url ?: "" }.filter { it.isNotEmpty() }.map { screenshot ->
-            "https:" + screenshot?.replace("t_thumb","t_720p")
+            "https:" + screenshot.replace("t_thumb","t_720p")
         }
     }
 

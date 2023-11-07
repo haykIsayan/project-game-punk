@@ -45,6 +45,7 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    namespace 'com.example.project_game_punk'
 }
 
 dependencies {
@@ -54,6 +55,8 @@ dependencies {
 
     implementation project(path: ":game_punk_game_data")
     implementation project(path: ":game_punk_domain")
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // Room
     def room_version = "2.3.0"
