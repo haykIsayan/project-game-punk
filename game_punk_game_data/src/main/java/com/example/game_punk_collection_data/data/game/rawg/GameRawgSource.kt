@@ -1,6 +1,7 @@
 package com.example.game_punk_collection_data.data.game.rawg
 
 import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameGenreEntity
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
 import com.example.game_punk_domain.domain.entity.GamePlatformEntity
@@ -43,6 +44,10 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
     }
 
     override suspend fun getGamePlatforms(id: String): List<GamePlatformEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getGameGenres(id: String): List<GameGenreEntity> {
         TODO("Not yet implemented")
     }
 

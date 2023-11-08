@@ -29,13 +29,11 @@ class GameDetailsActivity : ComponentActivity() {
                             gameId = intent.getStringExtra(GAME_ID_INTENT_EXTRA),
                             gameDetailsViewModel = hiltViewModel(),
                             gamePlatformsViewModel = hiltViewModel(),
+                            gameGenresViewModel = hiltViewModel(),
                             gameScreenshotsViewModel = hiltViewModel(),
                             gameDetailsNewsViewModel = hiltViewModel()
                         )
                     }
-
-
-
                 }
             }
         }

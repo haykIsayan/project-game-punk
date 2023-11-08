@@ -43,6 +43,12 @@ interface IDGBApi {
         @Body fields: String
     ): List<PlatformModel>
 
+    @POST("genres")
+    suspend fun getGenres(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<GenreModel>
+
     @POST("platform_logos")
     suspend fun getPlatformLogos(
         @HeaderMap headers: Map<String, String>,

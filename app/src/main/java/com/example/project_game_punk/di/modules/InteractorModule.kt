@@ -208,6 +208,16 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesGetGameGenresInteractor(
+        gameRepository: GameRepository
+    ): GetGameGenresInteractor {
+        return GetGameGenresInteractor(
+            gameRepository
+        )
+    }
+
+    @Provides
+    @Singleton
     fun provideGetGameScreenshotsInteractor(
         gameRepository: GameRepository
     ): GetGameScreenshotsInteractor {

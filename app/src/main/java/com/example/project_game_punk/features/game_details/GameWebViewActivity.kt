@@ -16,7 +16,6 @@ class GameWebViewActivity : ComponentActivity() {
         val myWebView: WebView = findViewById(R.id.webview)
         val progressIndicatorLayout: ConstraintLayout = findViewById(R.id.progressIndicatorLayout)
         val progressIndicator: CircularProgressIndicator = findViewById(R.id.progressIndicator)
-//        progressIndicator.
         myWebView.settings.javaScriptEnabled = true
         myWebView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
@@ -26,16 +25,10 @@ class GameWebViewActivity : ComponentActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-//                progressIndicatorLayout.visibility = View.GONE
+                progressIndicatorLayout.visibility = View.GONE
             }
         }
-
         intent.getStringExtra(URL_INTENT_EXTRA)?.let { url ->
-
-
-//            val encodedHtml = Base64.encodeToString(url.toByteArray(), Base64.NO_PADDING)
-//            myWebView.loadData(encodedHtml, "text/html", "base64")
-
             myWebView.loadUrl(url)
         }
     }

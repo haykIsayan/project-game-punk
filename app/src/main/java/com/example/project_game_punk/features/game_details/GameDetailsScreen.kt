@@ -5,6 +5,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.project_game_punk.features.game_details.sections.GameDetailsHeader
 import com.example.project_game_punk.features.game_details.sections.GameSynopsisSection
+import com.example.project_game_punk.features.game_details.sections.genre.GameGenresViewModel
+import com.example.project_game_punk.features.game_details.sections.genre.GameGenresSection
 import com.example.project_game_punk.features.game_details.sections.news.GameDetailsNewsSection
 import com.example.project_game_punk.features.game_details.sections.news.GameDetailsNewsViewModel
 import com.example.project_game_punk.features.game_details.sections.platforms.GamePlatformsSection
@@ -17,6 +19,7 @@ fun GameDetailsScreen(
     gameDetailsViewModel: GameDetailsViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
+    gameGenresViewModel: GameGenresViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel
 ) {
     when (gameId) {
@@ -24,11 +27,13 @@ fun GameDetailsScreen(
         else -> {
             gameDetailsViewModel.loadGame(id = gameId)
             gamePlatformsViewModel.loadState(param = gameId)
+            gameGenresViewModel.loadState(param = gameId)
             gameScreenshotsViewModel.loadState(param = gameId)
             gameDetailsNewsViewModel.loadState(param = gameId)
             GameDetailsScreenContent(
                 gameDetailsViewModel = gameDetailsViewModel,
                 gamePlatformsViewModel = gamePlatformsViewModel,
+                gameGenresViewModel = gameGenresViewModel,
                 gameDetailsNewsViewModel = gameDetailsNewsViewModel,
                 gameScreenshotsViewModel = gameScreenshotsViewModel
             )
@@ -45,6 +50,7 @@ private fun NoGameIdState() {
 private fun GameDetailsScreenContent(
     gameDetailsViewModel: GameDetailsViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
+    gameGenresViewModel: GameGenresViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel
 ) {
@@ -58,11 +64,11 @@ private fun GameDetailsScreenContent(
         }
 
         item {
-            GameGenreSection()
+            GamePlatformsSection(gamePlatformsViewModel = gamePlatformsViewModel)
         }
 
         item {
-            GamePlatformsSection(gamePlatformsViewModel = gamePlatformsViewModel)
+            GameGenresSection(gameGenresViewModel = gameGenresViewModel)
         }
 
         item {
@@ -73,10 +79,4 @@ private fun GameDetailsScreenContent(
             GameDetailsNewsSection(gameNewsViewModel = gameDetailsNewsViewModel)
         }
     }
-}
-
-
-@Composable
-fun GameGenreSection() {
-
 }
