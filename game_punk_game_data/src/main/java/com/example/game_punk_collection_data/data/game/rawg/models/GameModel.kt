@@ -19,6 +19,7 @@ data class GameModel(
     @Ignore val screenshots: List<String>? = null,
     @Ignore val artworks: List<String>? = null,
     @Ignore val platforms: List<String>? = null,
+    @Ignore val genres: List<String>? = null,
     @Ignore val cover: String? = null,
     @Ignore val follows: Int? = null,
     @Ignore val added: Int = 0,

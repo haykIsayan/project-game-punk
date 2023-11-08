@@ -8,6 +8,7 @@ import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
 import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
 import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameGenreEntity
 import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
 import com.example.game_punk_domain.domain.entity.GamePlatformEntity
 import com.example.game_punk_domain.domain.interfaces.GameRepository
@@ -62,7 +63,7 @@ class GameIDGBDataSource(
             if (gameQuery.query.isNotEmpty()) {
                 fields.append("search \"${gameQuery.query}\";")
             }
-            fields.append("fields name,cover,slug,follows,rating${if (gameQuery.gameMetaQuery.synopsis) ",summary" else ""}${if (gameQuery.gameMetaQuery.platforms) ",platforms" else ""}${if (gameQuery.gameMetaQuery.screenshots) ",screenshots" else ""}${if (gameQuery.gameMetaQuery.steamId) ",websites" else ""};")
+            fields.append("fields name,cover,slug,follows,rating${if (gameQuery.gameMetaQuery.synopsis) ",summary" else ""}${if (gameQuery.gameMetaQuery.platforms) ",platforms" else ""}${if (gameQuery.gameMetaQuery.genres) ",genres" else ""}${if (gameQuery.gameMetaQuery.screenshots) ",screenshots" else ""}${if (gameQuery.gameMetaQuery.steamId) ",websites" else ""};")
             fields.append(
                 "where category = 0 " +
                         (if (!ids.isNullOrEmpty())  "& id = ($ids)" else "" ) +
@@ -196,6 +197,32 @@ class GameIDGBDataSource(
                     get() = platformLogos.find { platformLogo ->
                         platformLogo.id == platform.platform_logo
                     }?.url ?: ""
+            }
+        }
+    }
+
+    override suspend fun getGameGenres(id: String): List<GameGenreEntity> {
+        val game = getGame(
+            id = id,
+            gameMetaQuery = GameMetaQueryModel(
+                genres = true,
+            )
+        ) as GameModel
+
+        val genreIds = game.genres?.joinToString(",").let {
+            it?.substring(0, it.length - 1)
+        }
+        val genres = withAuthenticatedHeaders { headers ->
+            idgbApi.getGenres(headers, "fields name, slug; where id = ($genreIds);")
+        }
+        return genres.map { genre ->
+            object : GameGenreEntity {
+                override val name: String
+                    get() = genre.name
+
+                override val url: String
+                    get() = genre.url
+
             }
         }
     }
