@@ -84,7 +84,9 @@ class GameIDGBDataSource(
             idgbApi.getGames(
                 headers,
                 fields.toString()
-            )
+            ).filter {
+                it.id != "206893"
+            }
         }
         return applyCovers(games)
     }

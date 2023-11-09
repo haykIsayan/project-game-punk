@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import com.example.project_game_punk.features.common.composables.GameCarouselItem
-import com.example.project_game_punk.features.common.composables.ItemCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController

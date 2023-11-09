@@ -41,7 +41,6 @@ class RecommendedGamesViewModel @Inject constructor(
         loadState()
     }
 
-
     fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
         executeIO(Dispatchers.IO,
             onBefore = { updateGames(game.updateGameProgress(gameProgress)) },

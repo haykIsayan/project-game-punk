@@ -15,8 +15,9 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.game_punk_domain.domain.entity.GamePlatformEntity
-import com.example.project_game_punk.features.common.composables.ItemCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 
 @Composable
 fun GamePlatformsSection(
@@ -25,19 +26,11 @@ fun GamePlatformsSection(
     val state = gamePlatformsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
-        failState = { GamePlatformSectionFailedState(it) },
         loadingState = { GamePlatformSectionLoadingState() }
     ) { platforms ->
         GamePlatformSectionLoadedState(platforms)
     }
 }
-
-
-@Composable
-private fun GamePlatformSectionFailedState(error: String) {
-    Text(text = error, color = Color.White)
-}
-
 
 @Composable
 private fun GamePlatformSectionLoadingState() {
@@ -54,7 +47,10 @@ private fun GamePlatformSectionLoadingState() {
 private fun GamePlatformSectionLoadedState(
     platforms: List<GamePlatformEntity>
 ) {
-    ItemCarousel(items = platforms) {
+    ItemCarousel(
+        items = platforms,
+        itemDecorator = ItemCarouselDecorators.pillItemDecorator
+    ) {
         GamePlatformSectionItem(platform = it)
     }
 }
@@ -63,7 +59,6 @@ private fun GamePlatformSectionLoadedState(
 private fun GamePlatformSectionItem(platform: GamePlatformEntity) {
     Box(
         modifier = Modifier
-            .padding(12.dp)
             .border(
                 1.dp,
                 SolidColor(Color.White),

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import com.example.project_game_punk.features.common.ViewModelState
-import com.example.project_game_punk.features.common.composables.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 
