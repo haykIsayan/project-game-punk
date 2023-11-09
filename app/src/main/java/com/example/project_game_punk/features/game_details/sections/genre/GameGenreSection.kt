@@ -18,8 +18,9 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.game_punk_domain.domain.entity.GameGenreEntity
-import com.example.project_game_punk.features.common.composables.ItemCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 
 @Composable
 fun GameGenresSection(
@@ -38,7 +39,7 @@ fun GameGenresSection(
 
 @Composable
 private fun GameGenresSectionFailedState(error: String) {
-    Text(text = error, color = Color.White)
+//    Text(text = error, color = Color.White)
 }
 
 
@@ -57,7 +58,10 @@ private fun GameGenresSectionLoadingState() {
 private fun GameGenresSectionLoadedState(
     genres: List<GameGenreEntity>
 ) {
-    ItemCarousel(items = genres) {
+    ItemCarousel(
+        items = genres,
+        itemDecorator = ItemCarouselDecorators.pillItemDecorator
+    ) {
         GameGenresSectionItem(genre = it)
     }
 }
@@ -66,7 +70,6 @@ private fun GameGenresSectionLoadedState(
 private fun GameGenresSectionItem(genre: GameGenreEntity) {
     Box(
         modifier = Modifier
-            .padding(12.dp)
             .border(
                 1.dp,
                 SolidColor(Color.White),

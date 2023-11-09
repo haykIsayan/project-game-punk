@@ -8,9 +8,9 @@ typealias ComposableFunction = @Composable () -> Unit
 @Composable
 fun <DataType> LoadableStateWrapper(
     state: ViewModelState<DataType>?,
-    failState: @Composable (errorMessage: String) -> Unit,
-    loadingState: ComposableFunction,
-    successState: @Composable (data: DataType) -> Unit,
+    failState: @Composable (errorMessage: String) -> Unit = {},
+    loadingState: ComposableFunction = {},
+    successState: @Composable (data: DataType) -> Unit = {},
 ) {
     when (state) {
         is ViewModelState.ErrorState -> failState.invoke(state.message)

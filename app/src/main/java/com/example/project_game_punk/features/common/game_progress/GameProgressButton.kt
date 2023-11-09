@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.game_punk_domain.domain.entity.GameEntity
@@ -25,7 +26,7 @@ fun GameProgressButton(
 ) {
     val context = LocalContext.current
     val gameProgress = game.gameProgress
-    val color = colorResource(GameProgressMapper.color(gameProgress)).copy(alpha = 0.6f)
+    val color = colorResource(GameProgressMapper.color(gameProgress))
     val textColor = colorResource(GameProgressMapper.displayTextColor(gameProgress))
     val borderColor =  Color.White
     val text = stringResource(GameProgressMapper.displayText(gameProgress = gameProgress)).uppercase()
@@ -44,7 +45,6 @@ fun GameProgressButton(
         border = BorderStroke(
             width = 1.dp,
             color = borderColor,
-
         ),
         shape = RoundedCornerShape(10.dp),
         onClick = onClick,
@@ -57,6 +57,7 @@ fun GameProgressButton(
             modifier = Modifier.background(Color.Transparent),
             text = text,
             fontSize = 10.sp,
+            fontWeight = FontWeight.Bold,
             color = textColor
         )
     }

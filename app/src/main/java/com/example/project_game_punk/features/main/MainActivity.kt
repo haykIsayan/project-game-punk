@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MainGameProgressBottomSheet(controller: GameProgressBottomSheetController) {
+fun MainGameProgressBottomSheet(controller: GameProgressBottomSheetController) {
 
     val state = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
@@ -60,7 +60,6 @@ private fun MainGameProgressBottomSheet(controller: GameProgressBottomSheetContr
 
     controller.onPropagate { game, onProgressSelected ->
         scope.launch { state.animateTo(ModalBottomSheetValue.Expanded) }
-//        onGameProgressSelected = onProgressSelected
         onGameProgressSelectedState.value = onProgressSelected
         gameState.value = game
     }
