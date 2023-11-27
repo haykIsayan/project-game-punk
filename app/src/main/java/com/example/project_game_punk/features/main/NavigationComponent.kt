@@ -28,7 +28,7 @@ fun NavigationComponent(
                 gameNewsViewModel = hiltViewModel(),
                 nowPlayingViewModel = hiltViewModel(),
                 trendingGamesViewModel = hiltViewModel(),
-                recentGamesViewModel = null,
+                recentGamesViewModel = hiltViewModel(),
                 recommendedGamesViewModel = hiltViewModel(),
                 navController = navController,
                 sheetController = sheetController
@@ -43,6 +43,7 @@ fun NavigationComponent(
 
         composable(route = MainNavigationTab.SearchMainNavigationTab.route) {
             SearchScreen(
+                searchFiltersViewModel = hiltViewModel(),
                 searchResultsViewModel = hiltViewModel(),
                 sheetController = sheetController
             )

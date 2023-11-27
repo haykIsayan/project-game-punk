@@ -28,10 +28,12 @@ class GameDetailsActivity : ComponentActivity() {
                         GameDetailsScreen(
                             gameId = intent.getStringExtra(GAME_ID_INTENT_EXTRA),
                             gameDetailsViewModel = hiltViewModel(),
+                            gameDeveloperPublisherViewModel = hiltViewModel(),
                             gamePlatformsViewModel = hiltViewModel(),
                             gameGenresViewModel = hiltViewModel(),
                             gameScreenshotsViewModel = hiltViewModel(),
-                            gameDetailsNewsViewModel = hiltViewModel()
+                            gameDetailsNewsViewModel = hiltViewModel(),
+                            gameDetailsSimilarGamesViewModel = hiltViewModel()
                         )
                     }
                 }

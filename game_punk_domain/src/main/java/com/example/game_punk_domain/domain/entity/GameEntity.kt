@@ -9,7 +9,7 @@ interface GameEntity {
     val banners: List<String>?
     val gameArtworks: List<String>?
     val numAdded: Int
-    val metaCriticScore: Int
+    val score: Int
     val isAdded: Boolean
     val gameProgress: GameProgress
     val gamePlatforms: List<GamePlatformEntity>?

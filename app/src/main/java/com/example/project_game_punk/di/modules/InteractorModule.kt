@@ -2,6 +2,8 @@ package com.example.project_game_punk.di.modules
 
 import com.example.game_punk_collection_data.data.game.rawg.models.GameCollectionFactoryImpl
 import com.example.game_punk_domain.domain.TrackedGamesCache
+import com.example.game_punk_domain.domain.interactors.GetAllAvailableGameGenresInteractor
+import com.example.game_punk_domain.domain.interactors.GetAllAvailableGamePlatformsInteractor
 import com.example.game_punk_domain.domain.interactors.game.*
 import com.example.game_punk_domain.domain.interactors.game_collection.AddGameToGameCollectionInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.CreateGameCollectionInteractor
@@ -208,6 +210,26 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesGetAllAvailableGamePlatforms(
+        gameRepository: GameRepository
+    ): GetAllAvailableGamePlatformsInteractor {
+        return GetAllAvailableGamePlatformsInteractor(
+            gameRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetAllAvailableGameGenres(
+        gameRepository: GameRepository
+    ): GetAllAvailableGameGenresInteractor {
+        return GetAllAvailableGameGenresInteractor(
+            gameRepository
+        )
+    }
+
+    @Provides
+    @Singleton
     fun providesGetGameGenresInteractor(
         gameRepository: GameRepository
     ): GetGameGenresInteractor {
@@ -222,6 +244,31 @@ object InteractorModule {
         gameRepository: GameRepository
     ): GetGameScreenshotsInteractor {
         return GetGameScreenshotsInteractor(gameRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetSimilarGamesInteractor(
+        gameRepository: GameRepository
+    ): GetSimilarGamesInteractor {
+        return GetSimilarGamesInteractor(gameRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetGameAgeRatingInteractor(
+        gameRepository: GameRepository
+    ): GetGameAgeRatingInteractor {
+        return GetGameAgeRatingInteractor(gameRepository)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideGetGameCompaniesInteractor(
+        gameRepository: GameRepository
+    ): GetGameCompaniesInteractor {
+        return GetGameCompaniesInteractor(gameRepository)
     }
 }
 

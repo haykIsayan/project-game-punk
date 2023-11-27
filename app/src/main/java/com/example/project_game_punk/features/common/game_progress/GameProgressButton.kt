@@ -8,7 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,7 +23,6 @@ fun GameProgressButton(
     controller: GameProgressBottomSheetController,
     onProgressSelected: (GameEntity, GameProgress) -> Unit
 ) {
-    val context = LocalContext.current
     val gameProgress = game.gameProgress
     val color = colorResource(GameProgressMapper.color(gameProgress))
     val textColor = colorResource(GameProgressMapper.displayTextColor(gameProgress))

@@ -5,7 +5,6 @@ import com.example.game_punk_domain.domain.entity.GameProgress
 import com.example.game_punk_domain.domain.interactors.game.GetGameQueryWithRecentDatesInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.game_punk_domain.domain.interactors.game.GetGamesInteractor
-import com.example.game_punk_domain.domain.interactors.game.GetTrendingGamesInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
 import com.example.game_punk_domain.domain.models.GameQueryModel
 import com.example.game_punk_domain.domain.models.GameSort
@@ -19,7 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchResultsViewModel @Inject constructor(
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
-    private val getTrendingGamesInteractor: GetTrendingGamesInteractor,
     private val getGamesInteractor: GetGamesInteractor,
 ): StateViewModel<List<GameEntity>, GameQueryModel>() {
 
@@ -48,9 +46,8 @@ class SearchResultsViewModel @Inject constructor(
     }
 
     override suspend fun loadData(param: GameQueryModel?): List<GameEntity> {
-        return when {
-            param == null -> emptyList()
-            param.query.isEmpty() -> getTrendingGamesInteractor.execute()
+        return when (param) {
+            null -> emptyList()
             else -> getGamesInteractor.execute(param)
         }
     }

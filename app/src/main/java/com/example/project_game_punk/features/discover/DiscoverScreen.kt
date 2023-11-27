@@ -19,6 +19,7 @@ import com.example.project_game_punk.features.discover.news.GameNewsSection
 import com.example.project_game_punk.features.discover.news.GameNewsViewModel
 import com.example.project_game_punk.features.discover.playing.NowPlayingSection
 import com.example.project_game_punk.features.discover.playing.NowPlayingViewModel
+import com.example.project_game_punk.features.discover.recent.RecentGamesSection
 import com.example.project_game_punk.features.discover.recent.RecentGamesViewModel
 import com.example.project_game_punk.features.discover.recommended.RecommendedGamesSection
 import com.example.project_game_punk.features.discover.recommended.RecommendedGamesViewModel
@@ -62,22 +63,22 @@ fun DiscoverScreen(
                 )
             }
         }
-//        if (recentGamesViewModel != null) {
-//            item {
-//                RecentGamesSection(
-//                    recentGamesViewModel,
-//                    sheetController,
-//                )
-//            }
-//        }
-        recommendedGamesViewModel?.let {
+        recentGamesViewModel?.let {
             item {
-                RecommendedGamesSection(
-                    recommendedGamesViewModel,
-                    sheetController
+                RecentGamesSection(
+                    recentGamesViewModel,
+                    sheetController,
                 )
             }
         }
+//        recommendedGamesViewModel?.let {
+//            item {
+//                RecommendedGamesSection(
+//                    recommendedGamesViewModel,
+//                    sheetController
+//                )
+//            }
+//        }
         item {
             Spacer(modifier = Modifier.height(20.dp))
         }

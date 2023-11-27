@@ -7,5 +7,8 @@ data class GameMetaQueryModel(
     val genres: Boolean = false,
     val screenshots: Boolean = false,
     val synopsis: Boolean = false,
+    val ageRating: Boolean = false,
+    val score: Boolean = false,
+    val similarGames: Boolean = false,
     val steamId: Boolean = false
 )

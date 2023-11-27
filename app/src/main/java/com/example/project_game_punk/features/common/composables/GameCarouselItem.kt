@@ -25,7 +25,7 @@ import com.example.project_game_punk.features.game_details.GameDetailsActivity
 @Composable
 fun GameCarouselItem(
     game: GameEntity,
-    sheetController: GameProgressBottomSheetController?,
+    sheetController: GameProgressBottomSheetController? = null,
     trailing: @Composable () -> Unit = {},
     onProgressSelected: ((GameEntity, GameProgress) -> Unit)? = null
 ) {
@@ -76,31 +76,6 @@ fun GameCarouselItem(
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
                 )
-            }
-            if (game.name != null) {
-//                Box(
-//                    modifier = Modifier
-//                        .background(
-//                            brush = Brush.verticalGradient(
-//
-//                                colors = listOf(
-//                                    Color.Transparent,
-//                                    Color.Black.copy(alpha = 0.7f)
-//                                )
-//                            )
-//                        )
-//                        .fillMaxWidth()
-//                        .align(Alignment.BottomCenter)
-//                ) {
-//                    Text(
-//                        text = game.name ?: "",
-//                        fontSize = 20.sp,
-//                        textAlign = TextAlign.Center,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(4.dp)
-//                    )
-//                }
             }
             trailing.invoke()
         }

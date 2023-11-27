@@ -7,10 +7,7 @@ import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
 import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
-import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameGenreEntity
-import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
-import com.example.game_punk_domain.domain.entity.GamePlatformEntity
+import com.example.game_punk_domain.domain.entity.*
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.models.GameFilter
 import com.example.game_punk_domain.domain.models.GameQueryModel
@@ -60,16 +57,34 @@ class GameIDGBDataSource(
                     null
                 }
             }
+            val platformIds = gameQuery.platforms.map {
+                it.id
+            }.commaSeparated { it }
+            val genreIds = gameQuery.genres.map {
+                it.id
+            }.commaSeparated { it }
             if (gameQuery.query.isNotEmpty()) {
                 fields.append("search \"${gameQuery.query}\";")
             }
-            fields.append("fields name,cover,slug,follows,rating${if (gameQuery.gameMetaQuery.synopsis) ",summary" else ""}${if (gameQuery.gameMetaQuery.platforms) ",platforms" else ""}${if (gameQuery.gameMetaQuery.genres) ",genres" else ""}${if (gameQuery.gameMetaQuery.screenshots) ",screenshots" else ""}${if (gameQuery.gameMetaQuery.steamId) ",websites" else ""};")
+//            16405920000
+            fields.append("fields name,cover,slug,follows,rating" +
+                    (if (gameQuery.gameMetaQuery.synopsis) ",summary" else "") +
+                    (if (gameQuery.gameMetaQuery.platforms) ",platforms" else "") +
+                    (if (gameQuery.gameMetaQuery.genres) ",genres" else "") +
+                    (if (gameQuery.gameMetaQuery.screenshots) ",screenshots" else "") +
+                    (if (gameQuery.gameMetaQuery.steamId) ",websites" else "") +
+                    (if(gameQuery.gameMetaQuery.similarGames)",similar_games" else "") +
+                    (if(gameQuery.gameMetaQuery.ageRating)",age_ratings" else "") +
+                    "${if(gameQuery.gameMetaQuery.score)",aggregated_rating" else ""};"
+            )
             fields.append(
                 "where category = 0 " +
                         (if (!ids.isNullOrEmpty())  "& id = ($ids)" else "" ) +
+                        (if (platformIds.isNotEmpty())  "& platforms = ($platformIds)" else "" ) +
+                        (if (genreIds.isNotEmpty())  "& genres = ($genreIds)" else "" ) +
                         "${if (gameQuery.filter == GameFilter.highestRated) "& rating > 40" else ""} " +
-                        (if (gameQuery.dateRangeStart.isNotEmpty()) "& first_release_date >= 16405920000" else "") +
-                        (if (gameQuery.dateRangeEnd.isNotEmpty()) "& first_release_date <= ${gameQuery.dateRangeEnd.dateToUnix()}" else "") +
+                        (if (gameQuery.dateRangeStart.isNotEmpty()) "& first_release_date >= 1668585600" else "") +
+//                        (if (gameQuery.dateRangeEnd.isNotEmpty()) "& first_release_date <= ${gameQuery.dateRangeEnd.dateToUnix()}" else "") +
                         ";"
             )
             when (gameQuery.sort) {
@@ -89,6 +104,74 @@ class GameIDGBDataSource(
             }
         }
         return applyCovers(games)
+    }
+
+    override suspend fun getGameAgeRating(gameId: String): GameAgeRatingEntity {
+
+        val gameWithAgeRatingsIds = (getGame(gameId, GameMetaQueryModel(ageRating = true)) as? GameModel)
+
+
+
+
+
+        val ageRatingIds = gameWithAgeRatingsIds?.age_ratings?.joinToString(",").let {
+            it?.substring(0, it.length - 1)
+        } ?: ""
+
+
+
+
+
+
+
+        val ageRatings = withAuthenticatedHeaders { headers ->
+            val fields = StringBuilder()
+            fields.append("fields rating_cover_url,synopsis;")
+            fields.append("where category = (1) & id = ($ageRatingIds);")
+
+
+
+
+
+
+
+            idgbApi.getAgeRatings(headers, fields.toString())
+        }
+        println(ageRatings.toString())
+        return ageRatings.first()
+    }
+
+    override suspend fun getSimilarGames(gameId: String): List<GameEntity> {
+//        val fields = StringBuilder()
+//        fields.append("fields category,checksum,countries,created_at,game,media,name,platform,uid,updated_at,url,year;")
+//        fields.append("where game = ($gameId) & category = (1,26,36,54,11,28,31);")
+//
+//        val external = withAuthenticatedHeaders { headers ->
+//            idgbApi.getExternalGames(headers, fields.toString())
+//        }
+//
+//        println(external)
+
+
+        /// todo all good here
+
+
+
+
+       val gameWithSimilarGameIds = getGame(gameId, GameMetaQueryModel(similarGames = true))
+        return (gameWithSimilarGameIds as? GameModel)?.similar_games?.let { similarGameIds ->
+            getGames(
+                gameQuery = GameQueryModel(
+                    filter = GameFilter.highestRated,
+                    sort = GameSort.trending,
+                    ids = similarGameIds,
+
+                    gameMetaQuery = GameMetaQueryModel(
+                        cover = true
+                    )
+                )
+            )
+        } ?: emptyList()
     }
 
     private fun extractSteamId(steamWebsite: String): String {
@@ -172,33 +255,118 @@ class GameIDGBDataSource(
             )
         ) as GameModel
 
+        println(game)
         val platformIds = game.platforms?.joinToString(",").let {
-            it?.substring(0, it.length - 1)
+            if (it?.get(it.length - 1) == ',') {
+                it.substring(0, it.length - 1)
+            } else {
+                it
+            }
         }
+        println(platformIds)
         val platforms = withAuthenticatedHeaders { headers ->
             idgbApi.getPlatforms(headers, "fields platform_logo, name, slug; where id = ($platformIds);")
         }
 
+        println(platforms)
+
         val platformLogoIds = platforms.filter { it.platform_logo != null }.joinToString { platform -> platform.platform_logo ?: "" }.let {
-            it.substring(0, it.length - 1)
+            if (it.get(it.length - 1) == ',') {
+                it.substring(0, it.length - 1)
+            } else {
+                it
+            }
         }
 
         val fields = StringBuilder()
         fields.append("fields alpha_channel,animated,checksum,height,image_id,url,width;")
         fields.append("where id = ($platformLogoIds);")
 
+        println(platformLogoIds)
+
         val platformLogos =  withAuthenticatedHeaders { headers ->
             idgbApi.getPlatformLogos(
                 headers, fields.toString())
         }
+        println(platformLogos)
         return platforms.filter { isProperPlatform(it) }.map { platform ->
             object : GamePlatformEntity {
+                override val id: String
+                    get() = platform.id
                 override val name: String
                     get() = platform.name
                 override val icon: String
-                    get() = platformLogos.find { platformLogo ->
+                    get() = ("https:" + platformLogos.find { platformLogo ->
                         platformLogo.id == platform.platform_logo
-                    }?.url ?: ""
+                    }?.url)
+                        .replace(
+                        "t_thumb",
+                        "t_thumb_2x"
+                    )
+            }
+        }
+    }
+
+    override suspend fun getGameCompanies(gameId: String): List<GameCompanyEntity> {
+        val fields = StringBuilder()
+        fields.append("fields *;")
+        fields.append("where game = ($gameId);")
+
+        val involvedCompanies = withAuthenticatedHeaders { headers ->
+            idgbApi.getInvolvedCompanies(headers, fields.toString())
+        }
+
+        println(involvedCompanies)
+
+        val companyIds = involvedCompanies.filter {
+            (it.publisher || it.developer) && !it.supporting
+        }.joinToString(",") {
+            it.company
+        }
+
+        val companies = withAuthenticatedHeaders { headers ->
+            idgbApi.getCompanies(
+                headers,
+                StringBuilder()
+                    .append("fields *;")
+                    .append("where id = ($companyIds);")
+                    .toString()
+            )
+        }
+
+        return companies.map { company ->
+            val isDeveloper = involvedCompanies.find {
+                it.company == company.id
+            }?.developer ?: false
+            val isPublisher = involvedCompanies.find {
+                it.company == company.id
+            }?.publisher ?: false
+            object : GameCompanyEntity {
+                override val name: String
+                    get() = company.name
+                override val isDeveloper: Boolean
+                    get() = isDeveloper
+                override val isPublisher: Boolean
+                    get() = isPublisher
+
+            }
+        }
+    }
+
+    override suspend fun getAllGamePlatforms(): List<GamePlatformEntity> {
+
+        val platforms = withAuthenticatedHeaders { headers ->
+            idgbApi.getPlatforms(headers, "fields platform_logo, name, slug; sort generation asc; limit 100;")
+        }
+
+        return platforms.filter { isProperPlatform(it) }.map { platform ->
+            object : GamePlatformEntity {
+                override val id: String
+                    get() = platform.id
+                override val name: String
+                    get() = platform.name
+                override val icon: String
+                    get() = ""
             }
         }
     }
@@ -212,13 +380,37 @@ class GameIDGBDataSource(
         ) as GameModel
 
         val genreIds = game.genres?.joinToString(",").let {
-            it?.substring(0, it.length - 1)
+            if (it?.get(it.length - 1) == ',') {
+                it.substring(0, it.length - 1)
+            } else {
+                it
+            }
         }
         val genres = withAuthenticatedHeaders { headers ->
             idgbApi.getGenres(headers, "fields name, slug; where id = ($genreIds);")
         }
         return genres.map { genre ->
             object : GameGenreEntity {
+                override val id: String
+                    get() = genre.id
+                override val name: String
+                    get() = genre.name
+
+                override val url: String
+                    get() = genre.url
+
+            }
+        }
+    }
+
+    override suspend fun getAllGameGenres(): List<GameGenreEntity> {
+        val genres = withAuthenticatedHeaders { headers ->
+            idgbApi.getGenres(headers, "fields name, slug; limit 200; sort name asc;")
+        }
+        return genres.map { genre ->
+            object : GameGenreEntity {
+                override val id: String
+                    get() = genre.id
                 override val name: String
                     get() = genre.name
 
@@ -310,9 +502,10 @@ fun String.dateToUnix(): String {
 
 
 fun <T> List<T>.commaSeparated(collapse: (T) -> String): String {
-    return joinToString(postfix = ",") { element ->
+    return joinToString(",") { element ->
         collapse.invoke(element)
-    }.let { joinedString ->
-        joinedString.substring(0, joinedString.length - 1)
     }
+//        .let { joinedString ->
+////        joinedString.substring(0, joinedString.length - 1)
+//    }
 }

@@ -5,6 +5,7 @@ package com.example.project_game_punk.features.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgress
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressModalBottomSheet
+import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
 import com.example.project_game_punk.ui.theme.ProjectGamePunkTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -35,7 +37,14 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val sheetController = GameProgressBottomSheetController()
                     Scaffold(
-                        backgroundColor = Color.Black,
+                        modifier = Modifier.background(
+                            largeRadialGradientBrush(
+                                listOf(
+                                    Color.DarkGray,
+                                    Color.Black
+                                )
+                            )
+                        ),
                         bottomBar = { MainBottomNavigation(navController) }
                     ) {
                         NavigationComponent(navController, sheetController)
@@ -46,6 +55,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
+
 
 @Composable
 fun MainGameProgressBottomSheet(controller: GameProgressBottomSheetController) {

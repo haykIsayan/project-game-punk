@@ -1,19 +1,26 @@
 package com.example.game_punk_domain.domain.interfaces
 
-import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameGenreEntity
-import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
-import com.example.game_punk_domain.domain.entity.GamePlatformEntity
+import com.example.game_punk_domain.domain.entity.*
 import com.example.game_punk_domain.domain.models.GameQueryModel
 
 interface GameRepository {
     suspend fun getGames(gameQuery: GameQueryModel): List<GameEntity>
 
+    suspend fun getGameAgeRating(gameId: String): GameAgeRatingEntity
+
+    suspend fun getSimilarGames(gameId: String): List<GameEntity>
+
     suspend fun applyBanners(games: List<GameEntity>): List<GameEntity>
 
     suspend fun getGamePlatforms(id: String): List<GamePlatformEntity>
 
+    suspend fun getGameCompanies(gameId: String): List<GameCompanyEntity>
+
+    suspend fun getAllGamePlatforms(): List<GamePlatformEntity>
+
     suspend fun getGameGenres(id: String): List<GameGenreEntity>
+
+    suspend fun getAllGameGenres(): List<GameGenreEntity>
 
     suspend fun getScreenshots(id: String): List<String>
 
