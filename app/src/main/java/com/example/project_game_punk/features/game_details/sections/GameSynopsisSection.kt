@@ -1,8 +1,11 @@
 package com.example.project_game_punk.features.game_details.sections
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -16,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,7 +47,7 @@ fun GameSynopsisSection(gameDetailsViewModel: GameDetailsViewModel) {
 private fun GameSynopsisSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        for (i in 0..4) {
+        for (i in 0..5) {
             Box(modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 6.dp)
                 .clip(RoundedCornerShape(4.dp))
@@ -58,41 +62,58 @@ private fun GameSynopsisSectionLoadingState() {
             )
         }
     }
-
 }
 
 @Composable
 private fun GameSynopsisSectionLoadedState(game: GameEntity?) {
-    val expanded = remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isOverflowing = remember { mutableStateOf(false) }
+    val isExpanded = remember { mutableStateOf(false) }
+    val rotation = remember { mutableStateOf(0f) }
+    val rotationAnimDuration = 300
+    val rotationAnimation = animateFloatAsState(
+        targetValue = rotation.value,
+        animationSpec = tween(durationMillis = rotationAnimDuration)
+    )
     game?.description?.let {
         Column {
             SectionTitle(title = "Description")
-                Text(
-                    text = it,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = if (expanded.value) Int.MAX_VALUE else 5,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .animateContentSize()
-                )
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Icon(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .clickable {
-                            expanded.value = !expanded.value
-                                   },
-                    imageVector = if (expanded.value) {
-                        Icons.Filled.ExpandLess
-                    } else {
-                        Icons.Filled.ExpandMore
-                           },
-                    tint = Color.White,
-                    contentDescription = ""
-                )
+            Text(
+                text = it,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = if (isExpanded.value) Int.MAX_VALUE else 5,
+                overflow = TextOverflow.Ellipsis,
+                onTextLayout = {
+                    isOverflowing.value = it.didOverflowHeight
+                },
+                modifier = Modifier
+                    .padding(12.dp)
+                    .animateContentSize(),
+            )
+            if (isOverflowing.value || isExpanded.value) {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Icon(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .rotate(rotationAnimation.value)
+                            .clickable(
+                                indication = null,
+                                interactionSource = interactionSource
+                            ) {
+                                isExpanded.value = !isExpanded.value
+                                if (rotation.value == 0f) {
+                                    rotation.value = 180f
+                                } else {
+                                    rotation.value = 0f
+                                }
+                            },
+                        imageVector = Icons.Filled.ExpandMore,
+                        tint = Color.White,
+                        contentDescription = ""
+                    )
+                }
             }
         }
     }

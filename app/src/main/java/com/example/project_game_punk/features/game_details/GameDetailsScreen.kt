@@ -1,13 +1,13 @@
 package com.example.project_game_punk.features.game_details
 
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -33,6 +33,9 @@ import com.example.project_game_punk.features.game_details.sections.screenshots.
 import com.example.project_game_punk.features.game_details.sections.similar_games.GameDetailsSimilarGamesSection
 import com.example.project_game_punk.features.game_details.sections.similar_games.GameDetailsSimilarGamesViewModel
 import com.example.project_game_punk.features.main.MainGameProgressBottomSheet
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 
 @Composable
 fun GameDetailsScreen(
@@ -121,28 +124,22 @@ private fun GameDetailsScreenContentItems(
     gameScreenshotsViewModel: GameScreenshotsViewModel,
     gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel
 ) {
-    val backgroundColor = remember {
-        mutableStateOf(0)
+    val scope = rememberCoroutineScope()
+    val colorOne = remember {
+        Animatable(Color.DarkGray.copy(alpha = 0.5f))
+    }
+    val colorTwo = remember {
+        Animatable(Color.DarkGray.copy(alpha = 0.2f))
     }
     LazyColumn(
         modifier = Modifier
             .background(
-                if (backgroundColor.value != 0) {
-                    largeRadialGradientBrush(
-                        listOf(
-                            Color(backgroundColor.value).copy(alpha = 0.7f),
-                            Color(backgroundColor.value).copy(alpha = 0.4f)
-                        )
+                largeRadialGradientBrush(
+                    listOf(
+                        colorOne.value,
+                        colorTwo.value
                     )
-
-                } else {
-                    largeRadialGradientBrush(
-                        listOf(
-                            Color.DarkGray.copy(alpha = 0.5f),
-                            Color.DarkGray.copy(alpha = 0.2f),
-                        )
-                    )
-                }
+                )
             )
     ) {
 
@@ -156,7 +153,19 @@ private fun GameDetailsScreenContentItems(
                 gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
                 gameScreenshotsViewModel = gameScreenshotsViewModel
             ) {
-                backgroundColor.value = it
+                scope.launch {
+                    listOf(async {
+                        colorOne.animateTo(
+                            Color(it).copy(alpha = 0.7f),
+                            animationSpec = tween(500)
+                        )
+                    },
+                        async { colorTwo.animateTo(
+                            Color(it).copy(alpha = 0.4f),
+                            animationSpec = tween(500)
+                        ) }
+                    ).awaitAll()
+                }
             }
         }
 
