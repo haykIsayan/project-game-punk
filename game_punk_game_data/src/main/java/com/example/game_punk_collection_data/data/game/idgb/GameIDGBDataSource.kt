@@ -6,7 +6,9 @@ import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
+import com.example.game_punk_collection_data.data.game.rawg.models.GameStoreModel
 import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
+import com.example.game_punk_collection_data.data.game.rawg.models.availableStores
 import com.example.game_punk_domain.domain.entity.*
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.models.GameFilter
@@ -141,23 +143,60 @@ class GameIDGBDataSource(
         return ageRatings.first()
     }
 
+
+//    steam	1
+//    gog	5
+//    youtube	10
+//    microsoft	11
+//    apple	13
+//    twitch	14
+//    android	15
+//    amazon_asin	20
+//    amazon_luna	22
+//    amazon_adg	23
+//    epic_game_store	26
+//    oculus	28
+//    utomik	29
+//    itch_io	30
+//    xbox_marketplace	31
+//    kartridge	32
+//    playstation_store_us	36
+//    focus_entertainment	37
+//    xbox_game_pass_ultimate_cloud	54
+//    gamejolt	55
+
+
+
+
+    override suspend fun getGameStores(gameId: String): List<GameStoreEntity> {
+
+        val categories = availableStores.keys.joinToString(",") { it.toString() }
+
+        println(categories)
+
+        val fields = StringBuilder()
+        fields.append("fields category,checksum,countries,created_at,game,media,name,platform,uid,updated_at,url,year;")
+        fields.append("where game = ($gameId) & category = ($categories);")
+
+        val external = withAuthenticatedHeaders { headers ->
+            idgbApi.getExternalGames(headers, fields.toString())
+        }
+
+        println(external)
+
+        return external.mapNotNull { gameExternal ->
+            availableStores[gameExternal.category]?.copy(
+                url = gameExternal.url
+            )
+        }.distinctBy { it.slug }
+    }
+
+    suspend fun getGameDLCs(gameId: String): List<GameEntity> {
+
+        return emptyList()
+    }
+
     override suspend fun getSimilarGames(gameId: String): List<GameEntity> {
-//        val fields = StringBuilder()
-//        fields.append("fields category,checksum,countries,created_at,game,media,name,platform,uid,updated_at,url,year;")
-//        fields.append("where game = ($gameId) & category = (1,26,36,54,11,28,31);")
-//
-//        val external = withAuthenticatedHeaders { headers ->
-//            idgbApi.getExternalGames(headers, fields.toString())
-//        }
-//
-//        println(external)
-
-
-        /// todo all good here
-
-
-
-
        val gameWithSimilarGameIds = getGame(gameId, GameMetaQueryModel(similarGames = true))
         return (gameWithSimilarGameIds as? GameModel)?.similar_games?.let { similarGameIds ->
             getGames(
@@ -336,6 +375,7 @@ class GameIDGBDataSource(
 
         return companies.map { company ->
             val isDeveloper = involvedCompanies.find {
+                it.company == company.id
                 it.company == company.id
             }?.developer ?: false
             val isPublisher = involvedCompanies.find {

@@ -270,5 +270,13 @@ object InteractorModule {
     ): GetGameCompaniesInteractor {
         return GetGameCompaniesInteractor(gameRepository)
     }
+
+    @Provides
+    @Singleton
+    fun provideGetGameStoresInteractor(
+        gameRepository: GameRepository
+    ): GetGameStoresInteractor {
+        return GetGameStoresInteractor(gameRepository)
+    }
 }
 

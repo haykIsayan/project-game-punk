@@ -19,8 +19,9 @@ import com.example.project_game_punk.features.common.game_progress.GameProgressB
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
 import com.example.project_game_punk.features.game_details.sections.header.GameDetailsHeader
 import com.example.project_game_punk.features.game_details.sections.GameSynopsisSection
-import com.example.project_game_punk.features.game_details.sections.age_rating.GameAgeRatingViewModel
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherViewModel
+import com.example.project_game_punk.features.game_details.sections.game_stores.GameStoresSection
+import com.example.project_game_punk.features.game_details.sections.game_stores.GameStoresViewModel
 import com.example.project_game_punk.features.game_details.sections.genre.GameGenresViewModel
 import com.example.project_game_punk.features.game_details.sections.genre.GameGenresSection
 import com.example.project_game_punk.features.game_details.sections.header.GameDetailsTitle
@@ -38,6 +39,7 @@ fun GameDetailsScreen(
     gameId: String?,
     gameDetailsViewModel: GameDetailsViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
+    gameStoresViewModel: GameStoresViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
     gameGenresViewModel: GameGenresViewModel,
@@ -49,6 +51,7 @@ fun GameDetailsScreen(
         else -> {
             gameDetailsViewModel.loadGame(id = gameId)
             gameDeveloperPublisherViewModel.loadState(param = gameId)
+            gameStoresViewModel.loadState(param = gameId)
             gamePlatformsViewModel.loadState(param = gameId)
             gameGenresViewModel.loadState(param = gameId)
             gameScreenshotsViewModel.loadState(param = gameId)
@@ -57,6 +60,7 @@ fun GameDetailsScreen(
             GameDetailsScreenContent(
                 gameDetailsViewModel = gameDetailsViewModel,
                 gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
+                gameStoresViewModel = gameStoresViewModel,
                 gamePlatformsViewModel = gamePlatformsViewModel,
                 gameGenresViewModel = gameGenresViewModel,
                 gameDetailsNewsViewModel = gameDetailsNewsViewModel,
@@ -76,6 +80,7 @@ private fun NoGameIdState() {
 private fun GameDetailsScreenContent(
     gameDetailsViewModel: GameDetailsViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
+    gameStoresViewModel: GameStoresViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
     gameGenresViewModel: GameGenresViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
@@ -88,6 +93,7 @@ private fun GameDetailsScreenContent(
         GameDetailsScreenContentItems(
             gameDetailsViewModel = gameDetailsViewModel,
             gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
+            gameStoresViewModel = gameStoresViewModel,
             gamePlatformsViewModel = gamePlatformsViewModel,
             gameGenresViewModel = gameGenresViewModel,
             gameDetailsNewsViewModel = gameDetailsNewsViewModel,
@@ -108,6 +114,7 @@ private fun GameDetailsScreenContent(
 private fun GameDetailsScreenContentItems(
     gameDetailsViewModel: GameDetailsViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
+    gameStoresViewModel: GameStoresViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
     gameGenresViewModel: GameGenresViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
@@ -156,6 +163,12 @@ private fun GameDetailsScreenContentItems(
         item {
             GameSynopsisSection(
                 gameDetailsViewModel = gameDetailsViewModel
+            )
+        }
+
+        item {
+            GameStoresSection(
+                gameStoresViewModel = gameStoresViewModel
             )
         }
 

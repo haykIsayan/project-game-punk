@@ -59,16 +59,13 @@ private fun GameDetailsScoreLoadedState(game: GameEntity) {
         targetValue = progress.value,
         animationSpec = tween(durationMillis = progressAnimDuration, easing = FastOutSlowInEasing)
     )
-
     Box(modifier = Modifier
         .size(80.dp)
         .padding(12.dp)
     ) {
         CircularProgressIndicator(
             modifier = Modifier.width(80.dp),
-
             progress = progressAnimation.value  / 100f,
-
             color = Color.White,
         )
         Text(
@@ -81,9 +78,7 @@ private fun GameDetailsScoreLoadedState(game: GameEntity) {
             fontSize = 20.sp
         )
     }
-
     LaunchedEffect(score) {
         progress.value = score
     }
-
 }
