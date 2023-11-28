@@ -6,7 +6,6 @@ import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
-import com.example.game_punk_collection_data.data.game.rawg.models.GameStoreModel
 import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
 import com.example.game_punk_collection_data.data.game.rawg.models.availableStores
 import com.example.game_punk_domain.domain.entity.*
@@ -76,11 +75,13 @@ class GameIDGBDataSource(
                     (if (gameQuery.gameMetaQuery.screenshots) ",screenshots" else "") +
                     (if (gameQuery.gameMetaQuery.steamId) ",websites" else "") +
                     (if(gameQuery.gameMetaQuery.similarGames)",similar_games" else "") +
+                    (if(gameQuery.gameMetaQuery.dlcs)",dlcs" else "") +
                     (if(gameQuery.gameMetaQuery.ageRating)",age_ratings" else "") +
                     "${if(gameQuery.gameMetaQuery.score)",aggregated_rating" else ""};"
             )
             fields.append(
-                "where category = 0 " +
+                "where " +
+                        if (gameQuery.onlyGames) { "category = 0" } else { "category = (0,1)" } +
                         (if (!ids.isNullOrEmpty())  "& id = ($ids)" else "" ) +
                         (if (platformIds.isNotEmpty())  "& platforms = ($platformIds)" else "" ) +
                         (if (genreIds.isNotEmpty())  "& genres = ($genreIds)" else "" ) +
@@ -191,9 +192,25 @@ class GameIDGBDataSource(
         }.distinctBy { it.slug }
     }
 
-    suspend fun getGameDLCs(gameId: String): List<GameEntity> {
+    override suspend fun getGameDLCs(gameId: String): List<GameEntity> {
+        val gameWithDlcIds = getGame(gameId, GameMetaQueryModel(dlcs = true))
+        println(gameWithDlcIds)
+        return (gameWithDlcIds as? GameModel)?.dlcs?.let { dlcs ->
+            val result = getGames(
+                gameQuery = GameQueryModel(
+//                    filter = GameFilter.highestRated,
+//                    sort = GameSort.trending,
+                    ids = dlcs,
+                    onlyGames = false,
 
-        return emptyList()
+                    gameMetaQuery = GameMetaQueryModel(
+                        cover = true
+                    )
+                )
+            )
+            println(result)
+            result
+        } ?: emptyList()
     }
 
     override suspend fun getSimilarGames(gameId: String): List<GameEntity> {
@@ -375,7 +392,6 @@ class GameIDGBDataSource(
 
         return companies.map { company ->
             val isDeveloper = involvedCompanies.find {
-                it.company == company.id
                 it.company == company.id
             }?.developer ?: false
             val isPublisher = involvedCompanies.find {

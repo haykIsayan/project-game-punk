@@ -44,6 +44,10 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getGameDLCs(gameId: String): List<GameEntity> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getGameStores(gameId: String): List<GameStoreEntity> {
         TODO("Not yet implemented")
     }

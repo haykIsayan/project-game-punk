@@ -1,4 +1,4 @@
-package com.example.project_game_punk.features.game_details.sections.similar_games
+package com.example.project_game_punk.features.game_details.sections.dlc
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,31 +25,29 @@ import com.example.project_game_punk.features.common.composables.carousels.ItemC
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 
 @Composable
-fun GameDetailsSimilarGamesSection(
-    gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel,
-    reload: () -> Unit = {}
+fun GameDLCSection(
+    gameDLCsViewModel: GameDLCsViewModel,
+    reload: () -> Unit = {},
 ) {
-    val state = gameDetailsSimilarGamesViewModel.getState().observeAsState().value
+    val state = gameDLCsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
-        failState = {
-            GameDetailsSimilarGamesSectionFailedState {
+        failState =  {
+            GameDLCsSectionFailedState {
                 reload()
             }
         },
-        loadingState = { GameDetailsSimilarGamesSectionLoadingState() }
-    ) { similarGames ->
-        GameDetailsSimilarGamesSectionLoadedState(similarGames)
+        loadingState = { GameDLCSectionLoadingState() }
+    ) { stores ->
+        GameDLCSectionLoadedState(stores)
     }
 }
 
-
-
 @Composable
-private fun GameDetailsSimilarGamesSectionFailedState(reload: () -> Unit) {
+private fun GameDLCsSectionFailedState(reload: () -> Unit) {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Similar Games")
+        SectionTitle(title = "Add Ons")
         Box(modifier = Modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -72,7 +70,7 @@ private fun GameDetailsSimilarGamesSectionFailedState(reload: () -> Unit) {
 }
 
 @Composable
-private fun GameDetailsSimilarGamesSectionLoadingState() {
+private fun GameDLCSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
         Box(
@@ -85,7 +83,6 @@ private fun GameDetailsSimilarGamesSectionLoadingState() {
         )
         LazyRow(content = {
             items(4) {
-
                 Box(modifier = Modifier
                     .size(
                         150.dp,
@@ -101,12 +98,11 @@ private fun GameDetailsSimilarGamesSectionLoadingState() {
 }
 
 @Composable
-private fun GameDetailsSimilarGamesSectionLoadedState(
-    similarGames: List<GameEntity>
-) {
+private fun GameDLCSectionLoadedState(dlcs: List<GameEntity>) {
+    if (dlcs.isEmpty()) return
     Column {
-        SectionTitle(title = "Similar Games")
-        ItemCarousel(items = similarGames) { game ->
+        SectionTitle(title = "Add Ons")
+        ItemCarousel(items = dlcs) { game ->
             GameCarouselItem(game = game)
         }
     }

@@ -10,6 +10,8 @@ interface GameRepository {
 
     suspend fun getSimilarGames(gameId: String): List<GameEntity>
 
+    suspend fun getGameDLCs(gameId: String): List<GameEntity>
+
     suspend fun getGameStores(gameId: String): List<GameStoreEntity>
 
     suspend fun applyBanners(games: List<GameEntity>): List<GameEntity>

@@ -2,8 +2,12 @@ package com.example.project_game_punk.features.game_details.sections.genre
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,14 +29,46 @@ import com.example.project_game_punk.features.common.composables.shimmerBrush
 
 @Composable
 fun GameGenresSection(
-    gameGenresViewModel: GameGenresViewModel
+    gameGenresViewModel: GameGenresViewModel,
+    reload: () -> Unit = {}
 ) {
     val state = gameGenresViewModel.getState().observeAsState().value
     LoadableStateWrapper(
-        state = state,
+        state = state, failState = {
+            GameGenresSectionFailedState {
+                reload()
+            }
+        },
         loadingState = { GameGenresSectionLoadingState() }
     ) { genres ->
         GameGenresSectionLoadedState(genres)
+    }
+}
+
+
+@Composable
+private fun GameGenresSectionFailedState(reload: () -> Unit) {
+    val showShimmer = remember { mutableStateOf(true) }
+    Column {
+        SectionTitle(title = "Genres")
+        Box(modifier = Modifier
+            .padding(12.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(shimmerBrush(showShimmer = showShimmer.value))
+            .fillMaxWidth()
+            .height(40.dp)) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(30.dp)
+                    .clickable {
+                        reload()
+                    },
+                imageVector = Icons.Filled.Sync,
+                tint = Color.White,
+                contentDescription = ""
+            )
+        }
     }
 }
 

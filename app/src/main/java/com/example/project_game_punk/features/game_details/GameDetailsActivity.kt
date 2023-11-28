@@ -34,6 +34,7 @@ class GameDetailsActivity : ComponentActivity() {
                             gameGenresViewModel = hiltViewModel(),
                             gameScreenshotsViewModel = hiltViewModel(),
                             gameDetailsNewsViewModel = hiltViewModel(),
+                            gameDLCsViewModel = hiltViewModel(),
                             gameDetailsSimilarGamesViewModel = hiltViewModel()
                         )
                     }

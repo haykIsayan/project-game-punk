@@ -256,6 +256,14 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun provideGetGamesDLCsInteractor(
+        gameRepository: GameRepository
+    ): GetGamesDLCsInteractor {
+        return GetGamesDLCsInteractor(gameRepository)
+    }
+
+    @Provides
+    @Singleton
     fun provideGetGameAgeRatingInteractor(
         gameRepository: GameRepository
     ): GetGameAgeRatingInteractor {

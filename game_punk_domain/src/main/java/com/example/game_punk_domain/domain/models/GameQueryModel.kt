@@ -13,5 +13,6 @@ data class GameQueryModel(
     val gameMetaQuery: GameMetaQueryModel = GameMetaQueryModel(),
     val platforms: List<GamePlatformEntity> = emptyList(),
     val genres: List<GameGenreEntity> = emptyList(),
+    val onlyGames: Boolean = true,
     val ids: List<String> = emptyList()
 )

@@ -5,5 +5,5 @@ data class GameExternalModel(
     val media: Int,
     val platform: String,
     val url: String,
-    val uid: String
+    val uid: String? = null,
 )

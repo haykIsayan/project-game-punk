@@ -30,6 +30,7 @@ data class GameModel(
     @Ignore val websites: List<String>? = null,
     @Ignore val age_ratings: List<String>? = null,
     @Ignore val similar_games: List<String>? = null,
+    @Ignore val dlcs: List<String>? = null,
     @ColumnInfo(name = "game_progress_status") var gameProgressStatus: GameProgressStatus? = null,
     @Ignore override val steamId: String? = null,
 ): GameEntity {

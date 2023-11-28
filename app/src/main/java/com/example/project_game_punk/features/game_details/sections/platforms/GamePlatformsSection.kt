@@ -2,8 +2,12 @@ package com.example.project_game_punk.features.game_details.sections.platforms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,14 +29,47 @@ import com.example.project_game_punk.features.common.composables.shimmerBrush
 
 @Composable
 fun GamePlatformsSection(
-    gamePlatformsViewModel: GamePlatformsViewModel
+    gamePlatformsViewModel: GamePlatformsViewModel,
+    reload: () -> Unit = {}
 ) {
     val state = gamePlatformsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
+        failState = {
+            GamePlatformSectionFailedState {
+                reload()
+            }
+        },
         loadingState = { GamePlatformSectionLoadingState() }
     ) { platforms ->
         GamePlatformSectionLoadedState(platforms)
+    }
+}
+
+
+@Composable
+private fun GamePlatformSectionFailedState(reload: () -> Unit) {
+    val showShimmer = remember { mutableStateOf(true) }
+    Column {
+        SectionTitle(title = "Platforms")
+        Box(modifier = Modifier
+            .padding(12.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(shimmerBrush(showShimmer = showShimmer.value))
+            .fillMaxWidth()
+            .height(40.dp)) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(30.dp)
+                    .clickable {
+                        reload()
+                    },
+                imageVector = Icons.Filled.Sync,
+                tint = Color.White,
+                contentDescription = ""
+            )
+        }
     }
 }
 

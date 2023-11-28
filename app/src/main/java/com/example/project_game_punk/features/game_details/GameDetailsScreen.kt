@@ -20,6 +20,8 @@ import com.example.project_game_punk.features.common.game_progress.GameProgressB
 import com.example.project_game_punk.features.game_details.sections.header.GameDetailsHeader
 import com.example.project_game_punk.features.game_details.sections.GameSynopsisSection
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherViewModel
+import com.example.project_game_punk.features.game_details.sections.dlc.GameDLCSection
+import com.example.project_game_punk.features.game_details.sections.dlc.GameDLCsViewModel
 import com.example.project_game_punk.features.game_details.sections.game_stores.GameStoresSection
 import com.example.project_game_punk.features.game_details.sections.game_stores.GameStoresViewModel
 import com.example.project_game_punk.features.game_details.sections.genre.GameGenresViewModel
@@ -47,6 +49,7 @@ fun GameDetailsScreen(
     gamePlatformsViewModel: GamePlatformsViewModel,
     gameGenresViewModel: GameGenresViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
+    gameDLCsViewModel: GameDLCsViewModel,
     gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel
 ) {
     when (gameId) {
@@ -59,8 +62,10 @@ fun GameDetailsScreen(
             gameGenresViewModel.loadState(param = gameId)
             gameScreenshotsViewModel.loadState(param = gameId)
             gameDetailsNewsViewModel.loadState(param = gameId)
+            gameDLCsViewModel.loadState(param = gameId)
             gameDetailsSimilarGamesViewModel.loadState(param = gameId)
             GameDetailsScreenContent(
+                gameId = gameId,
                 gameDetailsViewModel = gameDetailsViewModel,
                 gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
                 gameStoresViewModel = gameStoresViewModel,
@@ -68,6 +73,7 @@ fun GameDetailsScreen(
                 gameGenresViewModel = gameGenresViewModel,
                 gameDetailsNewsViewModel = gameDetailsNewsViewModel,
                 gameScreenshotsViewModel = gameScreenshotsViewModel,
+                gameDLCsViewModel = gameDLCsViewModel,
                 gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel
             )
         }
@@ -81,6 +87,7 @@ private fun NoGameIdState() {
 
 @Composable
 private fun GameDetailsScreenContent(
+    gameId: String?,
     gameDetailsViewModel: GameDetailsViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
     gameStoresViewModel: GameStoresViewModel,
@@ -88,12 +95,14 @@ private fun GameDetailsScreenContent(
     gameGenresViewModel: GameGenresViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
+    gameDLCsViewModel: GameDLCsViewModel,
     gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)) {
         GameDetailsScreenContentItems(
+            gameId = gameId,
             gameDetailsViewModel = gameDetailsViewModel,
             gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
             gameStoresViewModel = gameStoresViewModel,
@@ -101,6 +110,7 @@ private fun GameDetailsScreenContent(
             gameGenresViewModel = gameGenresViewModel,
             gameDetailsNewsViewModel = gameDetailsNewsViewModel,
             gameScreenshotsViewModel = gameScreenshotsViewModel,
+            gameDLCsViewModel = gameDLCsViewModel,
             gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel
         )
         val sheetController = GameProgressBottomSheetController()
@@ -115,6 +125,7 @@ private fun GameDetailsScreenContent(
 
 @Composable
 private fun GameDetailsScreenContentItems(
+    gameId: String?,
     gameDetailsViewModel: GameDetailsViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
     gameStoresViewModel: GameStoresViewModel,
@@ -122,6 +133,7 @@ private fun GameDetailsScreenContentItems(
     gameGenresViewModel: GameGenresViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
+    gameDLCsViewModel: GameDLCsViewModel,
     gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel
 ) {
     val scope = rememberCoroutineScope()
@@ -178,19 +190,31 @@ private fun GameDetailsScreenContentItems(
         item {
             GameStoresSection(
                 gameStoresViewModel = gameStoresViewModel
-            )
+            ) {
+                gameId?.let {
+                    gameStoresViewModel.loadState(gameId)
+                }
+            }
         }
 
         item {
             GamePlatformsSection(
                 gamePlatformsViewModel = gamePlatformsViewModel
-            )
+            ) {
+                gameId?.let {
+                    gamePlatformsViewModel.loadState(gameId)
+                }
+            }
         }
 
         item {
             GameGenresSection(
                 gameGenresViewModel = gameGenresViewModel
-            )
+            ) {
+                gameId?.let {
+                    gameGenresViewModel.loadState(gameId)
+                }
+            }
         }
 
         item {
@@ -200,9 +224,23 @@ private fun GameDetailsScreenContentItems(
         }
 
         item {
+            GameDLCSection(
+                gameDLCsViewModel = gameDLCsViewModel
+            ) {
+                gameId?.let {
+                    gameDLCsViewModel.loadState(gameId)
+                }
+            }
+        }
+
+        item {
             GameDetailsSimilarGamesSection(
                 gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel
-            )
+            ) {
+                gameId?.let {
+                    gameDetailsSimilarGamesViewModel.loadState(gameId)
+                }
+            }
         }
 
         item {

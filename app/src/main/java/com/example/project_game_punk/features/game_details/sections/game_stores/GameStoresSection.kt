@@ -7,6 +7,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -29,13 +32,48 @@ import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.game_details.GameWebViewActivity
 
 @Composable
-fun GameStoresSection(gameStoresViewModel: GameStoresViewModel) {
+fun GameStoresSection(
+    gameStoresViewModel: GameStoresViewModel,
+    reload: () -> Unit = {}
+) {
     val state = gameStoresViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
+        failState = {
+            GameStoresSectionFailedState {
+                reload()
+            }
+        },
         loadingState = { GameStoresSectionLoadingState() }
     ) { stores ->
         GameStoresSectionLoadedState(stores)
+    }
+}
+
+
+@Composable
+private fun GameStoresSectionFailedState(reload: () -> Unit) {
+    val showShimmer = remember { mutableStateOf(true) }
+    Column {
+        SectionTitle(title = "Available")
+        Box(modifier = Modifier
+            .padding(12.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(shimmerBrush(showShimmer = showShimmer.value))
+            .fillMaxWidth()
+            .height(40.dp)) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(30.dp)
+                    .clickable {
+                        reload()
+                    },
+                imageVector = Icons.Filled.Sync,
+                tint = Color.White,
+                contentDescription = ""
+            )
+        }
     }
 }
 
@@ -57,7 +95,7 @@ private fun GameStoresSectionLoadedState(
 ) {
     if (stores.isEmpty()) return
     Column {
-        SectionTitle(title = "Available")
+        SectionTitle(title = "Stores")
         ItemCarousel(
             items = stores,
             itemDecorator = ItemCarouselDecorators.pillItemDecorator
@@ -76,7 +114,8 @@ private fun GameStoresSectionItem(store: GameStoreEntity) {
                 1.dp,
                 SolidColor(Color.White),
                 shape = RoundedCornerShape(15.dp)
-            ).clickable {
+            )
+            .clickable {
                 onGameStoresItemClicked(
                     context,
                     store

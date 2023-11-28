@@ -5,7 +5,7 @@ import com.example.game_punk_domain.domain.entity.GameStoreEntity
 data class GameStoreModel(
     override val slug: String,
     override val name: String,
-    override val url: String = ""
+    override val url: String? = null
 ): GameStoreEntity
 
 val availableStores = mapOf(
