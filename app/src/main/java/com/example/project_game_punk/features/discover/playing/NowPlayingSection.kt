@@ -33,6 +33,7 @@ import com.example.project_game_punk.R
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
+import com.example.project_game_punk.features.common.composables.grids.GamePunkGrid
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
 import com.example.project_game_punk.features.game_details.GameDetailsActivity
@@ -52,8 +53,8 @@ fun NowPlayingSection(nowPlayingViewModel: NowPlayingViewModel) {
                 )
             },
             loadingState = { NowPlayingSectionLoadingState() },
-        ) { games ->
-            NowPlayingSectionLoadedState(games = games)
+        ) { nowPlayingState ->
+            NowPlayingSectionLoadedState(nowPlayingState = nowPlayingState)
         }
     }
 }
@@ -90,7 +91,82 @@ private fun NowPlayingSectionLoadingState() {
 }
 
 @Composable
-private fun NowPlayingSectionLoadedState(games: List<GameEntity>) {
+private fun NowPlayingSectionLoadedState(nowPlayingState: NowPlayingState) {
+
+    when (nowPlayingState) {
+        is NowPlayingState.NowPlayingAvailable -> {
+            NowPlayingAvailableState(
+                nowPlayingAvailable = nowPlayingState
+            )
+        }
+        is NowPlayingState.NowPlayingUnavailable -> {
+            NowPlayingUnavailable(
+               nowPlayingUnavailable = nowPlayingState
+           )
+        }
+    }
+}
+
+@Composable
+private fun NowPlayingUnavailable(
+    nowPlayingUnavailable: NowPlayingState.NowPlayingUnavailable
+) {
+    val games = nowPlayingUnavailable.games
+    Box(
+        modifier = Modifier.fillMaxWidth()
+            .height(140.dp)
+            .padding(6.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(Color.Black)
+    ) {
+        GamePunkGrid(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp),
+            items = games,
+            span = games.size
+        ) { game ->
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(game.backgroundImage)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+
+                .background(largeRadialGradientBrush(
+                    listOf(
+                        Color.Black.copy(alpha = 0.9f),
+                        Color.Black.copy(alpha = 0.6f),
+                    )
+                ))
+
+        )
+                Text(
+                    text = "No games being played",
+//                    text = "You are not playing any games",
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+private fun NowPlayingAvailableState(
+    nowPlayingAvailable: NowPlayingState.NowPlayingAvailable
+) {
+    val games = nowPlayingAvailable.nowPlayingGames
     ItemPagerCarousel(items = games) { game ->
         NowPlayingSectionItem(game = game)
     }
