@@ -18,6 +18,8 @@ import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 import com.example.project_game_punk.features.game_details.sections.GameHeaderBackgroundSection
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherSection
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherViewModel
+import com.example.project_game_punk.features.game_details.sections.release_date.GameReleaseDateSection
+import com.example.project_game_punk.features.game_details.sections.release_date.GameReleaseDateViewModel
 import com.example.project_game_punk.features.game_details.sections.screenshots.GameScreenshotsViewModel
 
 
@@ -25,6 +27,7 @@ import com.example.project_game_punk.features.game_details.sections.screenshots.
 fun GameDetailsHeader(
     gameDetailsViewModel: GameDetailsViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
+    gameReleaseDateViewModel: GameReleaseDateViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
     onColorLoaded: (Int) -> Unit
 ) {
@@ -32,7 +35,9 @@ fun GameDetailsHeader(
         GameScreenshotsPager(
             gameScreenshotsViewModel,
         )
-        Row(modifier = Modifier.fillMaxWidth().height(200.dp),
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             GameDetailsCover(
@@ -41,7 +46,8 @@ fun GameDetailsHeader(
             )
             GameDetailsAdditional(
                 gameDetailsViewModel,
-                gameDeveloperPublisherViewModel
+                gameDeveloperPublisherViewModel,
+                gameReleaseDateViewModel
             )
         }
     }
@@ -75,7 +81,8 @@ private fun GameScreenshotsPagerLoadingState() {
 @Composable
 private fun GameDetailsAdditional(
     gameDetailsViewModel: GameDetailsViewModel,
-    gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel
+    gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
+    gameReleaseDateViewModel: GameReleaseDateViewModel
 ) {
     Column(
         modifier = Modifier
@@ -90,11 +97,14 @@ private fun GameDetailsAdditional(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            GameDetailsReleaseDate()
-            Box(modifier = Modifier
-                .width(0.3.dp)
-                .height(30.dp)
-                .background(Color.White)
+            GameReleaseDateSection(
+                gameReleaseDateViewModel
+            )
+            Box(
+                modifier = Modifier
+                    .width(0.3.dp)
+                    .height(30.dp)
+                    .background(Color.White)
             )
             GameDetailsScore(
                 gameDetailsViewModel
@@ -104,7 +114,5 @@ private fun GameDetailsAdditional(
             gameDeveloperPublisherViewModel
         )
     }
-
-
 }
 

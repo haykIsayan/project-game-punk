@@ -55,6 +55,12 @@ interface IDGBApi {
         @Body fields: String
     ): List<GameExternalModel>
 
+    @POST("release_dates")
+    suspend fun getReleaseDates(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<GameReleaseModel>
+
     @POST("involved_companies")
     suspend fun getInvolvedCompanies(
         @HeaderMap headers: Map<String, String>,

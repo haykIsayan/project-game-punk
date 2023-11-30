@@ -31,6 +31,7 @@ import com.example.project_game_punk.features.game_details.sections.news.GameDet
 import com.example.project_game_punk.features.game_details.sections.news.GameDetailsNewsViewModel
 import com.example.project_game_punk.features.game_details.sections.platforms.GamePlatformsSection
 import com.example.project_game_punk.features.game_details.sections.platforms.GamePlatformsViewModel
+import com.example.project_game_punk.features.game_details.sections.release_date.GameReleaseDateViewModel
 import com.example.project_game_punk.features.game_details.sections.screenshots.GameScreenshotsViewModel
 import com.example.project_game_punk.features.game_details.sections.similar_games.GameDetailsSimilarGamesSection
 import com.example.project_game_punk.features.game_details.sections.similar_games.GameDetailsSimilarGamesViewModel
@@ -44,6 +45,7 @@ fun GameDetailsScreen(
     gameId: String?,
     gameDetailsViewModel: GameDetailsViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
+    gameReleaseDateViewModel: GameReleaseDateViewModel,
     gameStoresViewModel: GameStoresViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
@@ -57,6 +59,7 @@ fun GameDetailsScreen(
         else -> {
             gameDetailsViewModel.loadGame(id = gameId)
             gameDeveloperPublisherViewModel.loadState(param = gameId)
+            gameReleaseDateViewModel.loadState(param = gameId)
             gameStoresViewModel.loadState(param = gameId)
             gamePlatformsViewModel.loadState(param = gameId)
             gameGenresViewModel.loadState(param = gameId)
@@ -68,6 +71,7 @@ fun GameDetailsScreen(
                 gameId = gameId,
                 gameDetailsViewModel = gameDetailsViewModel,
                 gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
+                gameReleaseDateViewModel = gameReleaseDateViewModel,
                 gameStoresViewModel = gameStoresViewModel,
                 gamePlatformsViewModel = gamePlatformsViewModel,
                 gameGenresViewModel = gameGenresViewModel,
@@ -90,6 +94,7 @@ private fun GameDetailsScreenContent(
     gameId: String?,
     gameDetailsViewModel: GameDetailsViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
+    gameReleaseDateViewModel: GameReleaseDateViewModel,
     gameStoresViewModel: GameStoresViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
     gameGenresViewModel: GameGenresViewModel,
@@ -105,6 +110,7 @@ private fun GameDetailsScreenContent(
             gameId = gameId,
             gameDetailsViewModel = gameDetailsViewModel,
             gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
+            gameReleaseDateViewModel = gameReleaseDateViewModel,
             gameStoresViewModel = gameStoresViewModel,
             gamePlatformsViewModel = gamePlatformsViewModel,
             gameGenresViewModel = gameGenresViewModel,
@@ -128,6 +134,7 @@ private fun GameDetailsScreenContentItems(
     gameId: String?,
     gameDetailsViewModel: GameDetailsViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
+    gameReleaseDateViewModel: GameReleaseDateViewModel,
     gameStoresViewModel: GameStoresViewModel,
     gamePlatformsViewModel: GamePlatformsViewModel,
     gameGenresViewModel: GameGenresViewModel,
@@ -163,6 +170,7 @@ private fun GameDetailsScreenContentItems(
             GameDetailsHeader(
                 gameDetailsViewModel = gameDetailsViewModel,
                 gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
+                gameReleaseDateViewModel = gameReleaseDateViewModel,
                 gameScreenshotsViewModel = gameScreenshotsViewModel
             ) {
                 scope.launch {

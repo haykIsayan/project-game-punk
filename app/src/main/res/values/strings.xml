@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gamepunk</string>
+    <string name="app_name">GamePunk</string>
 
     <string name="steam_store_base_url">https://store.steampowered.com/api/</string>
     <string name="steam_api_base_url">https://api.steampowered.com/</string>

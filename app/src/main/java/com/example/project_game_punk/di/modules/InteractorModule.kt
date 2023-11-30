@@ -210,6 +210,16 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesGetGameReleaseDateInteractor(
+        gameRepository: GameRepository
+    ): GetGameReleaseDateInteractor {
+        return GetGameReleaseDateInteractor(
+            gameRepository
+        )
+    }
+
+    @Provides
+    @Singleton
     fun providesGetAllAvailableGamePlatforms(
         gameRepository: GameRepository
     ): GetAllAvailableGamePlatformsInteractor {

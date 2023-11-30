@@ -12,6 +12,8 @@ interface GameRepository {
 
     suspend fun getGameDLCs(gameId: String): List<GameEntity>
 
+    suspend fun getGameReleaseDate(gameId: String): String
+
     suspend fun getGameStores(gameId: String): List<GameStoreEntity>
 
     suspend fun applyBanners(games: List<GameEntity>): List<GameEntity>

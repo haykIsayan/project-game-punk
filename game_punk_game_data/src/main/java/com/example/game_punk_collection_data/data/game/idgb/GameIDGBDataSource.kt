@@ -3,11 +3,11 @@ package com.example.game_punk_collection_data.data.game.idgb
 import android.os.Build
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
-import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
 import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
 import com.example.game_punk_collection_data.data.game.rawg.models.availableStores
+import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_domain.domain.entity.*
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.models.GameFilter
@@ -16,10 +16,12 @@ import com.example.game_punk_domain.domain.models.GameSort
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 class GameIDGBDataSource(
     private val clientId: String,
@@ -166,8 +168,19 @@ class GameIDGBDataSource(
 //    xbox_game_pass_ultimate_cloud	54
 //    gamejolt	55
 
+    override suspend fun getGameReleaseDate(gameId: String): String {
 
+        val releaseDates = withAuthenticatedHeaders { header ->
+            val fields = StringBuilder()
+            fields.append("fields *;")
+            fields.append("where game = ($gameId);")
 
+            idgbApi.getReleaseDates(header, fields.toString())
+        }
+        return releaseDates.sortedBy { it.date.toLong() }.map {
+            it.date.unixToFormatted()
+        }.first()
+    }
 
     override suspend fun getGameStores(gameId: String): List<GameStoreEntity> {
 
@@ -555,13 +568,18 @@ fun String.dateToUnix(): String {
     return this
 }
 
+fun String.unixToFormatted(): String {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val date = Date(toLong() * 1000)
+        return SimpleDateFormat("MMM dd, yyyy").format(date)
+    }
+    return this
+}
+
 
 
 fun <T> List<T>.commaSeparated(collapse: (T) -> String): String {
     return joinToString(",") { element ->
         collapse.invoke(element)
     }
-//        .let { joinedString ->
-////        joinedString.substring(0, joinedString.length - 1)
-//    }
 }
