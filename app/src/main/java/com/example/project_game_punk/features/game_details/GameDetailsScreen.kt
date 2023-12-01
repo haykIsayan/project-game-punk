@@ -36,6 +36,8 @@ import com.example.project_game_punk.features.game_details.sections.screenshots.
 import com.example.project_game_punk.features.game_details.sections.similar_games.GameDetailsSimilarGamesSection
 import com.example.project_game_punk.features.game_details.sections.similar_games.GameDetailsSimilarGamesViewModel
 import com.example.project_game_punk.features.main.MainGameProgressBottomSheet
+import com.example.project_game_punk.ui.theme.gamePunkAlt
+import com.example.project_game_punk.ui.theme.gamePunkPrimary
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -145,10 +147,10 @@ private fun GameDetailsScreenContentItems(
 ) {
     val scope = rememberCoroutineScope()
     val colorOne = remember {
-        Animatable(Color.DarkGray.copy(alpha = 0.5f))
+        Animatable(gamePunkAlt)
     }
     val colorTwo = remember {
-        Animatable(Color.DarkGray.copy(alpha = 0.2f))
+        Animatable(gamePunkPrimary)
     }
     LazyColumn(
         modifier = Modifier

@@ -11,9 +11,9 @@ object GameProgressMapper {
         return when(gameProgress) {
             GameProgress.FinishedGameProgress -> R.color.apple
             GameProgress.FollowingGameProgress -> R.color.white
-            GameProgress.NotFollowingGameProgress -> R.color.black
-            GameProgress.PlayingGameProgress -> R.color.purple_700
-            GameProgress.ReplayingGameProgress -> R.color.purple_700
+            GameProgress.NotFollowingGameProgress -> R.color.transparent
+            GameProgress.PlayingGameProgress -> R.color.blue
+            GameProgress.ReplayingGameProgress -> R.color.blue
             GameProgress.StoppedGameProgress -> R.color.red
         }
     }

@@ -50,9 +50,10 @@ fun SearchField(
                     searchFiltersViewModel.updateQuery(it)
                 },
                 shape = CircleShape,
+                singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent,
-
+                    cursorColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent

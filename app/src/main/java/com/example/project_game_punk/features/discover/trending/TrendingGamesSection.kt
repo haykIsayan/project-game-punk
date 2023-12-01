@@ -73,15 +73,15 @@ private fun TrendingGamesSectionLoadingState() {
             ) {
                 Box(modifier = Modifier
                     .size(
-                        150.dp,
-                        200.dp
+                        120.dp,
+                        160.dp
                     )
                     .padding(6.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(shimmerBrush(showShimmer = showShimmer.value))
                 )
                 Box(modifier = Modifier
-                    .width(150.dp)
+                    .width(120.dp)
                     .height(40.dp)
                     .padding(6.dp)
                     .clip(RoundedCornerShape(10.dp))

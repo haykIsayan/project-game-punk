@@ -19,7 +19,6 @@ fun NavigationComponent(
     sheetController: GameProgressBottomSheetController
 ) {
     NavHost(
-        modifier = Modifier.padding(bottom = 60.dp),
         navController = navController,
         startDestination = MainNavigationTab.DiscoverMainNavigationTab.route
     ) {

@@ -5,12 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
 import com.example.project_game_punk.features.common.composables.*
 import com.example.project_game_punk.features.common.composables.grids.GamePunkGrid
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
-import com.example.project_game_punk.features.common.game_progress.GameProgressButton
 import com.example.project_game_punk.features.discover.components.DiscoverGameCarouselLoading
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
 
@@ -26,33 +23,22 @@ fun ProfileScreen(
         loadingState = { DiscoverGameCarouselLoading() },
     ) { games ->
         Column {
-            SectionTitle(title = "Your games")
+            SectionTitle(title = "Your Games")
             GamePunkGrid(
-                modifier = Modifier.padding(6.dp),
-                items = games, span = 3) {
-                GameCarouselItem(game = it, sheetController = controller)
-                { game, gameProgress ->
+                modifier = Modifier/*.padding(6.dp)*/,
+                items = games,
+                span = 3,
+                footer = {
+                    Spacer(modifier = Modifier.height(80.dp))
+                }
+            ) {
+                GameCarouselItem(
+                    game = it,
+                    sheetController = controller
+                ) { game, gameProgress ->
                     profileViewModel.updateGameProgress(game, gameProgress)
                 }
             }
         }
     }
-}
-
-@Composable
-private fun ProfileGameListItem(
-    game: GameEntity,
-    controller: GameProgressBottomSheetController,
-    onProgressSelected: (GameEntity, GameProgress) -> Unit
-) {
-    GameListItem(game = game,
-        trailingButton = {
-            GameProgressButton(
-                game = game,
-                modifier = Modifier.padding(8.dp),
-                controller = controller,
-                onProgressSelected = onProgressSelected
-            )
-        }
-    )
 }

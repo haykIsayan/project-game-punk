@@ -47,6 +47,7 @@ fun GameSynopsisSection(gameDetailsViewModel: GameDetailsViewModel) {
 private fun GameSynopsisSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
+        SectionTitle(title = "Description", isLoading = true)
         for (i in 0..5) {
             Box(modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 6.dp)

@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FFFF0000</color>
     <color name="apple">#FF007600</color>
+    <color name="transparent">#00000000</color>
+    <color name="blue">#FF00308F</color>
 </resources>

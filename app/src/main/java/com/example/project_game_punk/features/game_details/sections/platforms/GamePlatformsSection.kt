@@ -75,14 +75,17 @@ private fun GamePlatformSectionFailedState(reload: () -> Unit) {
 
 @Composable
 private fun GamePlatformSectionLoadingState() {
-    val showShimmer = remember { mutableStateOf(true) }
-    Box(modifier = Modifier
-        .padding(12.dp)
-        .clip(RoundedCornerShape(10.dp))
-        .fillMaxWidth()
-        .background(shimmerBrush(showShimmer = showShimmer.value))
-        .height(40.dp)
-    )
+    Column {
+        SectionTitle(title = "Platforms", isLoading = true)
+        val showShimmer = remember { mutableStateOf(true) }
+        Box(modifier = Modifier
+            .padding(12.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .fillMaxWidth()
+            .background(shimmerBrush(showShimmer = showShimmer.value))
+            .height(40.dp)
+        )
+    }
 }
 
 @Composable

@@ -49,10 +49,9 @@ fun GameCarouselItem(
     ) {
         Box(modifier = Modifier
             .size(
-                150.dp,
-                200.dp
+                120.dp,
+                160.dp
             )
-//            .padding(start = 6.dp, top = 6.dp, end = 6.dp)
             .padding(6.dp)
             .clip(RoundedCornerShape(10.dp))
         ) {
@@ -83,9 +82,8 @@ fun GameCarouselItem(
             GameProgressButton(
                 game = game,
                 modifier = Modifier
-                    .width(150.dp)
-                    .padding(6.dp)
-                    .fillMaxWidth(),
+                    .width(120.dp)
+                    .padding(6.dp),
                 onProgressSelected = onProgressSelected,
                 controller = sheetController
             )

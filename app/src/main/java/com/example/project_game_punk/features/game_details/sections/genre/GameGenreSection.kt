@@ -74,14 +74,17 @@ private fun GameGenresSectionFailedState(reload: () -> Unit) {
 
 @Composable
 private fun GameGenresSectionLoadingState() {
-    val showShimmer = remember { mutableStateOf(true) }
-    Box(modifier = Modifier
-        .padding(12.dp)
-        .clip(RoundedCornerShape(10.dp))
-        .fillMaxWidth()
-        .background(shimmerBrush(showShimmer = showShimmer.value))
-        .height(40.dp)
-    )
+    Column {
+        SectionTitle(title = "Genres", isLoading = true)
+        val showShimmer = remember { mutableStateOf(true) }
+        Box(modifier = Modifier
+            .padding(12.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .fillMaxWidth()
+            .background(shimmerBrush(showShimmer = showShimmer.value))
+            .height(40.dp)
+        )
+    }
 }
 
 @Composable

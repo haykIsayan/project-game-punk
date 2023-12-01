@@ -110,6 +110,10 @@ private fun SearchResultLoadedState(
                 searchResultsViewModel
             )
         }
+
+        item {
+            Spacer(modifier = Modifier.height(80.dp))
+        }
     }
 }
 
@@ -164,14 +168,20 @@ private fun GameSearchResultItem(
                     .padding(12.dp),
                 fontSize = 18.sp
             )
-            GameProgressButton(
-                game = game,
-                modifier = Modifier.padding(12.dp),
-                controller = sheetController,
-                onProgressSelected = { game, gameProgress ->
-                    searchResultsViewModel.updateGameProgress(game, gameProgress)
-                }
-            )
+            Box(
+                modifier = Modifier
+                    .padding(12.dp)
+            ) {
+                GameProgressButton(
+                    game = game,
+                    modifier = Modifier
+                        .width(100.dp),
+                    controller = sheetController,
+                    onProgressSelected = { game, gameProgress ->
+                        searchResultsViewModel.updateGameProgress(game, gameProgress)
+                    }
+                )
+            }
         }
     }
 }

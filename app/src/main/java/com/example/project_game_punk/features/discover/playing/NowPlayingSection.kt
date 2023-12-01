@@ -38,12 +38,13 @@ import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
 import com.example.project_game_punk.features.game_details.GameDetailsActivity
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
+import com.example.project_game_punk.ui.theme.gamePunkPrimary
 
 @Composable
 fun NowPlayingSection(nowPlayingViewModel: NowPlayingViewModel) {
     val state = nowPlayingViewModel.getState().observeAsState().value
     Column {
-        SectionTitle(title = "Now playing")
+        SectionTitle(title = "Now Playing")
         LoadableStateWrapper(
             state = state,
             failState = { errorMessage ->
@@ -76,7 +77,7 @@ private fun NowPlayingSectionLoadingState() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(180.dp)
+                .height(160.dp)
                 .padding(6.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(shimmerBrush(showShimmer = showShimmer.value))
@@ -143,21 +144,21 @@ private fun NowPlayingUnavailable(
                 .fillMaxWidth()
                 .fillMaxHeight()
 
-                .background(largeRadialGradientBrush(
-                    listOf(
-                        Color.Black.copy(alpha = 0.9f),
-                        Color.Black.copy(alpha = 0.6f),
+                .background(
+                    largeRadialGradientBrush(
+                        listOf(
+                        gamePunkPrimary.copy(alpha = 0.9f),
+                        gamePunkPrimary.copy(alpha = 0.6f),
+                        )
                     )
-                ))
-
+                )
         )
-                Text(
-                    text = "No games being played",
-//                    text = "You are not playing any games",
-                    modifier = Modifier.align(Alignment.Center),
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+        Text(
+            text = "No games being played",
+            modifier = Modifier.align(Alignment.Center),
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
         )
     }
 }
@@ -177,7 +178,7 @@ private fun NowPlayingSectionItem(game: GameEntity) {
     val context = LocalContext.current
     Box(modifier = Modifier
         .fillMaxWidth()
-        .height(180.dp)
+        .height(160.dp)
         .padding(6.dp)
         .clip(RoundedCornerShape(10.dp))
         .background(Color.Black)
@@ -195,7 +196,7 @@ private fun NowPlayingSectionItem(game: GameEntity) {
             )
         }
     ) {
-        if (isAboveAndroid12()) {
+        if (/*isAboveAndroid12()*/false) {
             NowPlayingSectionItemBlurredBackground(
                 game = game
             )

@@ -53,7 +53,7 @@ private fun GameDLCsSectionFailedState(reload: () -> Unit) {
             .clip(RoundedCornerShape(10.dp))
             .background(shimmerBrush(showShimmer = showShimmer.value))
             .fillMaxWidth()
-            .height(200.dp)) {
+            .height(160.dp)) {
             Icon(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -73,20 +73,13 @@ private fun GameDLCsSectionFailedState(reload: () -> Unit) {
 private fun GameDLCSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        Box(
-            modifier = Modifier
-                .padding(12.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(shimmerBrush(showShimmer = showShimmer.value))
-                .fillMaxWidth()
-                .height(22.dp)
-        )
+        SectionTitle(title = "Add Ons", isLoading = true)
         LazyRow(content = {
             items(4) {
                 Box(modifier = Modifier
                     .size(
-                        150.dp,
-                        200.dp
+                        120.dp,
+                        160.dp
                     )
                     .padding(6.dp)
                     .clip(RoundedCornerShape(10.dp))

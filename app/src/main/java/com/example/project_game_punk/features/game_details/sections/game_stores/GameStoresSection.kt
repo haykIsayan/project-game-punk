@@ -55,7 +55,7 @@ fun GameStoresSection(
 private fun GameStoresSectionFailedState(reload: () -> Unit) {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Available")
+        SectionTitle(title = "Stores", isLoading = true)
         Box(modifier = Modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -79,14 +79,17 @@ private fun GameStoresSectionFailedState(reload: () -> Unit) {
 
 @Composable
 private fun GameStoresSectionLoadingState() {
-    val showShimmer = remember { mutableStateOf(true) }
-    Box(modifier = Modifier
-        .padding(12.dp)
-        .clip(RoundedCornerShape(10.dp))
-        .fillMaxWidth()
-        .background(shimmerBrush(showShimmer = showShimmer.value))
-        .height(40.dp)
-    )
+    Column {
+        SectionTitle(title = "Stores")
+        val showShimmer = remember { mutableStateOf(true) }
+        Box(modifier = Modifier
+            .padding(12.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .fillMaxWidth()
+            .background(shimmerBrush(showShimmer = showShimmer.value))
+            .height(40.dp)
+        )
+    }
 }
 
 @Composable

@@ -11,6 +11,7 @@ fun <ItemType >GamePunkGrid(
     modifier: Modifier,
     items: List<ItemType>,
     span: Int = 2,
+    footer: @Composable () -> Unit = {},
     itemComposer: @Composable (item: ItemType) -> Unit
 ) {
     LazyVerticalGrid(
@@ -19,6 +20,9 @@ fun <ItemType >GamePunkGrid(
     ) {
         items(items) { item ->
             itemComposer.invoke(item)
+        }
+        item {
+            footer.invoke()
         }
     }
 }

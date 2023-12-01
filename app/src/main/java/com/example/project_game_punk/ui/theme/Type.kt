@@ -2,14 +2,19 @@ package com.example.project_game_punk.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.project_game_punk.R
 
 // Set of Material typography styles to start with
+
+val proximaNova = FontFamily(Font(R.font.proxima_nova))
+
 val Typography = Typography(
     body1 = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = proximaNova,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     )
