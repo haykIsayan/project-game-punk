@@ -28,11 +28,18 @@ class GameDetailsActivity : ComponentActivity() {
                         GameDetailsScreen(
                             gameId = intent.getStringExtra(GAME_ID_INTENT_EXTRA),
                             gameDetailsViewModel = hiltViewModel(),
+                            gameDeveloperPublisherViewModel = hiltViewModel(),
+                            gameReleaseDateViewModel = hiltViewModel(),
+                            gameStoresViewModel = hiltViewModel(),
                             gamePlatformsViewModel = hiltViewModel(),
                             gameGenresViewModel = hiltViewModel(),
                             gameScreenshotsViewModel = hiltViewModel(),
-                            gameDetailsNewsViewModel = hiltViewModel()
-                        )
+                            gameDetailsNewsViewModel = hiltViewModel(),
+                            gameDLCsViewModel = hiltViewModel(),
+                            gameDetailsSimilarGamesViewModel = hiltViewModel()
+                        ) {
+                            finish()
+                        }
                     }
                 }
             }

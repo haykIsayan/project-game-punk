@@ -21,7 +21,7 @@ import com.example.game_punk_domain.domain.entity.GameNewsEntity
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
-import com.example.project_game_punk.features.discover.DiscoverGameCarouselLoading
+import com.example.project_game_punk.features.discover.components.DiscoverGameCarouselLoading
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
 
 @Composable

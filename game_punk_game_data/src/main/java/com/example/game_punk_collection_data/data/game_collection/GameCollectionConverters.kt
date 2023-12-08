@@ -50,6 +50,7 @@ class GameCollectionConverters {
     fun toGamePlatform(value: String): GamePlatformEntity {
         val split = value.split('/')
         return object : GamePlatformEntity {
+            override val id: String = ""
             override val name: String = split.first()
             override val icon: String = split.last()
         }

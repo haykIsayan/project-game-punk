@@ -18,7 +18,7 @@ class GetNowPlayingGamesInteractor(
         }
         return applyGameMetaInteractor.execute(
             nowPlayingGames,
-            GameMetaQueryModel(banner = true)
+            GameMetaQueryModel()
         )
     }
 }

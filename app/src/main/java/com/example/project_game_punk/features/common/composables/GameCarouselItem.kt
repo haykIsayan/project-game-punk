@@ -25,7 +25,7 @@ import com.example.project_game_punk.features.game_details.GameDetailsActivity
 @Composable
 fun GameCarouselItem(
     game: GameEntity,
-    sheetController: GameProgressBottomSheetController?,
+    sheetController: GameProgressBottomSheetController? = null,
     trailing: @Composable () -> Unit = {},
     onProgressSelected: ((GameEntity, GameProgress) -> Unit)? = null
 ) {
@@ -49,10 +49,9 @@ fun GameCarouselItem(
     ) {
         Box(modifier = Modifier
             .size(
-                150.dp,
-                200.dp
+                120.dp,
+                160.dp
             )
-//            .padding(start = 6.dp, top = 6.dp, end = 6.dp)
             .padding(6.dp)
             .clip(RoundedCornerShape(10.dp))
         ) {
@@ -77,40 +76,14 @@ fun GameCarouselItem(
                     contentScale = ContentScale.FillHeight,
                 )
             }
-            if (game.name != null) {
-//                Box(
-//                    modifier = Modifier
-//                        .background(
-//                            brush = Brush.verticalGradient(
-//
-//                                colors = listOf(
-//                                    Color.Transparent,
-//                                    Color.Black.copy(alpha = 0.7f)
-//                                )
-//                            )
-//                        )
-//                        .fillMaxWidth()
-//                        .align(Alignment.BottomCenter)
-//                ) {
-//                    Text(
-//                        text = game.name ?: "",
-//                        fontSize = 20.sp,
-//                        textAlign = TextAlign.Center,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(4.dp)
-//                    )
-//                }
-            }
             trailing.invoke()
         }
         if (sheetController != null && onProgressSelected != null) {
             GameProgressButton(
                 game = game,
                 modifier = Modifier
-                    .width(150.dp)
-                    .padding(6.dp)
-                    .fillMaxWidth(),
+                    .width(120.dp)
+                    .padding(6.dp),
                 onProgressSelected = onProgressSelected,
                 controller = sheetController
             )

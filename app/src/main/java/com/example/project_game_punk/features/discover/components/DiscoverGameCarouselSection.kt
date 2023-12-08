@@ -9,7 +9,6 @@ import com.example.project_game_punk.features.common.composables.GameCarouselIte
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
-import com.example.project_game_punk.features.discover.DiscoverGameCarouselLoading
 
 @Composable
 fun DiscoverGameCarouselSection(title: String, viewModel: StateViewModel<List<GameEntity>, Unit>) {

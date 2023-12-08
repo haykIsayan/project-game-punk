@@ -23,12 +23,14 @@ data class GameModel(
     @Ignore val cover: String? = null,
     @Ignore val follows: Int? = null,
     @Ignore val added: Int = 0,
-    @Ignore val rating: Float? = null,
-    @Ignore override val metaCriticScore: Int = 0,
+    @Ignore val aggregated_rating: Float? = null,
     @Ignore override val isAdded: Boolean = false,
     @Ignore override val gamePlatforms: List<GamePlatformEntity>? = null,
     @Ignore val summary: String? = null,
     @Ignore val websites: List<String>? = null,
+    @Ignore val age_ratings: List<String>? = null,
+    @Ignore val similar_games: List<String>? = null,
+    @Ignore val dlcs: List<String>? = null,
     @ColumnInfo(name = "game_progress_status") var gameProgressStatus: GameProgressStatus? = null,
     @Ignore override val steamId: String? = null,
 ): GameEntity {
@@ -38,6 +40,9 @@ data class GameModel(
 
     override val numAdded: Int
         get() = added
+
+    override val score: Int
+        get() = aggregated_rating?.toInt() ?: 0
 
     override val banners: List<String>?
         get() = screenshots
@@ -56,6 +61,7 @@ data class GameModel(
             GameProgressStatus.replaying -> GameProgress.ReplayingGameProgress
             GameProgressStatus.notFollowing -> GameProgress.NotFollowingGameProgress
             GameProgressStatus.following -> GameProgress.FollowingGameProgress
+            GameProgressStatus.excited -> GameProgress.ExcitedGameProgress
         else -> GameProgress.NotFollowingGameProgress
     }
 
@@ -67,6 +73,7 @@ data class GameModel(
             GameProgress.PlayingGameProgress -> GameProgressStatus.playing
             GameProgress.ReplayingGameProgress -> GameProgressStatus.replaying
             GameProgress.StoppedGameProgress -> GameProgressStatus.stopped
+            GameProgress.ExcitedGameProgress -> GameProgressStatus.excited
         }
         return copy(gameProgressStatus = status)
     }
@@ -80,5 +87,6 @@ enum class GameProgressStatus {
     playing,
     stopped,
     finished,
-    replaying
+    replaying,
+    excited
 }

@@ -1,10 +1,7 @@
 package com.example.game_punk_collection_data.data.game.rawg
 
-import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameGenreEntity
+import com.example.game_punk_domain.domain.entity.*
 import com.example.game_punk_domain.domain.interfaces.GameRepository
-import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
-import com.example.game_punk_domain.domain.entity.GamePlatformEntity
 import com.example.game_punk_domain.domain.models.GameQueryModel
 import com.example.game_punk_domain.domain.models.GameSort
 
@@ -39,6 +36,26 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
         return emptyList()
     }
 
+    override suspend fun getGameAgeRating(gameId: String): GameAgeRatingEntity {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getSimilarGames(gameId: String): List<GameEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getGameDLCs(gameId: String): List<GameEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getGameReleaseDate(gameId: String): String {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getGameStores(gameId: String): List<GameStoreEntity> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun applyBanners(games: List<GameEntity>): List<GameEntity> {
         return games
     }
@@ -47,7 +64,19 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getGameCompanies(gameId: String): List<GameCompanyEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAllGamePlatforms(): List<GamePlatformEntity> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getGameGenres(id: String): List<GameGenreEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAllGameGenres(): List<GameGenreEntity> {
         TODO("Not yet implemented")
     }
 

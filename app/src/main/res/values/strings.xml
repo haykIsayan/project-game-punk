@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gamepunk</string>
+    <string name="app_name">GamePunk</string>
 
     <string name="steam_store_base_url">https://store.steampowered.com/api/</string>
     <string name="steam_api_base_url">https://api.steampowered.com/</string>
@@ -21,6 +21,8 @@
     <string name="finished_game_progress">Finished</string>
 
     <string name="replaying_game_progress">Replaying</string>
+
+    <string name="excited_game_progress">Excited</string>
 
     <string name="search_cta_text">Search</string>
     <string name="discover_nav_title">Discover</string>

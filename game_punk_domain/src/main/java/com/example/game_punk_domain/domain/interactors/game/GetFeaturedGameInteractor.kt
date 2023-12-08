@@ -13,7 +13,7 @@ class GetFeaturedGameInteractor constructor(
         val gameQuery = GetGameQueryWithRecentDatesInteractor().execute()
         val game = gameRepository.getGames(gameQuery.copy(sort = GameSort.trending)).apply {
             sortedBy {
-                it.metaCriticScore
+                it.score
             }
         }.random()
         return trackedGamesCache.applyCache(game)

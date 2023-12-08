@@ -2,6 +2,8 @@ package com.example.project_game_punk.di.modules
 
 import com.example.game_punk_collection_data.data.game.rawg.models.GameCollectionFactoryImpl
 import com.example.game_punk_domain.domain.TrackedGamesCache
+import com.example.game_punk_domain.domain.interactors.GetAllAvailableGameGenresInteractor
+import com.example.game_punk_domain.domain.interactors.GetAllAvailableGamePlatformsInteractor
 import com.example.game_punk_domain.domain.interactors.game.*
 import com.example.game_punk_domain.domain.interactors.game_collection.AddGameToGameCollectionInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.CreateGameCollectionInteractor
@@ -70,6 +72,12 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesGetGameQueryWithUpcomingDatesInteractor(): GetGameQueryWithUpcomingDatesInteractor {
+        return GetGameQueryWithUpcomingDatesInteractor()
+    }
+
+    @Provides
+    @Singleton
     fun providesGetUserGameQueryInteractor(
         getGameQueryWithRecentDatesInteractor: GetGameQueryWithRecentDatesInteractor
     ): GetUserGameQueryInteractor {
@@ -84,6 +92,18 @@ object InteractorModule {
     ): GetRecentGamesInteractor {
         return GetRecentGamesInteractor(
             getGameQueryWithRecentDatesInteractor,
+            getGamesInteractor,
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetUpcomingGamesInteractor(
+        getGameQueryWithUpcomingDatesInteractor: GetGameQueryWithUpcomingDatesInteractor,
+        getGamesInteractor: GetGamesInteractor,
+    ): GetUpcomingGamesInteractor {
+        return GetUpcomingGamesInteractor(
+            getGameQueryWithUpcomingDatesInteractor,
             getGamesInteractor,
         )
     }
@@ -208,6 +228,36 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesGetGameReleaseDateInteractor(
+        gameRepository: GameRepository
+    ): GetGameReleaseDateInteractor {
+        return GetGameReleaseDateInteractor(
+            gameRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetAllAvailableGamePlatforms(
+        gameRepository: GameRepository
+    ): GetAllAvailableGamePlatformsInteractor {
+        return GetAllAvailableGamePlatformsInteractor(
+            gameRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetAllAvailableGameGenres(
+        gameRepository: GameRepository
+    ): GetAllAvailableGameGenresInteractor {
+        return GetAllAvailableGameGenresInteractor(
+            gameRepository
+        )
+    }
+
+    @Provides
+    @Singleton
     fun providesGetGameGenresInteractor(
         gameRepository: GameRepository
     ): GetGameGenresInteractor {
@@ -222,6 +272,47 @@ object InteractorModule {
         gameRepository: GameRepository
     ): GetGameScreenshotsInteractor {
         return GetGameScreenshotsInteractor(gameRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetSimilarGamesInteractor(
+        gameRepository: GameRepository
+    ): GetSimilarGamesInteractor {
+        return GetSimilarGamesInteractor(gameRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetGamesDLCsInteractor(
+        gameRepository: GameRepository
+    ): GetGamesDLCsInteractor {
+        return GetGamesDLCsInteractor(gameRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetGameAgeRatingInteractor(
+        gameRepository: GameRepository
+    ): GetGameAgeRatingInteractor {
+        return GetGameAgeRatingInteractor(gameRepository)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideGetGameCompaniesInteractor(
+        gameRepository: GameRepository
+    ): GetGameCompaniesInteractor {
+        return GetGameCompaniesInteractor(gameRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetGameStoresInteractor(
+        gameRepository: GameRepository
+    ): GetGameStoresInteractor {
+        return GetGameStoresInteractor(gameRepository)
     }
 }
 

@@ -43,6 +43,43 @@ interface IDGBApi {
         @Body fields: String
     ): List<PlatformModel>
 
+    @POST("age_ratings")
+    suspend fun getAgeRatings(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<GameAgeRatingModel>
+
+    @POST("external_games")
+    suspend fun getExternalGames(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<GameExternalModel>
+
+    @POST("release_dates")
+    suspend fun getReleaseDates(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<GameReleaseModel>
+
+    @POST("involved_companies")
+    suspend fun getInvolvedCompanies(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<InvolvedCompanyModel>
+
+    @POST("companies")
+    suspend fun getCompanies(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<CompanyModel>
+
+    @POST("company_logos")
+    suspend fun getCompanyLogos(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<GameCoverModel>
+
+
     @POST("genres")
     suspend fun getGenres(
         @HeaderMap headers: Map<String, String>,

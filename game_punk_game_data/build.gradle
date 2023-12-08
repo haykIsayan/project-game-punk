@@ -16,6 +16,15 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
+//    signingConfigs {
+//        debug {
+//            storeFile file("gamePunk.jks")
+//            storePassword "punkiegame1998"
+//            keyAlias "punkiegame"
+//            keyPassword "punkiegame1998"
+//        }
+//    }
+
     buildTypes {
         release {
             minifyEnabled false
