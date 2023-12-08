@@ -1,4 +1,4 @@
-package com.example.project_game_punk.features.discover
+package com.example.project_game_punk.features.discover.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

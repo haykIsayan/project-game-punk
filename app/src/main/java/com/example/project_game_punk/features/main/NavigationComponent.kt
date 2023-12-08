@@ -1,9 +1,6 @@
 package com.example.project_game_punk.features.main
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -19,16 +16,17 @@ fun NavigationComponent(
     sheetController: GameProgressBottomSheetController
 ) {
     NavHost(
-        modifier = Modifier.padding(bottom = 60.dp),
         navController = navController,
         startDestination = MainNavigationTab.DiscoverMainNavigationTab.route
     ) {
         composable(route = MainNavigationTab.DiscoverMainNavigationTab.route) {
             DiscoverScreen(
+//                gameNewsViewModel = hiltViewModel(),
                 nowPlayingViewModel = hiltViewModel(),
-                featuredGameViewModel = hiltViewModel(),
                 trendingGamesViewModel = hiltViewModel(),
-                recommendedGameViewModel = hiltViewModel(),
+                recentGamesViewModel = hiltViewModel(),
+//                upcomingGamesViewModel = hiltViewModel(),
+//                recommendedGamesViewModel = hiltViewModel(),
                 navController = navController,
                 sheetController = sheetController
             )
@@ -42,6 +40,7 @@ fun NavigationComponent(
 
         composable(route = MainNavigationTab.SearchMainNavigationTab.route) {
             SearchScreen(
+                searchFiltersViewModel = hiltViewModel(),
                 searchResultsViewModel = hiltViewModel(),
                 sheetController = sheetController
             )

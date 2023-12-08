@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -18,7 +19,6 @@ fun <ItemType> ItemPagerCarousel(
     itemComposer: @Composable (item: ItemType) -> Unit
 ) {
     val state = rememberPagerState()
-
     Column {
         HorizontalPager(
             count = items.size,
@@ -29,6 +29,8 @@ fun <ItemType> ItemPagerCarousel(
         if (items.isNotEmpty() && items.size > 1) {
             HorizontalPagerIndicator(
                 pagerState = state,
+                activeColor = Color.White,
+                inactiveColor = Color.Gray,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(16.dp),

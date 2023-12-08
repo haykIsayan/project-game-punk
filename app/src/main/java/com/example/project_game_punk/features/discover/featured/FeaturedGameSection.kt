@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
-import com.example.project_game_punk.domain.models.GameModel
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
@@ -63,7 +63,7 @@ fun FeaturedGameSection(
 
 @Composable
 private fun FeatureGameLoadedState(
-    game: GameModel,
+    game: GameEntity,
     trailing: @Composable (Modifier) -> Unit,
 ) {
     Box(modifier = Modifier.padding(8.dp)) {
@@ -98,7 +98,7 @@ private fun FeatureGameLoadedState(
                     .align(Alignment.BottomCenter)
                 ) {
                     Text(
-                        text = game.name,
+                        text = game.name ?: "",
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier

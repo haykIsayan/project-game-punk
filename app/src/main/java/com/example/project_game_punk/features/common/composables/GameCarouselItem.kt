@@ -1,9 +1,10 @@
 package com.example.project_game_punk.features.common.composables
 
+import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,29 +13,45 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.project_game_punk.domain.entity.GameProgress
-import com.example.project_game_punk.domain.models.GameModel
+import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameProgress
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
+import com.example.project_game_punk.features.game_details.GameDetailsActivity
 
 @Composable
 fun GameCarouselItem(
-    game: GameModel,
-    sheetController: GameProgressBottomSheetController?,
+    game: GameEntity,
+    sheetController: GameProgressBottomSheetController? = null,
     trailing: @Composable () -> Unit = {},
-    onProgressSelected: (GameModel, GameProgress) -> Unit
+    onProgressSelected: ((GameEntity, GameProgress) -> Unit)? = null
 ) {
+    val context = LocalContext.current
     Column(
+        modifier = Modifier.clickable {
+            context.startActivity(
+                Intent(
+                    context,
+                    GameDetailsActivity::class.java
+                ).apply {
+                    putExtra(
+                        GameDetailsActivity.GAME_ID_INTENT_EXTRA,
+                        game.id
+                    )
+                }
+            )
+        },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(modifier = Modifier
-            .size(220.dp, 160.dp)
+            .size(
+                120.dp,
+                160.dp
+            )
             .padding(6.dp)
             .clip(RoundedCornerShape(10.dp))
         ) {
@@ -56,42 +73,17 @@ fun GameCarouselItem(
                         .crossfade(true)
                         .build(),
                     contentDescription = "",
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.FillHeight,
                 )
-            }
-            if (game.name != null) {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            brush = Brush.verticalGradient(
-
-                                colors = listOf(
-                                    Color.Transparent,
-                                    Color.Black.copy(alpha = 0.7f)
-                                )
-                            )
-                        )
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                ) {
-                    Text(
-                        text = game.name,
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp)
-                    )
-                }
             }
             trailing.invoke()
         }
-        if (sheetController != null) {
+        if (sheetController != null && onProgressSelected != null) {
             GameProgressButton(
                 game = game,
                 modifier = Modifier
-                    .padding(2.dp)
-                    .fillMaxWidth(),
+                    .width(120.dp)
+                    .padding(6.dp),
                 onProgressSelected = onProgressSelected,
                 controller = sheetController
             )

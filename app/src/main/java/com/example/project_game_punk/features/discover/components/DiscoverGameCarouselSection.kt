@@ -3,16 +3,15 @@ package com.example.project_game_punk.features.discover.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.features.common.composables.GameCarouselItem
-import com.example.project_game_punk.features.common.composables.ItemCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
-import com.example.project_game_punk.features.discover.DiscoverGameCarouselLoading
-import com.example.project_game_punk.domain.models.GameModel
 
 @Composable
-fun DiscoverGameCarouselSection(title: String, viewModel: StateViewModel<List<GameModel>, Unit>) {
+fun DiscoverGameCarouselSection(title: String, viewModel: StateViewModel<List<GameEntity>, Unit>) {
     val state = viewModel.getState().observeAsState().value
     Column {
         SectionTitle(title = title)

@@ -1,19 +1,25 @@
 package com.example.project_game_punk.features.common.composables.grids
 
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.lazy.*
 import androidx.compose.runtime.Composable
-import com.example.project_game_punk.domain.models.GameModel
+import androidx.compose.ui.Modifier
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GamePunkGrid(items: List<GameModel>) {
-    val splits = mutableListOf<List<GameModel>>()
-    var indess = 0
-    while (indess <= items.size) {
-        val section = items.subList(indess, indess + 3)
-        splits.add(section)
-        indess += 3
-    }
-    LazyColumn {
-
+fun <ItemType >GamePunkGrid(
+    modifier: Modifier,
+    items: List<ItemType>,
+    span: Int = 2,
+    footer: @Composable () -> Unit = {},
+    itemComposer: @Composable (item: ItemType) -> Unit
+) {
+    LazyVerticalGrid(
+        modifier = modifier,
+        cells = GridCells.Fixed(span),
+    ) {
+        items(items) { item ->
+            itemComposer.invoke(item)
+        }
     }
 }

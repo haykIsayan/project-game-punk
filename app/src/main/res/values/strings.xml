@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name">project-game-punk</string>
+    <string name="app_name">GamePunk</string>
+
+    <string name="steam_store_base_url">https://store.steampowered.com/api/</string>
+    <string name="steam_api_base_url">https://api.steampowered.com/</string>
+    <string name="twitch_api_base_url">https://api.twitch.tv/helix/</string>
+    <string name="idgb_auth_api_base_url">https://id.twitch.tv/oauth2/</string>
+    <string name="idgb_api_base_url">https://api.igdb.com/v4/</string>
     <string name="rawg_api_base_url">https://api.rawg.io/api/</string>
 
     <string name="following_game_progress">Following</string>
@@ -16,8 +22,11 @@
 
     <string name="replaying_game_progress">Replaying</string>
 
+    <string name="excited_game_progress">Excited</string>
+
     <string name="search_cta_text">Search</string>
     <string name="discover_nav_title">Discover</string>
     <string name="profile_nav_title">Profile</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_game_details">GameDetailsActivity</string>
 </resources>
