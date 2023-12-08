@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -79,29 +78,29 @@ private fun GameDetailsNewsSectionLoadedState(gameNewsList: List<GameNewsEntity>
 @Composable
 private fun GameDetailsNewsSectionItem(gameNews: GameNewsEntity) {
     val context = LocalContext.current
-        Text(
-            text = gameNews.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .padding(12.dp)
-                .clickable {
-                    onGameDetailsNewsItemClicked(context, gameNews)
-                }
-                .clip(RoundedCornerShape(10.dp))
-                .border(
-                    1.dp,
-                    SolidColor(Color.White),
-                    shape = RoundedCornerShape(15.dp)
-                )
-                .padding(8.dp),
-            fontSize = 18.sp,
-            color = Color.White,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis,
-        )
+    Text(
+        text = gameNews.title,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp)
+            .padding(12.dp)
+            .clickable {
+                onGameDetailsNewsItemClicked(context, gameNews)
+            }
+            .clip(RoundedCornerShape(10.dp))
+            .border(
+                1.dp,
+                SolidColor(Color.White),
+                shape = RoundedCornerShape(15.dp)
+            )
+            .padding(8.dp),
+        fontSize = 18.sp,
+        color = Color.White,
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.Bold,
+        maxLines = 3,
+        overflow = TextOverflow.Ellipsis,
+    )
 }
 
 private fun onGameDetailsNewsItemClicked(context: Context, gameNews: GameNewsEntity) {

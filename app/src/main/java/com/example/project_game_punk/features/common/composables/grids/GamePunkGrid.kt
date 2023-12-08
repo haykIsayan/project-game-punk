@@ -21,8 +21,5 @@ fun <ItemType >GamePunkGrid(
         items(items) { item ->
             itemComposer.invoke(item)
         }
-        item {
-            footer.invoke()
-        }
     }
 }

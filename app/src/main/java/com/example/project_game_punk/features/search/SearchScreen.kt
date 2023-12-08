@@ -110,10 +110,6 @@ private fun SearchResultLoadedState(
                 searchResultsViewModel
             )
         }
-
-        item {
-            Spacer(modifier = Modifier.height(80.dp))
-        }
     }
 }
 

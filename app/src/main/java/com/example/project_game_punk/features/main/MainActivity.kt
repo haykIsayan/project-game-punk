@@ -8,14 +8,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgress
@@ -41,7 +41,11 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val sheetController = GameProgressBottomSheetController()
 
-                    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+                    Scaffold(
+                        bottomBar = {
+                            MainBottomNavigation(navController)
+                        }
+                    ) {
                         Box(modifier = Modifier
                             .background(
                                 largeRadialGradientBrush(
@@ -51,12 +55,13 @@ class MainActivity : ComponentActivity() {
                                     )
                                 )
                             )
-                            .fillMaxSize()) {
-                            NavigationComponent(navController, sheetController)
-                            Box(modifier = Modifier.align(Alignment.BottomCenter)
-                            ) {
-                                MainBottomNavigation(navController)
-                            }
+                            .padding(bottom = 60.dp)
+                            .fillMaxSize()
+                        ) {
+                            NavigationComponent(
+                                navController,
+                                sheetController
+                            )
                         }
                     }
                     MainGameProgressBottomSheet(sheetController)

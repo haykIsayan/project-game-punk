@@ -1,18 +1,21 @@
 package com.example.project_game_punk.features.main
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -23,73 +26,63 @@ import com.example.project_game_punk.ui.theme.gamePunkPrimary
 fun MainBottomNavigation(
     navController: NavController
 ) {
-    val context = LocalContext.current
     val items = MainNavigationTab.Items.items
 
     Column {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(40.dp)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Transparent,
-                        gamePunkPrimary.copy(alpha = 0.8f)
-                    ),
-                )
-            )
-        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
-                .background(gamePunkPrimary.copy(alpha = 0.8f)),
+                .background(gamePunkPrimary),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             val entry by navController.currentBackStackEntryAsState()
             val currentRoute = entry?.destination?.route
             items.forEach { item ->
                 val isSelected = item.route == currentRoute
+                val ripple = rememberRipple(
+                    bounded = false,
+                    color = Color.White
+                )
+                val interactionSource = remember { MutableInteractionSource() }
 
-
-                BottomNavigationItem(
-                    selected = isSelected,
-                    onClick = {
-                        navController.navigate(item.route)
-                              },
-                    icon = {
-                        Icon(
-                            imageVector = item.icon,
-                            tint = Color.White,
-                            contentDescription = null
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .animateContentSize()
+                        .selectable(
+                            selected = isSelected,
+                            onClick = {
+                                navController.navigate(item.route)
+                            },
+                            enabled = true,
+                            role = Role.Tab,
+                            interactionSource = interactionSource,
+                            indication = ripple
+                        )
+                        .weight(1f),
+                    verticalArrangement = Arrangement.SpaceAround,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = item.icon,
+                        tint = if (isSelected)
+                            Color.White
+                        else
+                            Color.White.copy(
+                                alpha = 0.5f
+                            ),
+                        contentDescription = null
+                    )
+                    if (isSelected) {
+                        Box(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(2.dp)
+                                .background(Color.White)
+                                .clip(RoundedCornerShape(10.dp))
                         )
                     }
-                )
-            }
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .wrapContentHeight()
-                .background(gamePunkPrimary.copy(alpha = 0.8f)),
-            horizontalArrangement = Arrangement.SpaceEvenly
-
-        ) {
-            val entry by navController.currentBackStackEntryAsState()
-            val currentRoute = entry?.destination?.route
-            items.forEach { item ->
-                val isSelected = item.route == currentRoute
-                AnimatedVisibility(
-                    visible = isSelected,
-                    enter = fadeIn(animationSpec = tween(300)),
-                    exit = fadeOut(animationSpec = tween(300))
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(2.dp)
-                            .background(Color.White)
-                            .clip(RoundedCornerShape(10.dp))
-                    )
                 }
             }
         }

@@ -27,10 +27,7 @@ fun ProfileScreen(
             GamePunkGrid(
                 modifier = Modifier/*.padding(6.dp)*/,
                 items = games,
-                span = 3,
-                footer = {
-                    Spacer(modifier = Modifier.height(80.dp))
-                }
+                span = 3
             ) {
                 GameCarouselItem(
                     game = it,
