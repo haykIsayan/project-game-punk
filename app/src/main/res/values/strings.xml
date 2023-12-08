@@ -22,6 +22,8 @@
 
     <string name="replaying_game_progress">Replaying</string>
 
+    <string name="excited_game_progress">Excited</string>
+
     <string name="search_cta_text">Search</string>
     <string name="discover_nav_title">Discover</string>
     <string name="profile_nav_title">Profile</string>

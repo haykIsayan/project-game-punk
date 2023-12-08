@@ -88,10 +88,11 @@ class GameIDGBDataSource(
                         (if (platformIds.isNotEmpty())  "& platforms = ($platformIds)" else "" ) +
                         (if (genreIds.isNotEmpty())  "& genres = ($genreIds)" else "" ) +
                         "${if (gameQuery.filter == GameFilter.highestRated) "& rating > 40" else ""} " +
-                        (if (gameQuery.dateRangeStart.isNotEmpty()) "& first_release_date >= 1668585600" else "") +
+                        (if (gameQuery.dateRangeStart.isNotEmpty()) "& first_release_date >= ${gameQuery.dateRangeStart.dateToUnix()}" else "") +
 //                        (if (gameQuery.dateRangeEnd.isNotEmpty()) "& first_release_date <= ${gameQuery.dateRangeEnd.dateToUnix()}" else "") +
                         ";"
             )
+//            1668585600
             when (gameQuery.sort) {
                 GameSort.trending -> "follows"
                 GameSort.highestRated -> "rating"

@@ -60,7 +60,7 @@ fun GameProgressButton(
         )
         .background(color)) {
         Text(
-            modifier = modifier
+            modifier = Modifier
                 .align(Alignment.Center),
             text = text,
             fontSize = 10.sp,

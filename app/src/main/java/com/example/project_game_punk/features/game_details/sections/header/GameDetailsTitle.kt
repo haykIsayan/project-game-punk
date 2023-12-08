@@ -1,6 +1,7 @@
 package com.example.project_game_punk.features.game_details.sections.header
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,14 +28,20 @@ import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 
 
 @Composable
-fun GameDetailsTitle(gameDetailsViewModel: GameDetailsViewModel) {
+fun GameDetailsTitle(
+    gameDetailsViewModel: GameDetailsViewModel,
+    onBackPressed: () -> Unit
+) {
     val state = gameDetailsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
         loadingState = { GameTitleLoadingState() }
     ) { game ->
         game?.let {
-            GameTitleLoadedState(game = game)
+            GameTitleLoadedState(
+                game = game,
+                onBackPressed = onBackPressed
+            )
         }
     }
 }
@@ -52,15 +59,19 @@ private fun GameTitleLoadingState() {
 }
 
 @Composable
-private fun GameTitleLoadedState(game: GameEntity) {
+private fun GameTitleLoadedState(
+    game: GameEntity,
+    onBackPressed: () -> Unit
+) {
     game.name?.let {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-
         ) {
             Icon(
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier
+                    .padding(12.dp)
+                    .clickable { onBackPressed() },
                 imageVector = Icons.Filled.KeyboardArrowLeft,
                 contentDescription = "",
                 tint = Color.White
@@ -73,6 +84,7 @@ private fun GameTitleLoadedState(game: GameEntity) {
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,
                 fontSize = 18.sp,
+                maxLines = 1,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )

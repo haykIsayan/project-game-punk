@@ -59,7 +59,7 @@ private fun GameDetailsNewsSectionLoadingState() {
             .clip(RoundedCornerShape(10.dp))
             .fillMaxWidth()
             .background(shimmerBrush(showShimmer = showShimmer.value))
-            .height(60.dp)
+            .height(120.dp)
         )
     }
 }
@@ -79,20 +79,16 @@ private fun GameDetailsNewsSectionLoadedState(gameNewsList: List<GameNewsEntity>
 @Composable
 private fun GameDetailsNewsSectionItem(gameNews: GameNewsEntity) {
     val context = LocalContext.current
-    Box(
-        modifier = Modifier
-            .padding(12.dp)
-            .clickable {
-                onGameDetailsNewsItemClicked(context, gameNews)
-            }
-            .clip(RoundedCornerShape(10.dp))
-    ) {
         Text(
             text = gameNews.title,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp)
-                .align(Alignment.Center)
+                .height(120.dp)
+                .padding(12.dp)
+                .clickable {
+                    onGameDetailsNewsItemClicked(context, gameNews)
+                }
+                .clip(RoundedCornerShape(10.dp))
                 .border(
                     1.dp,
                     SolidColor(Color.White),
@@ -103,9 +99,9 @@ private fun GameDetailsNewsSectionItem(gameNews: GameNewsEntity) {
             color = Color.White,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
+            maxLines = 3,
             overflow = TextOverflow.Ellipsis,
         )
-    }
 }
 
 private fun onGameDetailsNewsItemClicked(context: Context, gameNews: GameNewsEntity) {

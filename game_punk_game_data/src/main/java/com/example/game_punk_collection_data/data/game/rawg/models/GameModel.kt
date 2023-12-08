@@ -61,6 +61,7 @@ data class GameModel(
             GameProgressStatus.replaying -> GameProgress.ReplayingGameProgress
             GameProgressStatus.notFollowing -> GameProgress.NotFollowingGameProgress
             GameProgressStatus.following -> GameProgress.FollowingGameProgress
+            GameProgressStatus.excited -> GameProgress.ExcitedGameProgress
         else -> GameProgress.NotFollowingGameProgress
     }
 
@@ -72,6 +73,7 @@ data class GameModel(
             GameProgress.PlayingGameProgress -> GameProgressStatus.playing
             GameProgress.ReplayingGameProgress -> GameProgressStatus.replaying
             GameProgress.StoppedGameProgress -> GameProgressStatus.stopped
+            GameProgress.ExcitedGameProgress -> GameProgressStatus.excited
         }
         return copy(gameProgressStatus = status)
     }
@@ -85,5 +87,6 @@ enum class GameProgressStatus {
     playing,
     stopped,
     finished,
-    replaying
+    replaying,
+    excited
 }

@@ -5,16 +5,18 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.dp
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
+import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
 import com.example.project_game_punk.features.game_details.sections.header.GameDetailsHeader
@@ -54,7 +56,8 @@ fun GameDetailsScreen(
     gameGenresViewModel: GameGenresViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
     gameDLCsViewModel: GameDLCsViewModel,
-    gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel
+    gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel,
+    onBackPressed: () -> Unit
 ) {
     when (gameId) {
         null -> NoGameIdState()
@@ -80,7 +83,8 @@ fun GameDetailsScreen(
                 gameDetailsNewsViewModel = gameDetailsNewsViewModel,
                 gameScreenshotsViewModel = gameScreenshotsViewModel,
                 gameDLCsViewModel = gameDLCsViewModel,
-                gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel
+                gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel,
+                onBackPressed = onBackPressed
             )
         }
     }
@@ -103,11 +107,13 @@ private fun GameDetailsScreenContent(
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
     gameDLCsViewModel: GameDLCsViewModel,
-    gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel
+    gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel,
+    onBackPressed: () -> Unit
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)) {
+        val sheetController = GameProgressBottomSheetController()
         GameDetailsScreenContentItems(
             gameId = gameId,
             gameDetailsViewModel = gameDetailsViewModel,
@@ -119,13 +125,9 @@ private fun GameDetailsScreenContent(
             gameDetailsNewsViewModel = gameDetailsNewsViewModel,
             gameScreenshotsViewModel = gameScreenshotsViewModel,
             gameDLCsViewModel = gameDLCsViewModel,
-            gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel
-        )
-        val sheetController = GameProgressBottomSheetController()
-        GameDetailsProgressButton(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            gameDetailsViewModel = gameDetailsViewModel,
-            controller = sheetController
+            gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel,
+            onBackPressed = onBackPressed,
+            sheetController = sheetController
         )
         MainGameProgressBottomSheet(sheetController)
     }
@@ -143,7 +145,9 @@ private fun GameDetailsScreenContentItems(
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
     gameDLCsViewModel: GameDLCsViewModel,
-    gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel
+    gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel,
+    onBackPressed: () -> Unit,
+    sheetController: GameProgressBottomSheetController
 ) {
     val scope = rememberCoroutineScope()
     val colorOne = remember {
@@ -165,7 +169,10 @@ private fun GameDetailsScreenContentItems(
     ) {
 
         item {
-            GameDetailsTitle(gameDetailsViewModel = gameDetailsViewModel)
+            GameDetailsTitle(
+                gameDetailsViewModel = gameDetailsViewModel,
+                onBackPressed = onBackPressed
+            )
         }
 
         item {
@@ -189,6 +196,13 @@ private fun GameDetailsScreenContentItems(
                     ).awaitAll()
                 }
             }
+        }
+
+        item {
+            GameDetailsProgressButton(
+                gameDetailsViewModel = gameDetailsViewModel,
+                controller = sheetController
+            )
         }
 
         item {
@@ -252,51 +266,38 @@ private fun GameDetailsScreenContentItems(
                 }
             }
         }
-
-        item {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp))
-        }
     }
 }
 
 @Composable
 private fun GameDetailsProgressButton(
-    modifier: Modifier,
-    color: Color = Color.Transparent,
     gameDetailsViewModel: GameDetailsViewModel,
     controller: GameProgressBottomSheetController
 ) {
     val state = gameDetailsViewModel.getState().observeAsState()
-    LoadableStateWrapper(state = state.value) { game ->
+    LoadableStateWrapper(
+        state = state.value,
+        loadingState = {
+            val showShimmer = remember { mutableStateOf(true) }
+            Box(modifier = Modifier
+                .padding(12.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .fillMaxWidth()
+                .background(shimmerBrush(showShimmer = showShimmer.value))
+                .height(45.dp)
+            )
+        }
+    ) { game ->
         game?.let {
-            Column(
-                modifier = modifier
-            ) {
-                Box(
-                    modifier = Modifier
-                        .height(70.dp)
-                        .fillMaxWidth()
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Color.Transparent,
-                                    color,
-                                    Color.Black.copy(alpha = 0.9f)
-                                ),
-                            )
-                        )
-                )
-                GameProgressButton(
-                    game = it,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(45.dp),
-                    controller = controller,
-                    onProgressSelected = gameDetailsViewModel::updateGameProgress
-                )
-            }
+            GameProgressButton(
+                game = it,
+                modifier = Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth()
+                    .height(45.dp),
+                controller = controller,
+                onProgressSelected = gameDetailsViewModel::updateGameProgress
+            )
         }
     }
 }

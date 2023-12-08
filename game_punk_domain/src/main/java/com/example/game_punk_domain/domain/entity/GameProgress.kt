@@ -23,6 +23,10 @@ sealed class GameProgress(
 
     )
 
+    object ExcitedGameProgress: GameProgress(
+
+    )
+
     object ReplayingGameProgress: GameProgress(
 
     )
@@ -37,7 +41,7 @@ sealed class GameProgress(
                 PlayingGameProgress,
                 StoppedGameProgress,
                 FinishedGameProgress,
-                ReplayingGameProgress
+                ExcitedGameProgress
             )
             if (game == null) return items
             return items.filter {

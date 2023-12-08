@@ -15,6 +15,7 @@ object GameProgressMapper {
             GameProgress.PlayingGameProgress -> R.color.blue
             GameProgress.ReplayingGameProgress -> R.color.blue
             GameProgress.StoppedGameProgress -> R.color.red
+            GameProgress.ExcitedGameProgress -> R.color.gold
         }
     }
 
@@ -35,6 +36,7 @@ object GameProgressMapper {
            GameProgress.PlayingGameProgress -> R.string.playing_game_progress
            GameProgress.ReplayingGameProgress -> R.string.replaying_game_progress
            GameProgress.StoppedGameProgress -> R.string.stopped_game_progress
+           GameProgress.ExcitedGameProgress -> R.string.excited_game_progress
        }
     }
 
@@ -47,6 +49,7 @@ object GameProgressMapper {
             GameProgress.PlayingGameProgress -> R.string.playing_game_progress
             GameProgress.ReplayingGameProgress -> R.string.replaying_game_progress
             GameProgress.StoppedGameProgress -> R.string.stopped_game_progress
+            GameProgress.ExcitedGameProgress -> R.string.excited_game_progress
             else -> displayText(gameProgress)
         }
     }

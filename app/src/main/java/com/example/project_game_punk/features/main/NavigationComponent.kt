@@ -1,9 +1,6 @@
 package com.example.project_game_punk.features.main
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -24,11 +21,12 @@ fun NavigationComponent(
     ) {
         composable(route = MainNavigationTab.DiscoverMainNavigationTab.route) {
             DiscoverScreen(
-                gameNewsViewModel = hiltViewModel(),
+//                gameNewsViewModel = hiltViewModel(),
                 nowPlayingViewModel = hiltViewModel(),
                 trendingGamesViewModel = hiltViewModel(),
                 recentGamesViewModel = hiltViewModel(),
-                recommendedGamesViewModel = hiltViewModel(),
+//                upcomingGamesViewModel = hiltViewModel(),
+//                recommendedGamesViewModel = hiltViewModel(),
                 navController = navController,
                 sheetController = sheetController
             )

@@ -72,6 +72,12 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesGetGameQueryWithUpcomingDatesInteractor(): GetGameQueryWithUpcomingDatesInteractor {
+        return GetGameQueryWithUpcomingDatesInteractor()
+    }
+
+    @Provides
+    @Singleton
     fun providesGetUserGameQueryInteractor(
         getGameQueryWithRecentDatesInteractor: GetGameQueryWithRecentDatesInteractor
     ): GetUserGameQueryInteractor {
@@ -86,6 +92,18 @@ object InteractorModule {
     ): GetRecentGamesInteractor {
         return GetRecentGamesInteractor(
             getGameQueryWithRecentDatesInteractor,
+            getGamesInteractor,
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetUpcomingGamesInteractor(
+        getGameQueryWithUpcomingDatesInteractor: GetGameQueryWithUpcomingDatesInteractor,
+        getGamesInteractor: GetGamesInteractor,
+    ): GetUpcomingGamesInteractor {
+        return GetUpcomingGamesInteractor(
+            getGameQueryWithUpcomingDatesInteractor,
             getGamesInteractor,
         )
     }

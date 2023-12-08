@@ -37,7 +37,9 @@ class GameDetailsActivity : ComponentActivity() {
                             gameDetailsNewsViewModel = hiltViewModel(),
                             gameDLCsViewModel = hiltViewModel(),
                             gameDetailsSimilarGamesViewModel = hiltViewModel()
-                        )
+                        ) {
+                            finish()
+                        }
                     }
                 }
             }

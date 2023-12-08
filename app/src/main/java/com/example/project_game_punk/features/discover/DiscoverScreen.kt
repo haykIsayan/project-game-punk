@@ -19,14 +19,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
+import com.example.project_game_punk.features.discover.news.GameNewsSection
 import com.example.project_game_punk.features.discover.news.GameNewsViewModel
 import com.example.project_game_punk.features.discover.playing.NowPlayingSection
 import com.example.project_game_punk.features.discover.playing.NowPlayingViewModel
 import com.example.project_game_punk.features.discover.recent.RecentGamesSection
 import com.example.project_game_punk.features.discover.recent.RecentGamesViewModel
+import com.example.project_game_punk.features.discover.recommended.RecommendedGamesSection
 import com.example.project_game_punk.features.discover.recommended.RecommendedGamesViewModel
 import com.example.project_game_punk.features.discover.trending.TrendingGamesSection
 import com.example.project_game_punk.features.discover.trending.TrendingGamesViewModel
+import com.example.project_game_punk.features.discover.upcoming.UpcomingGamesSection
+import com.example.project_game_punk.features.discover.upcoming.UpcomingGamesViewModel
 import com.example.project_game_punk.features.main.MainNavigationTab
 
 @Composable
@@ -35,17 +39,18 @@ fun DiscoverScreen(
     nowPlayingViewModel: NowPlayingViewModel? = null,
     trendingGamesViewModel: TrendingGamesViewModel? = null,
     recentGamesViewModel: RecentGamesViewModel? = null,
+    upcomingGamesViewModel: UpcomingGamesViewModel? = null,
     recommendedGamesViewModel: RecommendedGamesViewModel? = null,
     navController: NavHostController,
     sheetController: GameProgressBottomSheetController
 ) {
     LazyColumn {
         
-//        gameNewsViewModel?.let {
-//            item {
-//                GameNewsSection(gameNewsViewModel = it)
-//            }
-//        }
+        gameNewsViewModel?.let {
+            item {
+                GameNewsSection(gameNewsViewModel = it)
+            }
+        }
 
         nowPlayingViewModel?.let {
             item {
@@ -73,14 +78,24 @@ fun DiscoverScreen(
                 )
             }
         }
-//        recommendedGamesViewModel?.let {
-//            item {
-//                RecommendedGamesSection(
-//                    recommendedGamesViewModel,
-//                    sheetController
-//                )
-//            }
-//        }
+
+        upcomingGamesViewModel?.let {
+            item {
+                UpcomingGamesSection(
+                    viewModel = upcomingGamesViewModel,
+                    sheetController = sheetController
+                )
+            }
+        }
+
+        recommendedGamesViewModel?.let {
+            item {
+                RecommendedGamesSection(
+                    recommendedGamesViewModel,
+                    sheetController
+                )
+            }
+        }
         item {
             Spacer(modifier = Modifier.height(80.dp))
         }

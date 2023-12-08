@@ -2,15 +2,16 @@ package com.example.project_game_punk.features.game_details.sections.game_stores
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -19,9 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.game_punk_domain.domain.entity.GameStoreEntity
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
@@ -61,7 +61,7 @@ private fun GameStoresSectionFailedState(reload: () -> Unit) {
             .clip(RoundedCornerShape(10.dp))
             .background(shimmerBrush(showShimmer = showShimmer.value))
             .fillMaxWidth()
-            .height(40.dp)) {
+            .height(45.dp)) {
             Icon(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -80,15 +80,23 @@ private fun GameStoresSectionFailedState(reload: () -> Unit) {
 @Composable
 private fun GameStoresSectionLoadingState() {
     Column {
-        SectionTitle(title = "Stores")
+        SectionTitle(title = "Stores", isLoading = true)
         val showShimmer = remember { mutableStateOf(true) }
-        Box(modifier = Modifier
-            .padding(12.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .fillMaxWidth()
-            .background(shimmerBrush(showShimmer = showShimmer.value))
-            .height(40.dp)
-        )
+        LazyRow {
+            items(4) {
+                Box(
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .background(
+                            shimmerBrush(
+                                showShimmer = showShimmer.value
+                            ),
+                            shape = CircleShape
+                        )
+                    .size(45.dp)
+                )
+            }
+        }
     }
 }
 
@@ -111,26 +119,42 @@ private fun GameStoresSectionLoadedState(
 @Composable
 private fun GameStoresSectionItem(store: GameStoreEntity) {
     val context = LocalContext.current
-    Box(
+    Column(
         modifier = Modifier
-            .border(
-                1.dp,
-                SolidColor(Color.White),
-                shape = RoundedCornerShape(15.dp)
-            )
             .clickable {
                 onGameStoresItemClicked(
                     context,
                     store
                 )
             },
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = store.name,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(8.dp)
+        Image(
+            modifier = Modifier.size(45.dp),
+            painter = painterResource( when (store.slug) {
+                "xbox_marketplace" -> {
+                    com.example.project_game_punk.R.drawable.ic_xbox_marketplace
+                }
+                "microsoft" -> {
+                    com.example.project_game_punk.R.drawable.ic_microsoft
+                }
+                "steam" -> {
+                    com.example.project_game_punk.R.drawable.ic_steam
+                }
+                "epic_game_store" -> {
+                    com.example.project_game_punk.R.drawable.ic_epic_games
+                }
+                "xbox_game_pass_ultimate_cloud" -> {
+                    com.example.project_game_punk.R.drawable.ic_xbox_game_pass
+                }
+                "playstation_store_us" -> {
+                    com.example.project_game_punk.R.drawable.ic_playstation_store
+                }
+                else -> {
+                    com.example.project_game_punk.R.drawable.ic_playstation_store
+                }
+            }),
+            contentDescription = "Content description for visually impaired"
         )
     }
 }
