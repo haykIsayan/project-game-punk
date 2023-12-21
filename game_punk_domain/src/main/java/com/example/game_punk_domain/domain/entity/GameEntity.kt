@@ -10,10 +10,18 @@ interface GameEntity {
     val gameArtworks: List<String>?
     val numAdded: Int
     val score: Int
-    val isAdded: Boolean
-    val gameProgress: GameProgress
+    val gameExperience: GameExperienceEntity?
     val gamePlatforms: List<GamePlatformEntity>?
+    val gameGenres: List<GameGenreEntity>?
+    val keywords: List<String>?
     val steamId: String?
+    val videos: List<GameVideoEntity>?
 
-    fun updateGameProgress(gameProgress: GameProgress): GameEntity
+    fun toggleIsFavorite(): GameEntity
+
+    fun updateGameExperience(gameExperience: GameExperienceEntity): GameEntity
+
+    fun updateGameProgressStatus(gameProgressStatus: GameProgressStatus): GameEntity
+
+    fun updateVideos(videos: List<GameVideoEntity>): GameEntity
 }

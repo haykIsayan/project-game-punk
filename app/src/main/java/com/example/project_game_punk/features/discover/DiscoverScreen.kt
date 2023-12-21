@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
+import com.example.project_game_punk.features.discover.featured.FeaturedGameSection
+import com.example.project_game_punk.features.discover.featured.FeaturedGameViewModel
 import com.example.project_game_punk.features.discover.news.GameNewsSection
 import com.example.project_game_punk.features.discover.news.GameNewsViewModel
 import com.example.project_game_punk.features.discover.playing.NowPlayingSection
@@ -32,10 +36,12 @@ import com.example.project_game_punk.features.discover.trending.TrendingGamesVie
 import com.example.project_game_punk.features.discover.upcoming.UpcomingGamesSection
 import com.example.project_game_punk.features.discover.upcoming.UpcomingGamesViewModel
 import com.example.project_game_punk.features.main.MainNavigationTab
+import com.example.project_game_punk.ui.theme.cyberPunk
 
 @Composable
 fun DiscoverScreen(
     gameNewsViewModel: GameNewsViewModel? = null,
+    featuredGameViewModel: FeaturedGameViewModel? = null,
     nowPlayingViewModel: NowPlayingViewModel? = null,
     trendingGamesViewModel: TrendingGamesViewModel? = null,
     recentGamesViewModel: RecentGamesViewModel? = null,
@@ -45,7 +51,47 @@ fun DiscoverScreen(
     sheetController: GameProgressBottomSheetController
 ) {
     LazyColumn {
-        
+
+        item {
+            GamePunkTitle(navController = navController)
+        }
+
+        item {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+            )
+        }
+
+//        item {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(0.5.dp)
+//                    .padding(horizontal = 12.dp)
+//                    .background(Color.White.copy(alpha = 0.5f))
+//                    .clip(RoundedCornerShape(10.dp))
+//            )
+//        }
+
+        item {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .height(12.dp)
+            )
+        }
+
+        featuredGameViewModel?.let {
+            item {
+                FeaturedGameSection(
+                    featuredGameViewModel = featuredGameViewModel,
+                    sheetController = sheetController
+                )
+            }
+        }
+
         gameNewsViewModel?.let {
             item {
                 GameNewsSection(gameNewsViewModel = it)
@@ -56,10 +102,6 @@ fun DiscoverScreen(
             item {
                 NowPlayingSection(nowPlayingViewModel)
             }
-        }
-
-        item {
-            SearchCta(navController)
         }
 
         trendingGamesViewModel?.let {
@@ -100,14 +142,46 @@ fun DiscoverScreen(
 }
 
 @Composable
+private fun GamePunkTitle(navController: NavHostController) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier.padding(12.dp),
+            textAlign = TextAlign.Start,
+            text = "GamePunk",
+            fontWeight = FontWeight.Bold,
+            fontFamily = cyberPunk,
+            color = Color.White,
+            fontSize = 28.sp
+        )
+        IconButton(
+            modifier = Modifier.size(50.dp),
+            onClick = {
+                navController.navigate(MainNavigationTab.SearchMainNavigationTab.route)
+            }
+        ) {
+            Icon(
+                Icons.Filled.Search,
+                "",
+                tint = Color.White
+            )
+        }
+    }
+
+}
+
+@Composable
 private fun SearchCta(navController: NavHostController) {
     Box(modifier = Modifier
         .clickable {
             navController.navigate(MainNavigationTab.SearchMainNavigationTab.route)
         }
         .fillMaxWidth()
-        .height(60.dp)
-        .padding(6.dp)
+        .height(70.dp)
+        .padding(12.dp)
         .clip(RoundedCornerShape(10.dp))
         .border(
             1.dp,

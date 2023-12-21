@@ -1,6 +1,6 @@
 package com.example.project_game_punk.di.modules
 
-import com.example.game_punk_collection_data.data.game.rawg.models.GameCollectionFactoryImpl
+import com.example.game_punk_collection_data.data.models.game.GameCollectionFactoryImpl
 import com.example.game_punk_domain.domain.TrackedGamesCache
 import com.example.game_punk_domain.domain.interactors.GetAllAvailableGameGenresInteractor
 import com.example.game_punk_domain.domain.interactors.GetAllAvailableGamePlatformsInteractor
@@ -11,9 +11,11 @@ import com.example.game_punk_domain.domain.interactors.game_collection.GetGameCo
 import com.example.game_punk_domain.domain.interactors.game_collection.RemoveGameFromGameCollectionInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
 import com.example.game_punk_domain.domain.interactors.news.GetNewsForGameInteractor
+import com.example.game_punk_domain.domain.interactors.user.*
 import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
 import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
 import com.example.game_punk_domain.domain.interfaces.GameRepository
+import com.example.game_punk_domain.domain.interfaces.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -139,10 +141,12 @@ object InteractorModule {
     @Provides
     @Singleton
     fun providesGetMainGameCollectionInteractor(
+        userCache: UserCache,
         getGameCollectionInteractor: GetGameCollectionInteractor,
         createGameCollectionInteractor: CreateGameCollectionInteractor,
     ): GetTrackedGamesInteractor {
         return GetTrackedGamesInteractor(
+            userCache,
             GameCollectionFactoryImpl(),
             getGameCollectionInteractor,
             createGameCollectionInteractor
@@ -182,10 +186,32 @@ object InteractorModule {
         removeGameFromGameCollectionInteractor: RemoveGameFromGameCollectionInteractor,
         trackedGamesCache: TrackedGamesCache,
     ): UpdateGameProgressInteractor {
-        return  UpdateGameProgressInteractor(
+        return UpdateGameProgressInteractor(
             gameCollectionRepository,
             addGameToGameCollectionInteractor,
             removeGameFromGameCollectionInteractor,
+            trackedGamesCache
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesFavoriteUnFavoriteGameInteractor(
+        gameCollectionRepository: GameCollectionRepository,
+        trackedGamesCache: TrackedGamesCache,
+    ): FavoriteUnFavoriteGameInteractor {
+        return FavoriteUnFavoriteGameInteractor(
+            gameCollectionRepository,
+            trackedGamesCache
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetUserFavoriteGamesInteractor(
+        trackedGamesCache: TrackedGamesCache,
+    ): GetUserFavoriteGamesInteractor {
+        return GetUserFavoriteGamesInteractor(
             trackedGamesCache
         )
     }
@@ -314,5 +340,44 @@ object InteractorModule {
     ): GetGameStoresInteractor {
         return GetGameStoresInteractor(gameRepository)
     }
+
+    @Provides
+    @Singleton
+    fun provideUserSignInInteractor(
+        userRepository: UserRepository
+    ): UserSignInInteractor {
+        return UserSignInInteractor(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserSignUpInteractor(
+        userRepository: UserRepository
+    ): UserSignUpInteractor {
+        return UserSignUpInteractor(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserInteractor(
+        userRepository: UserRepository
+    ): GetUserInteractor {
+        return GetUserInteractor(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserSignOutInteractor(
+        userCache: UserCache,
+        trackedGamesCache: TrackedGamesCache,
+        userRepository: UserRepository
+    ): UserSignOutInteractor {
+        return UserSignOutInteractor(
+            userCache,
+            trackedGamesCache,
+            userRepository
+        )
+    }
+
 }
 

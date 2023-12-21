@@ -11,6 +11,7 @@ import com.example.project_game_punk.R
 // Set of Material typography styles to start with
 
 val proximaNova = FontFamily(Font(R.font.proxima_nova))
+val cyberPunk = FontFamily(Font(R.font.cyberpunk))
 
 val Typography = Typography(
     body1 = TextStyle(

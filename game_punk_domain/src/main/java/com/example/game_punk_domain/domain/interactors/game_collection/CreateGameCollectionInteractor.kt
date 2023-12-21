@@ -8,6 +8,9 @@ class CreateGameCollectionInteractor(
 ) {
     suspend fun execute(gameCollection: GameCollectionEntity): GameCollectionEntity {
         gameCollectionRepository.createGameCollection(gameCollection)
-        return gameCollection
+        return gameCollectionRepository.getGameCollection(
+            gameCollection.id ?: "",
+            gameCollection.userId ?: ""
+        ) ?: gameCollection
     }
 }

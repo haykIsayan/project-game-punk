@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
@@ -22,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.game_details.GameDetailsViewModel
@@ -40,7 +43,10 @@ fun GameDetailsTitle(
         game?.let {
             GameTitleLoadedState(
                 game = game,
-                onBackPressed = onBackPressed
+                onBackPressed = onBackPressed,
+                onFavoritePressed = {
+                    gameDetailsViewModel.updateIsFavorite(game)
+                }
             )
         }
     }
@@ -61,7 +67,8 @@ private fun GameTitleLoadingState() {
 @Composable
 private fun GameTitleLoadedState(
     game: GameEntity,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onFavoritePressed: () -> Unit,
 ) {
     game.name?.let {
         Row(
@@ -88,12 +95,20 @@ private fun GameTitleLoadedState(
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
-            Icon(
-                modifier = Modifier.padding(12.dp),
-                imageVector = Icons.Filled.MoreVert,
-                contentDescription = "",
-                tint = Color.White
-            )
+
+            game.gameExperience?.let { experience ->
+                Icon(
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .clickable { onFavoritePressed() },
+                    imageVector = if (experience.isFavorite == true)
+                        Icons.Filled.Favorite
+                    else
+                        Icons.Filled.FavoriteBorder,
+                    contentDescription = "",
+                    tint = Color.White
+                )
+            }
         }
     }
 }

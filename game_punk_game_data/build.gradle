@@ -16,15 +16,6 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
-//    signingConfigs {
-//        debug {
-//            storeFile file("gamePunk.jks")
-//            storePassword "punkiegame1998"
-//            keyAlias "punkiegame"
-//            keyPassword "punkiegame1998"
-//        }
-//    }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -38,6 +29,8 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+
 }
 
 dependencies {
@@ -50,6 +43,7 @@ dependencies {
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     // Retrofit
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"

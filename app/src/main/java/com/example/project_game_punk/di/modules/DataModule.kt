@@ -1,6 +1,9 @@
 package com.example.project_game_punk.di.modules
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.example.game_punk_collection_data.data.game.idgb.GameIDGBDataSource
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
@@ -12,10 +15,13 @@ import com.example.game_punk_collection_data.data.game_collection.GameCollection
 import com.example.game_punk_collection_data.data.game_collection.GameCollectionDatabase
 import com.example.game_punk_collection_data.data.news.GameNewsDataSource
 import com.example.game_punk_collection_data.data.news.SteamNewsApi
+import com.example.game_punk_collection_data.data.user.UserDatabase
+import com.example.game_punk_collection_data.data.user.UserLocalDataSource
 import com.example.project_game_punk.R
 import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
 import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
 import com.example.game_punk_domain.domain.interfaces.GameRepository
+import com.example.game_punk_domain.domain.interfaces.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,6 +37,33 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
+
+
+    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
+//    @Provides
+//    @Singleton
+//    fun providesDataStore(
+//        @ApplicationContext context: Context,
+//    ): DataStore<Preferences> {
+//        return context.dataStore
+//    }
+
+
+    @Provides
+    @Singleton
+    fun providesUserRepository(
+        @ApplicationContext context: Context,
+    ): UserRepository {
+        val userDatabase = Room.databaseBuilder(
+            context,
+            UserDatabase::class.java,
+            "user-database-name"
+        ).fallbackToDestructiveMigration().build()
+        return UserLocalDataSource(context.dataStore, userDatabase)
+    }
+
+
 
     @Provides
     @Singleton

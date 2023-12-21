@@ -2,6 +2,7 @@ package com.example.game_punk_domain.domain.interactors.game
 
 import com.example.game_punk_domain.domain.TrackedGamesCache
 import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.models.GameSort
 
@@ -11,11 +12,30 @@ class GetFeaturedGameInteractor constructor(
 ) {
     suspend fun execute(): GameEntity {
         val gameQuery = GetGameQueryWithRecentDatesInteractor().execute()
-        val game = gameRepository.getGames(gameQuery.copy(sort = GameSort.trending)).apply {
+        val game = gameRepository.getGames(
+            gameQuery.copy(
+                sort = GameSort.trending,
+            )
+        ).apply {
             sortedBy {
                 it.score
             }
         }.random()
-        return trackedGamesCache.applyCache(game)
+
+        val featuredGame = game.id?.let { gameId ->
+            gameRepository.getGame(
+                gameId,
+                GameMetaQueryModel(
+                    genres = true,
+                    synopsis = true
+                )
+            )
+        } ?: game
+
+
+
+            println(game)
+
+            return trackedGamesCache.applyCache(featuredGame)
     }
 }

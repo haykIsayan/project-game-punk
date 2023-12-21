@@ -18,9 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressModalBottomSheet
+import com.example.project_game_punk.features.game_details.GameWebViewActivity
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
 import com.example.project_game_punk.ui.theme.ProjectGamePunkTheme
 import com.example.project_game_punk.ui.theme.gamePunkAlt
@@ -31,8 +32,17 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        intent.getStringExtra(MainActivity.USER_ID_INTENT_EXTRA)?.let { url ->
+//            myWebView.loadUrl(url)
+//        }
+
+
         setContent {
             ProjectGamePunkTheme {
                 Surface(
@@ -69,6 +79,13 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+
+    companion object {
+        const val USER_ID_INTENT_EXTRA = "intent_extra_user_id"
+    }
+
+
 }
 
 @Composable
@@ -77,7 +94,7 @@ fun MainGameProgressBottomSheet(controller: GameProgressBottomSheetController) {
     val state = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
-    val onGameProgressSelectedState = remember { mutableStateOf<(((GameProgress) -> Unit))?>(null) }
+    val onGameProgressSelectedState = remember { mutableStateOf<(((GameProgressStatus) -> Unit))?>(null) }
     val gameState = remember { mutableStateOf<GameEntity?>(null)}
 
     controller.onPropagate { game, onProgressSelected ->

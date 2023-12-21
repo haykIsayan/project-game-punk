@@ -21,6 +21,7 @@ import com.example.project_game_punk.features.common.composables.GameCarouselIte
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
@@ -33,25 +34,18 @@ fun RecentGamesSection(
 ) {
     val state = viewModel.getState().observeAsState().value
     Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SectionTitle(title = "Recent Releases")
-            IconButton(modifier = Modifier.size(50.dp, 50.dp),
-                onClick = {
+        SectionTitle(title = "Recent Releases") {
 
-            }) {
-                Icon(Icons.Filled.KeyboardArrowRight, "", tint = Color.White)
-            }
         }
         LoadableStateWrapper(
             state = state,
             failState = { errorMessage -> DiscoverGameFailState(errorMessage) { viewModel.loadState() } },
             loadingState = { RecentGamesSectionLoadingState() },
         ) { games ->
-            ItemCarousel(items = games) { game ->
+            ItemCarousel(
+                items = games,
+                itemDecorator = ItemCarouselDecorators.pillItemDecorator
+            ) { game ->
                 GameCarouselItem(
                     game = game,
                     sheetController = sheetController

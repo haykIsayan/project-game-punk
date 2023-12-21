@@ -12,5 +12,6 @@ data class GameMetaQueryModel(
     val releaseDate: Boolean = false,
     val similarGames: Boolean = false,
     val dlcs: Boolean = false,
-    val steamId: Boolean = false
+    val steamId: Boolean = false,
+    val keywords: Boolean = false,
 )

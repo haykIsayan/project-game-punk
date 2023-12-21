@@ -21,6 +21,7 @@ fun NavigationComponent(
     ) {
         composable(route = MainNavigationTab.DiscoverMainNavigationTab.route) {
             DiscoverScreen(
+                featuredGameViewModel = hiltViewModel(),
 //                gameNewsViewModel = hiltViewModel(),
                 nowPlayingViewModel = hiltViewModel(),
                 trendingGamesViewModel = hiltViewModel(),
@@ -33,7 +34,10 @@ fun NavigationComponent(
         }
         composable(route = MainNavigationTab.ProfileMainNavigationTab.route) {
             ProfileScreen(
+                nowPlayingViewModel = hiltViewModel(),
+                profileUserViewModel = hiltViewModel(),
                 profileViewModel = hiltViewModel(),
+                favoriteGamesViewModel = hiltViewModel(),
                 controller = sheetController
             )
         }

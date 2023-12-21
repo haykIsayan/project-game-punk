@@ -1,7 +1,7 @@
 package com.example.project_game_punk.features.discover.trending
 
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.game_punk_domain.domain.interactors.game.GetTrendingGamesInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
@@ -22,10 +22,10 @@ class TrendingGamesViewModel @Inject constructor(
         loadState()
     }
 
-    fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
+    fun updateGameProgress(game: GameEntity, gameProgress: GameProgressStatus) {
         executeIO(
             Dispatchers.IO,
-            onBefore = { updateGames(game.updateGameProgress(gameProgress)) },
+            onBefore = { updateGames(game.updateGameProgressStatus(gameProgress)) },
             execute = { updateGameProgressInteractor.execute(game, gameProgress) },
             onFail = { updateGames(game) },
         )

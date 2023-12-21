@@ -81,7 +81,7 @@ private fun GameDLCSectionLoadingState() {
                         120.dp,
                         160.dp
                     )
-                    .padding(6.dp)
+                    .padding(12.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(shimmerBrush(showShimmer = showShimmer.value))
                 )

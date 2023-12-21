@@ -44,7 +44,9 @@ import com.example.project_game_punk.ui.theme.gamePunkPrimary
 fun NowPlayingSection(nowPlayingViewModel: NowPlayingViewModel) {
     val state = nowPlayingViewModel.getState().observeAsState().value
     Column {
-        SectionTitle(title = "Now Playing")
+        SectionTitle(title = "Now Playing") {
+
+        }
         LoadableStateWrapper(
             state = state,
             failState = { errorMessage ->
@@ -116,7 +118,7 @@ private fun NowPlayingUnavailable(
     Box(
         modifier = Modifier.fillMaxWidth()
             .height(140.dp)
-            .padding(6.dp)
+            .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(Color.Black)
     ) {
@@ -179,7 +181,7 @@ private fun NowPlayingSectionItem(game: GameEntity) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(160.dp)
-        .padding(6.dp)
+        .padding(12.dp)
         .clip(RoundedCornerShape(10.dp))
         .background(Color.Black)
         .clickable {
@@ -295,7 +297,7 @@ private fun NowPlayingSectionItemGradientBackground(
     Box(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()
-        .blur(20.dp)
+//        .blur(20.dp)
         .background(
             largeRadialGradientBrush(
                 listOf(

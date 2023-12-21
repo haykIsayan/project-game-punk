@@ -1,6 +1,6 @@
 package com.example.game_punk_collection_data.data.game.twitch
 
-import com.example.game_punk_collection_data.data.game.rawg.models.TwitchApiResponse
+import com.example.game_punk_collection_data.data.models.game.TwitchApiResponse
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
 

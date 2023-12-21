@@ -20,7 +20,15 @@ class GameCollectionDataSource(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getGameCollection(id: String): GameCollectionEntity {
-        return gameCollectionDatabase.gameCollectionDao().getGameCollection(id)
+    override suspend fun getGameCollection(
+        id: String,
+        userId: String
+    ): GameCollectionEntity {
+        return gameCollectionDatabase
+            .gameCollectionDao()
+            .getGameCollection(
+                id,
+                userId
+            )
     }
 }

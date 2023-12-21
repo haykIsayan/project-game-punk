@@ -22,6 +22,7 @@ import com.example.project_game_punk.features.common.composables.GameCarouselIte
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 
 @Composable
@@ -97,8 +98,13 @@ private fun GameDetailsSimilarGamesSectionLoadedState(
     similarGames: List<GameEntity>
 ) {
     Column {
-        SectionTitle(title = "Similar Games")
-        ItemCarousel(items = similarGames) { game ->
+        SectionTitle(title = "Similar Games") {
+
+        }
+        ItemCarousel(
+            items = similarGames,
+            itemDecorator = ItemCarouselDecorators.pillItemDecorator
+        ) { game ->
             GameCarouselItem(game = game)
         }
     }

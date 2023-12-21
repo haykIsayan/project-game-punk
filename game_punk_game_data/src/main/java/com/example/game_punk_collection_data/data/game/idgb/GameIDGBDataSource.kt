@@ -1,13 +1,15 @@
 package com.example.game_punk_collection_data.data.game.idgb
 
 import android.os.Build
+import android.util.Log
+import android.util.SparseArray
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
-import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
-import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
-import com.example.game_punk_collection_data.data.game.rawg.models.availableStores
 import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
+import com.example.game_punk_collection_data.data.models.game.GameModel
+import com.example.game_punk_collection_data.data.models.game.PlatformModel
+import com.example.game_punk_collection_data.data.models.game.availableStores
 import com.example.game_punk_domain.domain.entity.*
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.models.GameFilter
@@ -21,6 +23,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.coroutines.suspendCoroutine
 
 
 class GameIDGBDataSource(
@@ -109,6 +112,8 @@ class GameIDGBDataSource(
                 it.id != "206893"
             }
         }
+
+
         return applyCovers(games)
     }
 
@@ -225,6 +230,19 @@ class GameIDGBDataSource(
             println(result)
             result
         } ?: emptyList()
+    }
+
+    suspend fun getKeywords(keywordIds: List<String>): List<String> {
+        val ids = keywordIds.joinToString(",")
+        val fields = StringBuilder()
+        fields.append("fields *;")
+        fields.append("where id = ($ids);")
+
+        val keywords = withAuthenticatedHeaders { headers ->
+            idgbApi.getKeywords(headers, fields.toString())
+        }
+
+        return keywords.map { it.name }
     }
 
     override suspend fun getSimilarGames(gameId: String): List<GameEntity> {
@@ -473,6 +491,31 @@ class GameIDGBDataSource(
         }
     }
 
+     suspend fun getGameGenres(genresIds: List<String>): List<GameGenreEntity> {
+        val ids = genresIds.joinToString(",").let {
+            if (it[it.length - 1] == ',') {
+                it.substring(0, it.length - 1)
+            } else {
+                it
+            }
+        }
+        val genres = withAuthenticatedHeaders { headers ->
+            idgbApi.getGenres(headers, "fields name, slug; where id = ($ids);")
+        }
+        return genres.map { genre ->
+            object : GameGenreEntity {
+                override val id: String
+                    get() = genre.id
+                override val name: String
+                    get() = genre.name
+
+                override val url: String
+                    get() = genre.url
+
+            }
+        }
+    }
+
     override suspend fun getAllGameGenres(): List<GameGenreEntity> {
         val genres = withAuthenticatedHeaders { headers ->
             idgbApi.getGenres(headers, "fields name, slug; limit 200; sort name asc;")
@@ -544,7 +587,52 @@ class GameIDGBDataSource(
     }
 
     override suspend fun getGame(id: String, gameMetaQuery: GameMetaQueryModel): GameEntity {
-        return getGames(GameQueryModel(ids = listOf(id), gameMetaQuery = gameMetaQuery)).first()
+        val game = getGames(GameQueryModel(ids = listOf(id), gameMetaQuery = gameMetaQuery)).first()
+
+        if (gameMetaQuery.genres) {
+//            val updatedGames = getGameGenres(game.genres)
+        }
+
+        return game
+    }
+
+    override suspend fun getVideos(gameId: String): List<GameVideoEntity> {
+
+        val videos = withAuthenticatedHeaders { headers ->
+            val body = StringBuilder()
+                .append("fields video_id;")
+                .append("where game = $gameId;")
+
+            idgbApi.getVideos(
+                headers,
+                body.toString()
+            )
+        }
+
+
+//        suspendCoroutine {
+//            val youtubeLink = "http://youtube.com/watch?v=xxxx"
+//
+//            object : YouTubeExtractor(this) {
+//                fun onExtractionComplete(ytFiles: SparseArray<YtFile>?, vMeta: VideoMeta?) {
+//                    if (ytFiles != null) {
+//                        val itag = 22
+//                        val downloadUrl: String = ytFiles[itag].getUrl()
+//                    }
+//                }
+//            }.extract(youtubeLink, true, true)
+//        }
+
+
+
+
+
+        return videos.map {
+            object : GameVideoEntity {
+                override val url: String
+                    get() = /*"https://www.youtube.com/watch?v=${it.video_id}"*/it.video_id
+            }
+        }
     }
 
     private suspend fun <T> withAuthenticatedHeaders(

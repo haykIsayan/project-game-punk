@@ -17,7 +17,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
+import com.example.game_punk_domain.domain.entity.gameProgressStatusItems
 import com.example.project_game_punk.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -28,16 +29,16 @@ fun GameProgressModalBottomSheet(
     state: ModalBottomSheetState,
     scope: CoroutineScope,
     game: GameEntity,
-    onGameProgressSelected: (GameProgress) -> Unit
+    onGameProgressSelected: (GameProgressStatus) -> Unit
 ) {
-    val onGameProgressItemTapped: (GameProgress) -> Unit = { gameProgress ->
+    val onGameProgressItemTapped: (GameProgressStatus) -> Unit = { gameProgress ->
         onGameProgressSelected.invoke(gameProgress)
         scope.launch {
             state.animateTo(ModalBottomSheetValue.Hidden)
         }
     }
 
-    val gameProgressItem: @Composable (GameProgress) -> Unit = { gameProgress ->
+    val gameProgressItem: @Composable (GameProgressStatus) -> Unit = { gameProgress ->
         Button(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,7 +76,7 @@ fun GameProgressModalBottomSheet(
                 textAlign = TextAlign.Center
             )
             LazyColumn {
-                items(GameProgress.gameProgressItems(game)) { gameProgress ->
+                items(gameProgressStatusItems(game)) { gameProgress ->
                     gameProgressItem.invoke(gameProgress)
                 }
             }

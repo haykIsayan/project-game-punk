@@ -9,5 +9,8 @@ interface GameCollectionRepository {
 
     suspend fun getGameCollections(): List<GameCollectionEntity>
 
-    suspend fun getGameCollection(id: String): GameCollectionEntity?
+    suspend fun getGameCollection(
+        id: String,
+        userId: String
+    ): GameCollectionEntity?
 }
