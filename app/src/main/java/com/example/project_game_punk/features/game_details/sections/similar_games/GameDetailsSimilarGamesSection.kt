@@ -78,16 +78,26 @@ private fun GameDetailsSimilarGamesSectionLoadingState() {
     Column {
         SectionTitle(title = "Similar Games", isLoading = true)
         LazyRow(content = {
-            items(4) {
-                Box(modifier = Modifier
-                    .size(
-                        120.dp,
-                        160.dp
+            items(4) {index ->
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(modifier = Modifier
+                        .size(
+                            120.dp,
+                            160.dp
+                        )
+                        .padding(
+                            start = if (index == 0) 12.dp else 6.dp,
+                            end = 6.dp,
+                            top = 6.dp,
+                            bottom = 6.dp
+                        )
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(shimmerBrush(showShimmer = showShimmer.value))
                     )
-                    .padding(6.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(shimmerBrush(showShimmer = showShimmer.value))
-                )
+                }
             }
         })
     }

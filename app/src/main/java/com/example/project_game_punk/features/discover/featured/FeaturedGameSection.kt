@@ -2,46 +2,30 @@ package com.example.project_game_punk.features.discover.featured
 
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
-import android.media.session.MediaSession
-import android.webkit.WebView
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.SimpleExoPlayer
-import androidx.media3.ui.PlayerView
 import androidx.palette.graphics.Palette
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import coil.ImageLoader
-//import androidx.media3.exoplayer.hls.HlsMediaSource
-//import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.game_punk_domain.domain.entity.GameEntity
@@ -49,7 +33,6 @@ import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.R
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
-import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.shimmerBrush
@@ -57,14 +40,12 @@ import com.example.project_game_punk.features.common.game_progress.GameProgressB
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
 import com.example.project_game_punk.features.game_details.GameDetailsActivity
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
-import com.example.project_game_punk.features.game_details.sections.screenshots.GameScreenshotsViewModel
 import com.example.project_game_punk.ui.theme.gamePunkAlt
 import com.example.project_game_punk.ui.theme.gamePunkPrimary
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
-@androidx.media3.common.util.UnstableApi
 @Composable
 fun FeaturedGameSection(
     featuredGameViewModel: FeaturedGameViewModel,
@@ -152,7 +133,6 @@ private fun FeatureGameLoadedState(
         ) {
             when (it) {
                 is FeaturedGameItem.CoverFeaturedGameItem -> {
-
                     it.game?.let { game ->
                         FeaturedGameCover(
                             game = game,
@@ -241,30 +221,20 @@ private fun FeaturedGameDetails(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
-//                    Text(
-//                        text = "Genres",
-//                        fontWeight = FontWeight.ExtraBold,
-//                        fontSize = 10.sp,
-//                        maxLines = 2,
-//                        overflow = TextOverflow.Ellipsis
-//                    )
-//                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = game.keywords?.joinToString(",") ?: "",
+                        text = game.gameGenres?.joinToString(", ") { it.name } ?: "",
                         fontWeight = FontWeight.Bold,
                         fontSize = 10.sp,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = game.description ?: "",
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
-                        maxLines = 5,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(12.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -311,16 +281,13 @@ private fun FeaturedGameCover(
                 )
                 .clip(RoundedCornerShape(10.dp))
         ) {
-
             val context = LocalContext.current
-
             val loader = ImageLoader(LocalContext.current)
             val req = ImageRequest.Builder(LocalContext.current)
                 .data(game.backgroundImage)
                 .allowHardware(false)
                 .target { result ->
                     val bitmap = (result as BitmapDrawable).bitmap
-
                     Palette.from(bitmap).generate {
                         it?.let { palette ->
                             val dominantColor = palette.getDominantColor(
@@ -334,9 +301,7 @@ private fun FeaturedGameCover(
                     }
                 }
                 .build()
-
             loader.enqueue(req)
-
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(game.backgroundImage)
@@ -346,7 +311,6 @@ private fun FeaturedGameCover(
                 contentScale = ContentScale.FillHeight,
             )
         }
-
         Spacer(modifier = Modifier
             .fillMaxWidth()
             .height(12.dp))
@@ -354,11 +318,9 @@ private fun FeaturedGameCover(
             game = game,
             modifier = Modifier.width(110.dp),
             onProgressSelected = onProgressSelected,
-
-                controller = sheetController
-            )
+            controller = sheetController
+        )
     }
-
 }
 
 @Composable
@@ -418,16 +380,4 @@ private fun FeaturedGameLoadingState() {
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -58,9 +58,11 @@ data class GameModel(
         return copy(
             gameExperienceModel = GameExperienceModel(
                 0,
+                gameExperience.userScore,
                 gameExperience.isFavorite,
-                gameExperience.store,
-                gameExperience.platform,
+                gameExperience.storeId,
+                gameExperience.platformId,
+                gameExperience.userReview,
                 gameExperience.gameProgressStatus,
                 gameExperience.gameId,
                 gameExperience.userId
@@ -74,10 +76,27 @@ data class GameModel(
         return updateGameExperience(experience)
     }
 
+    override fun updateUserScore(userScore: Float): GameEntity {
+        return gameExperienceModel?.copy(userScore = userScore)?.let { updatedGameExperience ->
+            updateGameExperience(updatedGameExperience)
+        } ?: this
+    }
 
 
     override fun updateGameProgressStatus(gameProgressStatus: GameProgressStatus): GameEntity {
         return gameExperienceModel?.copy(gameProgressStatus = gameProgressStatus)?.let { updatedGameExperience ->
+            updateGameExperience(updatedGameExperience)
+        } ?: this
+    }
+
+    override fun updateGameExperiencePlatform(platformId: String): GameEntity {
+        return gameExperienceModel?.copy(platformId = platformId)?.let { updatedGameExperience ->
+            updateGameExperience(updatedGameExperience)
+        } ?: this
+    }
+
+    override fun updateGameExperienceStore(storeId: String): GameEntity {
+        return gameExperienceModel?.copy(storeId = storeId)?.let { updatedGameExperience ->
             updateGameExperience(updatedGameExperience)
         } ?: this
     }
@@ -102,9 +121,11 @@ data class GameModel(
 @Entity
 data class GameExperienceModel(
     @PrimaryKey(autoGenerate = true) var experienceUuid: Long = 0,
+    @ColumnInfo(name = "user_score") override var userScore: Float = 0f,
     @ColumnInfo(name = "is_favorite") override var isFavorite: Boolean? = null,
-    @Ignore override val store: GameStoreEntity? = null,
-    @Ignore override val platform: GamePlatformEntity? = null,
+    @ColumnInfo(name = "store_id") override val storeId: String? = null,
+    @ColumnInfo(name = "platform_id") override val platformId: String? = null,
+    @ColumnInfo(name = "user_review") override val userReview: String? = null,
     @ColumnInfo(name = "game_progress_status") override var gameProgressStatus: GameProgressStatus? = null,
     @ColumnInfo(name = "user_id") override var userId: String = "",
     @ColumnInfo(name = "game_id") override var gameId: String = ""
@@ -120,6 +141,18 @@ data class GameExperienceModel(
         isFavorite: Boolean
     ): GameExperienceEntity {
         return copy(isFavorite = isFavorite)
+    }
+
+    override fun updatePlatformId(
+        platformId: String
+    ): GameExperienceEntity {
+        return copy(platformId = platformId)
+    }
+
+    override fun updateStoreId(
+        storeId: String
+    ): GameExperienceEntity {
+        return copy(storeId = storeId)
     }
 
 }

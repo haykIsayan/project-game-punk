@@ -19,9 +19,15 @@ interface GameEntity {
 
     fun toggleIsFavorite(): GameEntity
 
+    fun updateUserScore(userScore: Float): GameEntity
+
     fun updateGameExperience(gameExperience: GameExperienceEntity): GameEntity
 
     fun updateGameProgressStatus(gameProgressStatus: GameProgressStatus): GameEntity
+
+    fun updateGameExperiencePlatform(platformId: String): GameEntity
+
+    fun updateGameExperienceStore(storeId: String): GameEntity
 
     fun updateVideos(videos: List<GameVideoEntity>): GameEntity
 }

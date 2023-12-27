@@ -151,6 +151,9 @@ private fun GameStoresSectionItem(store: GameStoreEntity) {
                 "playstation_store_us" -> {
                     com.example.project_game_punk.R.drawable.ic_playstation_store
                 }
+                "amazon" -> {
+                    com.example.project_game_punk.R.drawable.ic_amazon
+                }
                 else -> {
                     com.example.project_game_punk.R.drawable.ic_playstation_store
                 }

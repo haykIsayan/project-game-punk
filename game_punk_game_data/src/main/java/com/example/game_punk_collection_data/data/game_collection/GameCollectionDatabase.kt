@@ -7,7 +7,7 @@ import com.example.game_punk_collection_data.data.models.game.GameExperienceMode
 import com.example.game_punk_collection_data.data.models.game.GameModel
 
 
-@Database(entities = [GameCollectionModel::class, GameModel::class, GameExperienceModel::class], version = 8)
+@Database(entities = [GameCollectionModel::class, GameModel::class, GameExperienceModel::class], version = 11)
 @TypeConverters(GameCollectionConverters::class)
 abstract class GameCollectionDatabase: RoomDatabase() {
     abstract fun gameCollectionDao(): GameCollectionDao

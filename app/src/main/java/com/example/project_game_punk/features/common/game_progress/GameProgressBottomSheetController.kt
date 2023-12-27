@@ -7,7 +7,6 @@ class GameProgressBottomSheetController {
 
     private var propagate: ((GameEntity, (GameProgressStatus) -> Unit) -> Unit)? = null
 
-
     fun onPropagate(propagate: (GameEntity, (GameProgressStatus) -> Unit) -> Unit) {
         this.propagate = propagate
     }

@@ -19,12 +19,12 @@ fun <ItemType >GamePunkGrid(
     footer: @Composable () -> Unit = {},
     itemComposer: @Composable (item: ItemType) -> Unit
 ) {
-    LazyVerticalGrid(
-        modifier = modifier.scrollable(rememberScrollState(), enabled = false, orientation = Orientation.Vertical),
-        cells = GridCells.Fixed(span),
-    ) {
-        items(items) { item ->
-            itemComposer.invoke(item)
-        }
-    }
+//    LazyVerticalGrid(
+//        modifier = modifier.scrollable(rememberScrollState(), enabled = false, orientation = Orientation.Vertical),
+//        cells = GridCells.Fixed(span),
+//    ) {
+//        items(items) { item ->
+//            itemComposer.invoke(item)
+//        }
+//    }
 }

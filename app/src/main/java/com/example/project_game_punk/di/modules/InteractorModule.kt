@@ -208,6 +208,42 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesUpdateUserScoreInteractor(
+        gameCollectionRepository: GameCollectionRepository,
+        trackedGamesCache: TrackedGamesCache,
+    ): UpdateUserScoreInteractor {
+        return UpdateUserScoreInteractor(
+            gameCollectionRepository,
+            trackedGamesCache
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesUpdateGameExperiencePlatformInteractor(
+        gameCollectionRepository: GameCollectionRepository,
+        trackedGamesCache: TrackedGamesCache,
+    ): UpdateGameExperiencePlatformInteractor {
+        return UpdateGameExperiencePlatformInteractor(
+            gameCollectionRepository,
+            trackedGamesCache
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesUpdateGameExperienceStoreInteractor(
+        gameCollectionRepository: GameCollectionRepository,
+        trackedGamesCache: TrackedGamesCache,
+    ): UpdateGameExperienceStoreInteractor {
+        return UpdateGameExperienceStoreInteractor(
+            gameCollectionRepository,
+            trackedGamesCache
+        )
+    }
+
+    @Provides
+    @Singleton
     fun providesGetUserFavoriteGamesInteractor(
         trackedGamesCache: TrackedGamesCache,
     ): GetUserFavoriteGamesInteractor {
@@ -220,11 +256,13 @@ object InteractorModule {
     @Singleton
     fun providesGetNowPlayingInteractor(
         applyGameMetaInteractor: ApplyGameMetaInteractor,
-        trackedGamesCache: TrackedGamesCache
+        trackedGamesCache: TrackedGamesCache,
+        gameRepository: GameRepository
     ): GetNowPlayingGamesInteractor {
         return GetNowPlayingGamesInteractor(
             applyGameMetaInteractor,
-            trackedGamesCache
+            trackedGamesCache,
+            gameRepository
         )
     }
 

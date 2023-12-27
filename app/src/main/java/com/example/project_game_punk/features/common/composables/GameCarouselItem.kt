@@ -52,7 +52,6 @@ fun GameCarouselItem(
                 110.dp,
                 150.dp
             )
-//            .padding(6.dp)
             .clip(RoundedCornerShape(10.dp))
         ) {
             Box(
@@ -75,17 +74,22 @@ fun GameCarouselItem(
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
                 )
+                Box(modifier = Modifier
+                    .padding(6.dp)
+                    .align(Alignment.BottomCenter)
+                ) {
+                    GameUserScoreDisplay(game = game)
+                }
             }
             trailing.invoke()
         }
         if (sheetController != null && onProgressSelected != null) {
-            Spacer(modifier = Modifier.fillMaxWidth().height(12.dp))
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .height(12.dp))
             GameProgressButton(
                 game = game,
-                modifier = Modifier
-                    .width(110.dp)
-//                    .padding(6.dp)
-                ,
+                modifier = Modifier.width(110.dp),
                 onProgressSelected = onProgressSelected,
                 controller = sheetController
             )

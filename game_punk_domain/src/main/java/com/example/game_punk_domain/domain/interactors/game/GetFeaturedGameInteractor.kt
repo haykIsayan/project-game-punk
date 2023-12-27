@@ -15,27 +15,17 @@ class GetFeaturedGameInteractor constructor(
         val game = gameRepository.getGames(
             gameQuery.copy(
                 sort = GameSort.trending,
+                gameMetaQuery = GameMetaQueryModel(
+                    genres = true,
+                    synopsis = true
+                ),
+                limit = 1
             )
         ).apply {
             sortedBy {
                 it.score
             }
         }.random()
-
-        val featuredGame = game.id?.let { gameId ->
-            gameRepository.getGame(
-                gameId,
-                GameMetaQueryModel(
-                    genres = true,
-                    synopsis = true
-                )
-            )
-        } ?: game
-
-
-
-            println(game)
-
-            return trackedGamesCache.applyCache(featuredGame)
+        return trackedGamesCache.applyCache(game)
     }
 }

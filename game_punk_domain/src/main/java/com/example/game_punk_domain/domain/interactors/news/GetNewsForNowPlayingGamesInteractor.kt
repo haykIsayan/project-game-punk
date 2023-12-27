@@ -7,9 +7,14 @@ class GetNewsForNowPlayingGamesInteractor(
     private val getNewsForGameInteractor: GetNewsForGameInteractor,
     private val getNowPlayingGamesInteractor: GetNowPlayingGamesInteractor,
 ) {
-
     suspend fun execute(): List<GameNewsEntity> {
         val nowPlayingGames = getNowPlayingGamesInteractor.execute()
-        return emptyList()
+        // todo reduce now playing games to 5
+        val topNowPlayingNews = nowPlayingGames.map { game ->
+            game.id?.let { gameId ->
+                getNewsForGameInteractor.execute(gameId = gameId)
+            }?.first()
+        }.toList().filterNotNull()
+        return topNowPlayingNews
     }
 }

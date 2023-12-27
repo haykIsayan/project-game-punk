@@ -13,10 +13,12 @@ enum class GameProgressStatus {
 interface GameExperienceEntity {
     val userId: String
     val gameId: String
+    val userScore: Float
     val isFavorite: Boolean?
-    val store: GameStoreEntity?
-    val platform: GamePlatformEntity?
+    val storeId: String?
+    val platformId: String?
     val gameProgressStatus: GameProgressStatus?
+    val userReview: String?
 
     fun updateGameProgressStatus(
         gameProgressStatus: GameProgressStatus
@@ -25,4 +27,8 @@ interface GameExperienceEntity {
     fun updateIsFavorite(
         isFavorite: Boolean
     ): GameExperienceEntity
+
+    fun updateStoreId(storeId: String): GameExperienceEntity
+
+    fun updatePlatformId(platformId: String): GameExperienceEntity
 }

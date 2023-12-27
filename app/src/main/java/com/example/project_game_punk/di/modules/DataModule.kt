@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.example.game_punk_collection_data.data.game.idgb.GameIDGBDataSource
+import com.example.game_punk_collection_data.data.game.idgb.IGDBClientInterceptor
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
@@ -98,7 +99,7 @@ object DataModule {
             .create(IDGBAuthApi::class.java)
 
         val idgbApi = Retrofit.Builder()
-            .client(OkHttpClient.Builder().build())
+            .client(OkHttpClient.Builder().addInterceptor(IGDBClientInterceptor()).build())
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(context.getString(R.string.idgb_api_base_url)).build()

@@ -57,5 +57,12 @@ val availableStores = mapOf(
             slug = "xbox_game_pass_ultimate_cloud",
             name = "Xbox Game Pass"
         )
+    ),
+    Pair(
+        20,
+        GameStoreModel(
+            "amazon",
+            "Amazon"
+        )
     )
 )

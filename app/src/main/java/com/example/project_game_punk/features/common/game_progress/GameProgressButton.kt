@@ -58,7 +58,8 @@ fun GameProgressButton(
             SolidColor(borderColor),
             shape = RoundedCornerShape(10.dp)
         )
-        .background(color)) {
+        .background(color)
+    ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = text,

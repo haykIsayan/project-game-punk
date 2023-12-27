@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -37,6 +36,7 @@ import com.example.project_game_punk.features.authentication.GamePunkAuthActivit
 import com.example.project_game_punk.features.common.composables.*
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselPill
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.discover.components.DiscoverGameCarouselLoading
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
@@ -96,7 +96,8 @@ fun ProfileScreen(
 
             item {
                 Box(modifier = Modifier.fillMaxWidth()) {
-                    Box(modifier = Modifier.align(Alignment.Center)
+                    Box(modifier = Modifier
+                        .align(Alignment.Center)
                         .padding(12.dp)) {
                         ProfileIconSection(profileUserViewModel = profileUserViewModel)
                     }
@@ -338,30 +339,44 @@ private fun SignOutDialog(
 ) {
     if (openSignOutDialog) {
         AlertDialog(
+
             onDismissRequest = {
                 onDismissPressed()
             },
             title = {
-                Text(text = "Do you want to sign out?")
-            },
-            confirmButton = {
-                Button(
 
-                    onClick = {
-                        onConfirmPressed()
-                    }) {
-                    Text("Confirm Button")
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    Text(
+                        text = "Do you want to sign out?",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ItemCarouselPill(
+                            text = "Yes",
+                            onTap = {
+                                onConfirmPressed()
+                            }
+                        )
+                        ItemCarouselPill(
+                            text = "No",
+                            onTap = {
+                                onDismissPressed()
+                            }
+                        )
+                    }
                 }
             },
-            dismissButton = {
-                Button(
-
-                    onClick = {
-                        onDismissPressed()
-                    }) {
-                    Text("Dismiss Button")
-                }
-            }
+            buttons = {}
         )
     }
 }

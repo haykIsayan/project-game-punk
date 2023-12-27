@@ -14,7 +14,11 @@ data class SteamNewsItemModel(
     val contents: String? = null,
     override val title: String,
     override val url: String,
+    override val date: String,
+    val feedlabel: String,
 ): GameNewsEntity {
     override val description: String
         get() = contents ?: ""
+    override val author: String
+        get() = feedlabel
 }

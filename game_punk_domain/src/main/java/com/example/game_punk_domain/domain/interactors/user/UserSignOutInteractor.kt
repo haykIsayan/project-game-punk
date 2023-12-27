@@ -8,7 +8,6 @@ class UserSignOutInteractor(
     private val trackedGamesCache: TrackedGamesCache,
     private val userRepository: UserRepository
 ) {
-
     suspend fun execute() {
         userCache.clearCache()
         trackedGamesCache.clearCache()

@@ -2,7 +2,6 @@ package com.example.game_punk_collection_data.data.game.idgb
 
 import android.os.Build
 import android.util.Log
-import android.util.SparseArray
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
@@ -18,12 +17,14 @@ import com.example.game_punk_domain.domain.models.GameSort
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
+import retrofit2.HttpException
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.coroutines.suspendCoroutine
 
 
 class GameIDGBDataSource(
@@ -104,6 +105,7 @@ class GameIDGBDataSource(
             }?.let { sort ->
                 fields.append("sort $sort desc;")
             }
+            fields.append("limit ${gameQuery.limit};")
 
             idgbApi.getGames(
                 headers,
@@ -113,8 +115,30 @@ class GameIDGBDataSource(
             }
         }
 
+        val gamesWithPlatforms = if (gameQuery.gameMetaQuery.platforms) {
+            games.map { game ->
+                scope.async {
+                    val platforms = game.platforms?.let { platforms ->
+                        getPlatforms(platforms)
+                    }
+                    game.copy(gamePlatforms = platforms)
+                }
+            }.toList().awaitAll()
+        } else games
 
-        return applyCovers(games)
+
+        val gamesWithGenres = if (gameQuery.gameMetaQuery.genres) {
+            gamesWithPlatforms.map { game ->
+                scope.async {
+                    val genres = game.genres?.let { genreIds ->
+                        getGameGenres(genreIds)
+                    }
+                    game.copy(gameGenres = genres)
+                }
+            }.toList().awaitAll()
+        } else gamesWithPlatforms
+
+        return applyCovers(gamesWithGenres)
     }
 
     override suspend fun getGameAgeRating(gameId: String): GameAgeRatingEntity {
@@ -196,7 +220,7 @@ class GameIDGBDataSource(
 
         val fields = StringBuilder()
         fields.append("fields category,checksum,countries,created_at,game,media,name,platform,uid,updated_at,url,year;")
-        fields.append("where game = ($gameId) & category = ($categories);")
+        fields.append("where game = ($gameId) & category = ($categories); limit 100;")
 
         val external = withAuthenticatedHeaders { headers ->
             idgbApi.getExternalGames(headers, fields.toString())
@@ -395,6 +419,58 @@ class GameIDGBDataSource(
         }
     }
 
+    private suspend fun getPlatforms(ids: List<String>): List<GamePlatformEntity> {
+        val platformIds = ids.joinToString(",").let {
+            if (it.get(it.length - 1) == ',') {
+                it.substring(0, it.length - 1)
+            } else {
+                it
+            }
+        }
+        println(platformIds)
+        val platforms = withAuthenticatedHeaders { headers ->
+            idgbApi.getPlatforms(headers, "fields platform_logo, name, slug; where id = ($platformIds);")
+        }
+
+        println(platforms)
+
+        val platformLogoIds = platforms.filter { it.platform_logo != null }.joinToString { platform -> platform.platform_logo ?: "" }.let {
+            if (it.get(it.length - 1) == ',') {
+                it.substring(0, it.length - 1)
+            } else {
+                it
+            }
+        }
+
+        val fields = StringBuilder()
+        fields.append("fields alpha_channel,animated,checksum,height,image_id,url,width;")
+        fields.append("where id = ($platformLogoIds);")
+
+        println(platformLogoIds)
+
+        val platformLogos =  withAuthenticatedHeaders { headers ->
+            idgbApi.getPlatformLogos(
+                headers, fields.toString())
+        }
+        println(platformLogos)
+        return platforms.filter { isProperPlatform(it) }.map { platform ->
+            object : GamePlatformEntity {
+                override val id: String
+                    get() = platform.id
+                override val name: String
+                    get() = platform.name
+                override val icon: String
+                    get() = ("https:" + platformLogos.find { platformLogo ->
+                        platformLogo.id == platform.platform_logo
+                    }?.url)
+                        .replace(
+                            "t_thumb",
+                            "t_thumb_2x"
+                        )
+            }
+        }
+    }
+
     override suspend fun getGameCompanies(gameId: String): List<GameCompanyEntity> {
         val fields = StringBuilder()
         fields.append("fields *;")
@@ -589,11 +665,17 @@ class GameIDGBDataSource(
     override suspend fun getGame(id: String, gameMetaQuery: GameMetaQueryModel): GameEntity {
         val game = getGames(GameQueryModel(ids = listOf(id), gameMetaQuery = gameMetaQuery)).first()
 
-        if (gameMetaQuery.genres) {
+//        if (gameMetaQuery.genres) {
 //            val updatedGames = getGameGenres(game.genres)
-        }
+//        }
 
-        return game
+        val platformIds = (game as (GameModel)).platforms
+        val updatedGame = if (gameMetaQuery.platforms && platformIds != null) {
+            val platforms = getPlatforms(platformIds)
+            game.copy(gamePlatforms = platforms)
+        } else game
+
+        return updatedGame
     }
 
     override suspend fun getVideos(gameId: String): List<GameVideoEntity> {
@@ -643,7 +725,19 @@ class GameIDGBDataSource(
             put("Client-ID", clientId)
             put("Authorization", "Bearer ${idgbAuth.access_token}")
         }
-        return onHeadersCreated.invoke(headers)
+
+        return try {
+            onHeadersCreated.invoke(headers)
+        } catch (e: Exception) {
+
+            if (e is HttpException && 429 == e.code()) {
+                Log.d("Haykk", "With headers $e")
+                delay(1000)
+                return onHeadersCreated.invoke(headers)
+            }
+
+            throw e
+        }
     }
 }
 
