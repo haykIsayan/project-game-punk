@@ -20,28 +20,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 
 @Composable
 fun GameProgressButton(
     game: GameEntity,
     modifier: Modifier,
     controller: GameProgressBottomSheetController,
-    onProgressSelected: (GameEntity, GameProgress) -> Unit
+    onProgressSelected: (GameEntity, GameProgressStatus) -> Unit
 ) {
-    val gameProgress = game.gameProgress
-    val color = colorResource(GameProgressMapper.color(gameProgress))
-    val textColor = colorResource(GameProgressMapper.displayTextColor(gameProgress))
-    val borderColor =  if (gameProgress == GameProgress.NotFollowingGameProgress) {
+    val gameProgressStatus = game.gameExperience?.gameProgressStatus ?: return
+    val color = colorResource(GameProgressMapper.color(gameProgressStatus))
+    val textColor = colorResource(GameProgressMapper.displayTextColor(gameProgressStatus))
+    val borderColor =  if (gameProgressStatus == GameProgressStatus.notFollowing) {
         Color.White
     } else {
-        colorResource(GameProgressMapper.color(gameProgress))
+        colorResource(GameProgressMapper.color(gameProgressStatus))
     }
-    val text = stringResource(GameProgressMapper.displayText(gameProgress = gameProgress)).uppercase()
+    val text = stringResource(GameProgressMapper.displayText(gameProgressStatus = gameProgressStatus)).uppercase()
 
     val onClick = {
-        if (game.gameProgress == GameProgress.NotFollowingGameProgress) {
-            onProgressSelected.invoke(game, GameProgress.FollowingGameProgress)
+        if (gameProgressStatus == GameProgressStatus.notFollowing) {
+            onProgressSelected.invoke(game, GameProgressStatus.following)
         } else {
             controller.displayBottomSheet(game) { gameProgress ->
                 onProgressSelected.invoke(game, gameProgress)
@@ -58,10 +58,10 @@ fun GameProgressButton(
             SolidColor(borderColor),
             shape = RoundedCornerShape(10.dp)
         )
-        .background(color)) {
+        .background(color)
+    ) {
         Text(
-            modifier = Modifier
-                .align(Alignment.Center),
+            modifier = Modifier.align(Alignment.Center),
             text = text,
             fontSize = 10.sp,
             letterSpacing = 1.sp,

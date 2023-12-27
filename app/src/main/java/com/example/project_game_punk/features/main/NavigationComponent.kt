@@ -21,19 +21,19 @@ fun NavigationComponent(
     ) {
         composable(route = MainNavigationTab.DiscoverMainNavigationTab.route) {
             DiscoverScreen(
-//                gameNewsViewModel = hiltViewModel(),
-                nowPlayingViewModel = hiltViewModel(),
+                featuredGameViewModel = hiltViewModel(),
+                gameNewsViewModel = hiltViewModel(),
                 trendingGamesViewModel = hiltViewModel(),
                 recentGamesViewModel = hiltViewModel(),
-//                upcomingGamesViewModel = hiltViewModel(),
-//                recommendedGamesViewModel = hiltViewModel(),
-                navController = navController,
                 sheetController = sheetController
             )
         }
         composable(route = MainNavigationTab.ProfileMainNavigationTab.route) {
             ProfileScreen(
+                nowPlayingViewModel = hiltViewModel(),
+                profileUserViewModel = hiltViewModel(),
                 profileViewModel = hiltViewModel(),
+                favoriteGamesViewModel = hiltViewModel(),
                 controller = sheetController
             )
         }

@@ -14,5 +14,6 @@ data class GameQueryModel(
     val platforms: List<GamePlatformEntity> = emptyList(),
     val genres: List<GameGenreEntity> = emptyList(),
     val onlyGames: Boolean = true,
-    val ids: List<String> = emptyList()
+    val ids: List<String> = emptyList(),
+    val limit: Int = 10
 )

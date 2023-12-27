@@ -59,6 +59,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
     // Room
     def room_version = "2.3.0"
 
@@ -81,6 +84,14 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
     implementation 'com.google.code.gson:gson:2.8.8'
+
+//
+//    def media3_version = ""
+    implementation "androidx.media3:media3-exoplayer:1.0.0-alpha01"
+    implementation "androidx.media3:media3-ui:1.0.0-alpha01"
+//    implementation "androidx.media3:media3-exoplayer-hls:$media3_version"
+
+
 
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "io.coil-kt:coil-compose:2.1.0"

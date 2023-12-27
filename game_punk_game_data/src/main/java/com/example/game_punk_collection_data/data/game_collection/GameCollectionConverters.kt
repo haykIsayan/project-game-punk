@@ -1,11 +1,11 @@
 package com.example.game_punk_collection_data.data.game_collection
 
 import androidx.room.TypeConverter
-import com.example.game_punk_collection_data.data.game.rawg.models.GameModel
-import com.example.game_punk_collection_data.data.game.rawg.models.GameProgressStatus
-import com.example.game_punk_collection_data.data.game.rawg.models.PlatformModel
+import com.example.game_punk_collection_data.data.models.game.GameModel
+import com.example.game_punk_collection_data.data.models.game.PlatformModel
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GamePlatformEntity
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.google.gson.Gson
 
 import com.google.gson.reflect.TypeToken

@@ -11,7 +11,8 @@ class GameGenresViewModel @Inject constructor(
     private val getGameGenresInteractor: GetGameGenresInteractor
 ) : StateViewModel<List<GameGenreEntity>, String>(){
     override suspend fun loadData(param: String?): List<GameGenreEntity> {
-        if (param == null) return emptyList()
-        return getGameGenresInteractor.execute(param)
+        return emptyList()
+//        if (param == null) return emptyList()
+//        return getGameGenresInteractor.execute(param)
     }
 }

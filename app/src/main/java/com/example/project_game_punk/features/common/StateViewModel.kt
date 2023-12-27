@@ -20,6 +20,10 @@ abstract class StateViewModel<DataType, Param>: ViewModel() {
         state.value = updatedState
     }
 
+    protected fun updateData(newData: DataType) {
+        emit(ViewModelState.SuccessState(newData))
+    }
+
     fun loadState(param: Param? = null) {
         viewModelScope.launch {
             try {

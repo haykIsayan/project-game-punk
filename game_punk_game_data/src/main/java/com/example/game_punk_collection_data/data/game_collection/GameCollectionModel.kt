@@ -7,6 +7,7 @@ import com.example.game_punk_domain.domain.entity.GameEntity
 @Entity
 data class GameCollectionModel(
     @PrimaryKey(autoGenerate = true) var uuid: Long,
+    @ColumnInfo(name = "user_id") override val userId: String,
     @ColumnInfo(name = "id") override val id: String?,
     @ColumnInfo(name = "name") override val name: String?,
     @ColumnInfo(name = "games") override val games: List<GameEntity> = emptyList()

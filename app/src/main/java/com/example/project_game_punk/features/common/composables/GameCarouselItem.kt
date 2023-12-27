@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
 import com.example.project_game_punk.features.game_details.GameDetailsActivity
@@ -27,7 +27,7 @@ fun GameCarouselItem(
     game: GameEntity,
     sheetController: GameProgressBottomSheetController? = null,
     trailing: @Composable () -> Unit = {},
-    onProgressSelected: ((GameEntity, GameProgress) -> Unit)? = null
+    onProgressSelected: ((GameEntity, GameProgressStatus) -> Unit)? = null
 ) {
     val context = LocalContext.current
     Column(
@@ -49,10 +49,9 @@ fun GameCarouselItem(
     ) {
         Box(modifier = Modifier
             .size(
-                120.dp,
-                160.dp
+                110.dp,
+                150.dp
             )
-            .padding(6.dp)
             .clip(RoundedCornerShape(10.dp))
         ) {
             Box(
@@ -75,15 +74,22 @@ fun GameCarouselItem(
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
                 )
+                Box(modifier = Modifier
+                    .padding(6.dp)
+                    .align(Alignment.BottomCenter)
+                ) {
+                    GameUserScoreDisplay(game = game)
+                }
             }
             trailing.invoke()
         }
         if (sheetController != null && onProgressSelected != null) {
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .height(12.dp))
             GameProgressButton(
                 game = game,
-                modifier = Modifier
-                    .width(120.dp)
-                    .padding(6.dp),
+                modifier = Modifier.width(110.dp),
                 onProgressSelected = onProgressSelected,
                 controller = sheetController
             )

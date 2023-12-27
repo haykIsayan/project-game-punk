@@ -1,7 +1,6 @@
 package com.example.project_game_punk.features.game_details.sections.genre
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.game_punk_domain.domain.entity.GameGenreEntity
@@ -26,13 +24,14 @@ import com.example.project_game_punk.features.common.composables.LoadableStateWr
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.shimmerBrush
+import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 
 @Composable
 fun GameGenresSection(
-    gameGenresViewModel: GameGenresViewModel,
+    gameDetailsViewModel: GameDetailsViewModel,
     reload: () -> Unit = {}
 ) {
-    val state = gameGenresViewModel.getState().observeAsState().value
+    val state = gameDetailsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state, failState = {
             GameGenresSectionFailedState {
@@ -40,8 +39,10 @@ fun GameGenresSection(
             }
         },
         loadingState = { GameGenresSectionLoadingState() }
-    ) { genres ->
-        GameGenresSectionLoadedState(genres)
+    ) { game ->
+        game?.gameGenres?.let { genres ->
+            GameGenresSectionLoadedState(genres)
+        }
     }
 }
 
@@ -107,11 +108,8 @@ private fun GameGenresSectionLoadedState(
 private fun GameGenresSectionItem(genre: GameGenreEntity) {
     Box(
         modifier = Modifier
-            .border(
-                1.dp,
-                SolidColor(Color.White),
-                shape = RoundedCornerShape(15.dp)
-            ),
+            .clip(RoundedCornerShape(15.dp))
+            .background(Color.White.copy(0.05f)),
         contentAlignment = Alignment.Center
     ) {
         Text(

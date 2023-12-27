@@ -35,4 +35,6 @@ interface GameRepository {
     suspend fun getGameSteamId(gameId: String): String
 
     suspend fun getGame(id: String, gameMetaQuery: GameMetaQueryModel): GameEntity
+
+    suspend fun getVideos(gameId: String): List<GameVideoEntity>
 }

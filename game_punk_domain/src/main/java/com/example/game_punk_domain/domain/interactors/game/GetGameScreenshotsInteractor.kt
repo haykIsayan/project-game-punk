@@ -8,6 +8,6 @@ class GetGameScreenshotsInteractor(
     suspend fun execute(
         id: String
     ): List<String> {
-        return gameRepository.getScreenshots(id)
+        return gameRepository.getScreenshots(id).filter { it.isNotEmpty() }
     }
 }

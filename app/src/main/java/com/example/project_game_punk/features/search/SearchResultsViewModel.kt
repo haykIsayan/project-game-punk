@@ -1,7 +1,7 @@
 package com.example.project_game_punk.features.search
 
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.game_punk_domain.domain.interactors.game.GetGameQueryWithRecentDatesInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.game_punk_domain.domain.interactors.game.GetGamesInteractor
@@ -30,11 +30,11 @@ class SearchResultsViewModel @Inject constructor(
         )
     }
 
-    fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
+    fun updateGameProgress(game: GameEntity, gameProgressStatus: GameProgressStatus) {
         executeIO(
             Dispatchers.IO,
-            onBefore = { updateGames(game.updateGameProgress(gameProgress)) },
-            execute = { updateGameProgressInteractor.execute(game, gameProgress) },
+            onBefore = { updateGames(game.updateGameProgressStatus(gameProgressStatus)) },
+            execute = { updateGameProgressInteractor.execute(game, gameProgressStatus) },
             onFail = { updateGames(game) },
         )
     }

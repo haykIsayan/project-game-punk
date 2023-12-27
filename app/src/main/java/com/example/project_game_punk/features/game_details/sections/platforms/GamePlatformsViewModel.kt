@@ -12,6 +12,6 @@ class GamePlatformsViewModel @Inject constructor(
 ): StateViewModel<List<GamePlatformEntity>, String>(){
     override suspend fun loadData(param: String?): List<GamePlatformEntity> {
         if (param == null) return emptyList()
-        return getGamePlatformsInteractor.execute(param)
+        return /*getGamePlatformsInteractor.execute(param)*/ emptyList()
     }
 }

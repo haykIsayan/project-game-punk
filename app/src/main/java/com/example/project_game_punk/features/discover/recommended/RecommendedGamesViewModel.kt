@@ -1,7 +1,7 @@
 package com.example.project_game_punk.features.discover.recommended
 
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.game_punk_domain.domain.interactors.game.GetRecommendedGamesInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
@@ -19,14 +19,9 @@ class GameSuccessState(data: List<GameEntity>): ViewModelState.SuccessState<List
 
         return data == otherData &&
                 data.map {
-                    it.isAdded
+                    it.gameExperience?.gameProgressStatus
                 } == otherData.map {
-            it.isAdded
-                } &&
-                data.map {
-                    it.gameProgress
-                } == otherData.map {
-            it.gameProgress
+            it.gameExperience?.gameProgressStatus
         }
     }
 }
@@ -41,9 +36,9 @@ class RecommendedGamesViewModel @Inject constructor(
         loadState()
     }
 
-    fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
+    fun updateGameProgress(game: GameEntity, gameProgress: GameProgressStatus) {
         executeIO(Dispatchers.IO,
-            onBefore = { updateGames(game.updateGameProgress(gameProgress)) },
+            onBefore = { updateGames(game.updateGameProgressStatus(gameProgress)) },
             execute = { updateGameProgressInteractor.execute(game, gameProgress) },
             onFail = { updateGames(game) },
         )

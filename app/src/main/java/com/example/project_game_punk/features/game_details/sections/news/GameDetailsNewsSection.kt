@@ -3,7 +3,6 @@ package com.example.project_game_punk.features.game_details.sections.news
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,10 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -78,29 +75,40 @@ private fun GameDetailsNewsSectionLoadedState(gameNewsList: List<GameNewsEntity>
 @Composable
 private fun GameDetailsNewsSectionItem(gameNews: GameNewsEntity) {
     val context = LocalContext.current
-    Text(
-        text = gameNews.title,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp)
-            .padding(12.dp)
-            .clickable {
-                onGameDetailsNewsItemClicked(context, gameNews)
-            }
-            .clip(RoundedCornerShape(10.dp))
-            .border(
-                1.dp,
-                SolidColor(Color.White),
-                shape = RoundedCornerShape(15.dp)
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(160.dp)
+        .padding(horizontal = 12.dp)
+        .clickable {
+            onGameDetailsNewsItemClicked(context, gameNews)
+        }
+        .clip(RoundedCornerShape(10.dp))
+        .background(Color.White.copy(alpha = 0.05f))
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "${gameNews.date}  •  ${gameNews.author}",
+                color = Color.White,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 12.sp
             )
-            .padding(8.dp),
-        fontSize = 18.sp,
-        color = Color.White,
-        textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold,
-        maxLines = 3,
-        overflow = TextOverflow.Ellipsis,
-    )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = gameNews.title,
+                color = Color.White,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 18.sp
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = gameNews.description,
+                color = Color.White,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+        }
+    }
 }
 
 private fun onGameDetailsNewsItemClicked(context: Context, gameNews: GameNewsEntity) {

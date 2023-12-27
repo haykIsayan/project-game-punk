@@ -2,7 +2,7 @@ package com.example.game_punk_domain.domain
 
 import com.example.game_punk_domain.domain.entity.GameCollectionEntity
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.game_punk_domain.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
 
 class TrackedGamesCache(
@@ -15,32 +15,37 @@ class TrackedGamesCache(
         this.gameCollection = updatedMainGameCollection
     }
 
-    suspend fun getMainGameCollection(): GameCollectionEntity {
+    suspend fun getMainGameCollection(): GameCollectionEntity? {
         return gameCollection ?: loadMainGameCollection()
     }
 
     suspend fun applyCache(games: List<GameEntity>): List<GameEntity> {
         val mainGameCollection = getMainGameCollection()
         val updatedGames = games.map { game ->
-            val cachedGame = mainGameCollection.games.find { it.id == game.id }
-            if (cachedGame != null) game.updateGameProgress(cachedGame.gameProgress) else game
+            val cachedGame = mainGameCollection?.games?.find { it.id == game.id }
+            val cachedGameExperience = cachedGame?.gameExperience
+            if (cachedGame != null && cachedGameExperience!= null) game.updateGameExperience(cachedGameExperience) else game
         }
         return updatedGames
     }
 
     suspend fun applyCache(game: GameEntity): GameEntity {
         val mainGameCollection = getMainGameCollection()
-        val trackedGames = mainGameCollection.games
-        val cachedGame = trackedGames.find { it.id == game.id }
-        return game.updateGameProgress(
-            cachedGame?.gameProgress ?: GameProgress.NotFollowingGameProgress
+        val trackedGames = mainGameCollection?.games
+        val cachedGame = trackedGames?.find { it.id == game.id }
+        return game.updateGameProgressStatus(
+            cachedGame?.gameExperience?.gameProgressStatus ?: GameProgressStatus.notFollowing
         )
     }
 
-    private suspend fun loadMainGameCollection(): GameCollectionEntity {
+    private suspend fun loadMainGameCollection(): GameCollectionEntity? {
         val gameCollection = getTrackedGamesInteractor.execute()
         this.gameCollection = gameCollection
         return gameCollection
+    }
+
+    fun clearCache() {
+        gameCollection = null
     }
 
 }

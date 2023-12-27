@@ -19,6 +19,7 @@ import com.example.project_game_punk.features.common.composables.LoadableStateWr
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
+import com.example.project_game_punk.features.game_details.sections.GameExperienceSection
 import com.example.project_game_punk.features.game_details.sections.header.GameDetailsHeader
 import com.example.project_game_punk.features.game_details.sections.GameSynopsisSection
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherViewModel
@@ -206,24 +207,21 @@ private fun GameDetailsScreenContentItems(
         }
 
         item {
+            GameExperienceSection(
+                gameDetailsViewModel = gameDetailsViewModel,
+                gameStoresViewModel = gameStoresViewModel
+            )
+        }
+
+        item {
             GameSynopsisSection(
                 gameDetailsViewModel = gameDetailsViewModel
             )
         }
 
         item {
-            GameStoresSection(
-                gameStoresViewModel = gameStoresViewModel
-            ) {
-                gameId?.let {
-                    gameStoresViewModel.loadState(gameId)
-                }
-            }
-        }
-
-        item {
             GamePlatformsSection(
-                gamePlatformsViewModel = gamePlatformsViewModel
+                gameDetailsViewModel = gameDetailsViewModel
             ) {
                 gameId?.let {
                     gamePlatformsViewModel.loadState(gameId)
@@ -233,10 +231,20 @@ private fun GameDetailsScreenContentItems(
 
         item {
             GameGenresSection(
-                gameGenresViewModel = gameGenresViewModel
+                gameDetailsViewModel = gameDetailsViewModel,
             ) {
                 gameId?.let {
                     gameGenresViewModel.loadState(gameId)
+                }
+            }
+        }
+
+        item {
+            GameStoresSection(
+                gameStoresViewModel = gameStoresViewModel
+            ) {
+                gameId?.let {
+                    gameStoresViewModel.loadState(gameId)
                 }
             }
         }
@@ -301,7 +309,6 @@ private fun GameDetailsProgressButton(
         }
     }
 }
-
 
 fun largeRadialGradientBrush(
     colors: List<Color>

@@ -3,7 +3,7 @@ package com.example.project_game_punk.features.discover.playing
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,6 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.project_game_punk.R
+import com.example.project_game_punk.features.common.composables.GameUserScoreDisplay
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
@@ -44,7 +46,9 @@ import com.example.project_game_punk.ui.theme.gamePunkPrimary
 fun NowPlayingSection(nowPlayingViewModel: NowPlayingViewModel) {
     val state = nowPlayingViewModel.getState().observeAsState().value
     Column {
-        SectionTitle(title = "Now Playing")
+        SectionTitle(title = "Now Playing") {
+
+        }
         LoadableStateWrapper(
             state = state,
             failState = { errorMessage ->
@@ -78,12 +82,12 @@ private fun NowPlayingSectionLoadingState() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(160.dp)
-                .padding(6.dp)
+                .padding(12.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(shimmerBrush(showShimmer = showShimmer.value))
         )
         Box(modifier = Modifier
-            .padding(6.dp)
+            .padding(12.dp)
             .fillMaxWidth()
             .height(14.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -114,9 +118,10 @@ private fun NowPlayingUnavailable(
 ) {
     val games = nowPlayingUnavailable.games
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .height(140.dp)
-            .padding(6.dp)
+            .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(Color.Black)
     ) {
@@ -147,8 +152,8 @@ private fun NowPlayingUnavailable(
                 .background(
                     largeRadialGradientBrush(
                         listOf(
-                        gamePunkPrimary.copy(alpha = 0.9f),
-                        gamePunkPrimary.copy(alpha = 0.6f),
+                            gamePunkPrimary.copy(alpha = 0.9f),
+                            gamePunkPrimary.copy(alpha = 0.6f),
                         )
                     )
                 )
@@ -179,7 +184,7 @@ private fun NowPlayingSectionItem(game: GameEntity) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(160.dp)
-        .padding(6.dp)
+        .padding(12.dp)
         .clip(RoundedCornerShape(10.dp))
         .background(Color.Black)
         .clickable {
@@ -196,16 +201,10 @@ private fun NowPlayingSectionItem(game: GameEntity) {
             )
         }
     ) {
-        if (/*isAboveAndroid12()*/false) {
-            NowPlayingSectionItemBlurredBackground(
-                game = game
-            )
-        } else {
-            NowPlayingSectionItemGradientBackground(
-                context = context,
-                game = game
-            )
-        }
+        NowPlayingSectionItemGradientBackground(
+            context = context,
+            game = game
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -214,20 +213,79 @@ private fun NowPlayingSectionItem(game: GameEntity) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             NowPlayingSectionItemGameCover(game = game)
-            game.name?.let { name ->
-                Text(
-                    modifier = Modifier.padding(
-                        horizontal = 28.dp,
-                        vertical = 6.dp
-                    ),
-                    text = name,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
+            Column(
+                modifier = Modifier
+                    .padding(
+                    horizontal = 28.dp,
+                    vertical = 6.dp
+                ),
+            ) {
+                GameUserScoreDisplay(game = game)
+                Spacer(modifier = Modifier.height(6.dp))
+                game.name?.let { name ->
+                    Text(
+                        text = name,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+                NowPlayingPlatformInfo(game = game)
+                Spacer(modifier = Modifier.height(6.dp))
+                NowPlayingStoreInfo(game = game)
             }
         }
     }
+}
+
+@Composable
+private fun NowPlayingPlatformInfo(game: GameEntity) {
+    game.gamePlatforms?.find {
+        it.id == game.gameExperience?.platformId
+    }?.let { platform ->
+        Text(
+            text = platform.name,
+            color = Color.White,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.ExtraBold
+        )
+    }
+}
+
+@Composable
+private fun NowPlayingStoreInfo(game: GameEntity) {
+    Image(
+        modifier = Modifier
+            .size(35.dp),
+        painter = painterResource( when (game.gameExperience?.storeId) {
+            "xbox_marketplace" -> {
+                R.drawable.ic_xbox_marketplace
+            }
+            "microsoft" -> {
+                R.drawable.ic_microsoft
+            }
+            "steam" -> {
+                R.drawable.ic_steam
+            }
+            "epic_game_store" -> {
+                R.drawable.ic_epic_games
+            }
+            "xbox_game_pass_ultimate_cloud" -> {
+                R.drawable.ic_xbox_game_pass
+            }
+            "playstation_store_us" -> {
+                R.drawable.ic_playstation_store
+            }
+            "amazon" -> {
+                R.drawable.ic_amazon
+            }
+            else -> {
+                R.drawable.ic_playstation_store
+            }
+        }),
+        contentDescription = "Content description for visually impaired"
+    )
 }
 
 @Composable
@@ -248,23 +306,6 @@ private fun NowPlayingSectionItemGameCover(game: GameEntity) {
         contentScale = ContentScale.Crop,
     )
 }
-
-@Composable
-private fun NowPlayingSectionItemBlurredBackground(game: GameEntity) {
-    AsyncImage(
-        modifier = Modifier
-            .fillMaxSize()
-            .blur(45.dp)
-            .clip(RoundedCornerShape(10.dp)),
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(game.backgroundImage)
-            .crossfade(true)
-            .build(),
-        contentDescription = "",
-        contentScale = ContentScale.FillWidth,
-    )
-}
-
 
 @Composable
 private fun NowPlayingSectionItemGradientBackground(
@@ -295,7 +336,6 @@ private fun NowPlayingSectionItemGradientBackground(
     Box(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()
-        .blur(20.dp)
         .background(
             largeRadialGradientBrush(
                 listOf(
@@ -305,8 +345,4 @@ private fun NowPlayingSectionItemGradientBackground(
             )
         )
     )
-}
-
-private fun isAboveAndroid12(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || "S" == Build.VERSION.CODENAME
 }

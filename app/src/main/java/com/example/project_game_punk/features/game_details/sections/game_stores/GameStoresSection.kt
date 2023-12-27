@@ -28,6 +28,7 @@ import com.example.project_game_punk.features.common.composables.LoadableStateWr
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
+import com.example.project_game_punk.features.common.composables.grids.GamePunkGrid
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.game_details.GameWebViewActivity
 
@@ -93,7 +94,7 @@ private fun GameStoresSectionLoadingState() {
                             ),
                             shape = CircleShape
                         )
-                    .size(45.dp)
+                        .size(45.dp)
                 )
             }
         }
@@ -149,6 +150,9 @@ private fun GameStoresSectionItem(store: GameStoreEntity) {
                 }
                 "playstation_store_us" -> {
                     com.example.project_game_punk.R.drawable.ic_playstation_store
+                }
+                "amazon" -> {
+                    com.example.project_game_punk.R.drawable.ic_amazon
                 }
                 else -> {
                     com.example.project_game_punk.R.drawable.ic_playstation_store

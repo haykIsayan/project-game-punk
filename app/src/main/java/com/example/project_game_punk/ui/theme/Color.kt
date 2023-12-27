@@ -8,7 +8,7 @@ val Purple700 = Color(0xFF483d8b)
 val Teal200 = Color(0xFF03DAC5)
 
 //val gamePunkAlt = Color(0xFF6a6a6a)
-//val gamePunkPurple = Color(0xFF1c0742)
+val gamePunkPurple = Color(0xFF1c0742)
 
 
 //val gamePunkAlt = Color(0xFF2e4967)

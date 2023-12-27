@@ -95,4 +95,8 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
     override suspend fun getGame(id: String, gameMetaQuery: GameMetaQueryModel): GameEntity {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getVideos(gameId: String): List<GameVideoEntity> {
+        TODO("Not yet implemented")
+    }
 }

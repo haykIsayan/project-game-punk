@@ -1,6 +1,7 @@
 package com.example.game_punk_collection_data.data.game.idgb.api
 
-import com.example.game_punk_collection_data.data.game.rawg.models.*
+import com.example.game_punk_collection_data.data.models.*
+import com.example.game_punk_collection_data.data.models.game.*
 import retrofit2.http.Body
 import retrofit2.http.HeaderMap
 import retrofit2.http.POST
@@ -91,4 +92,23 @@ interface IDGBApi {
         @HeaderMap headers: Map<String, String>,
         @Body fields: String
     ): List<PlatformLogoModel>
+
+
+
+//    https://api.igdb.com/v4/game_videos
+
+    @POST("game_videos")
+    suspend fun getVideos(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<VideoModel>
+
+
+//    https://api.igdb.com/v4/keywords
+    @POST("keywords")
+    suspend fun getKeywords(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+): List<KeywordModel>
+
 }
