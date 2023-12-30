@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +48,7 @@ import com.example.project_game_punk.features.common.composables.carousels.ItemC
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 import com.example.project_game_punk.features.game_details.sections.game_stores.GameStoresViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun GameExperienceSection(
@@ -213,11 +215,13 @@ private fun PlatformsLol(
     game: GameEntity,
     gameDetailsViewModel: GameDetailsViewModel
 ) {
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     val platforms = game.gamePlatforms ?: return
     val selectedPlatformId = game.gameExperience?.platformId
 
+
     Box(modifier = Modifier.padding(horizontal = 12.dp)) {
-        val listState = rememberLazyListState()
         val orderedPlatforms = platforms.sortedBy { platform ->
             platform.id != selectedPlatformId
         }
@@ -233,6 +237,9 @@ private fun PlatformsLol(
                             game,
                             platform.id
                         )
+                        scope.launch {
+                            listState.animateScrollToItem(index = 0)
+                        }
                     }
             ) {
                 PlatformItem(
@@ -284,6 +291,8 @@ private fun StoresLol(
     gameStoresViewModel: GameStoresViewModel,
     gameDetailsViewModel: GameDetailsViewModel
 ) {
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     val state = gameStoresViewModel.getState().observeAsState().value
 
     LoadableStateWrapper(state = state) { stores ->
@@ -297,6 +306,7 @@ private fun StoresLol(
         Box(modifier = Modifier.padding(horizontal = 12.dp)) {
             ItemCarousel(
                 items = orderedStores,
+                state = listState,
                 itemDecorator = ItemCarouselDecorators.pillItemDecorator
             ) { store ->
                 Box(
@@ -306,6 +316,9 @@ private fun StoresLol(
                                 game,
                                 store.slug
                             )
+                            scope.launch {
+                                listState.animateScrollToItem(0)
+                            }
                         }
                 ) {
                     GameExperienceStoreItem(
@@ -333,7 +346,9 @@ private fun GameExperienceStoreItem(
             )
     ) {
         Image(
-            modifier = Modifier.size(55.dp).padding(4.dp),
+            modifier = Modifier
+                .size(55.dp)
+                .padding(4.dp),
             painter = painterResource( when (store.slug) {
                 "xbox_marketplace" -> {
                     R.drawable.ic_xbox_marketplace
