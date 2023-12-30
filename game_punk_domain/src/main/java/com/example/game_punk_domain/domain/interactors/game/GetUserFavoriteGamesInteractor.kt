@@ -8,7 +8,7 @@ class GetUserFavoriteGamesInteractor(
 ) {
     suspend fun execute(): List<GameEntity> {
         return trackedGamesCache.getMainGameCollection()?.games?.filter {
-            it.gameExperience?.isFavorite == true
+            it.gameExperience?.favorite == true
         } ?: emptyList()
     }
 }

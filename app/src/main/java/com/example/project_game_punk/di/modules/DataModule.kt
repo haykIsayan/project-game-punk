@@ -12,8 +12,7 @@ import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgClientInterceptor
-import com.example.game_punk_collection_data.data.game_collection.GameCollectionDataSource
-import com.example.game_punk_collection_data.data.game_collection.GameCollectionDatabase
+import com.example.game_punk_collection_data.data.game_collection.GameCollectionFireStoreSource
 import com.example.game_punk_collection_data.data.news.GameNewsDataSource
 import com.example.game_punk_collection_data.data.news.SteamNewsApi
 import com.example.game_punk_collection_data.data.user.UserDatabase
@@ -23,6 +22,7 @@ import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
 import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.interfaces.UserRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -127,14 +127,10 @@ object DataModule {
     @Provides
     @Singleton
     fun providesGameCollectionRepository(
-        @ApplicationContext context: Context,
         gameRepository: GameRepository
     ): GameCollectionRepository {
-        val gameCollectionDatabase = Room.databaseBuilder(
-            context,
-            GameCollectionDatabase::class.java,
-            "game-collection-database-name"
-        ).fallbackToDestructiveMigration().build()
-        return GameCollectionDataSource(gameCollectionDatabase, gameRepository)
+        return GameCollectionFireStoreSource(
+            gameRepository
+        )
     }
 }

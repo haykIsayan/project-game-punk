@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.game_details.GameDetailsViewModel
@@ -101,7 +99,7 @@ private fun GameTitleLoadedState(
                     modifier = Modifier
                         .padding(12.dp)
                         .clickable { onFavoritePressed() },
-                    imageVector = if (experience.isFavorite == true)
+                    imageVector = if (experience.favorite == true)
                         Icons.Filled.Favorite
                     else
                         Icons.Filled.FavoriteBorder,

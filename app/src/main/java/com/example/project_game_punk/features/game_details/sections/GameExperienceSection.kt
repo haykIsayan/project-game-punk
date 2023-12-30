@@ -47,7 +47,6 @@ import com.example.project_game_punk.features.common.composables.carousels.ItemC
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 import com.example.project_game_punk.features.game_details.sections.game_stores.GameStoresViewModel
-import com.example.project_game_punk.features.game_details.sections.platforms.GamePlatformsViewModel
 
 @Composable
 fun GameExperienceSection(
@@ -154,7 +153,7 @@ private fun UserScoreAndFavorite(
     gameExperience: GameExperienceEntity,
     gameDetailsViewModel: GameDetailsViewModel
 ) {
-    val isFavorite = gameExperience.isFavorite
+    val isFavorite = gameExperience.favorite
     val score = gameExperience.userScore
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -317,7 +316,6 @@ private fun StoresLol(
             }
         }
     }
-
 }
 
 @Composable
@@ -329,7 +327,6 @@ private fun GameExperienceStoreItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .clip(RoundedCornerShape(10.dp))
-//            .clip(CircleShape)
             .background(
                 if (isSelecting) Color.White.copy(alpha = 0.2f)
                 else Color.Transparent
@@ -365,16 +362,15 @@ private fun GameExperienceStoreItem(
             }),
             contentDescription = "Content description for visually impaired"
         )
-//        Spacer(modifier = Modifier.height(6.dp))
-//        Box(modifier = Modifier
-//            .height(0.3.dp)
-//            .width(45.dp)
-//            .background(
-//                if (isSelecting)
-//                    Color.White
-//                else
-//                    Color.Transparent
-//            )
-//        )
     }
+}
+
+@Composable
+private fun GameUserReview(
+    game: GameEntity,
+    gameExperience: GameExperienceEntity,
+    gameDetailsViewModel: GameDetailsViewModel
+) {
+    val userReview = gameExperience.userReview
+
 }

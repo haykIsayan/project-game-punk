@@ -14,7 +14,7 @@ interface GameExperienceEntity {
     val userId: String
     val gameId: String
     val userScore: Float
-    val isFavorite: Boolean?
+    val favorite: Boolean?
     val storeId: String?
     val platformId: String?
     val gameProgressStatus: GameProgressStatus?

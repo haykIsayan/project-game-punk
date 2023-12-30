@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "545122695794",
+    "project_id": "project-game-punk",
+    "storage_bucket": "project-game-punk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545122695794:android:3df38d18bdd4a51c09e0eb",
+        "android_client_info": {
+          "package_name": "com.example.project_game_punk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD6faoWAViXkVdl1pY_XyhQ0-pCDWvbVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
