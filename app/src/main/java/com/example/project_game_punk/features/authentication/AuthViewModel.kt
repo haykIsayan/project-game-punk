@@ -6,6 +6,7 @@ import com.example.game_punk_domain.domain.interactors.user.UserCache
 import com.example.project_game_punk.features.common.StateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -28,8 +29,10 @@ class AuthViewModel @Inject constructor(
     }
 
     override suspend fun loadData(param: Unit?): AuthMode {
-        return if (userCache.isActiveUserSession()) AuthMode.ActiveUserSession
-        else AuthMode.SignIn
+        val authMode = if (userCache.isActiveUserSession()) AuthMode.ActiveUserSession
+            else AuthMode.SignIn
+        delay(3000)
+        return authMode
     }
 
     fun setToSignInMode() = updateData(AuthMode.SignIn)
@@ -40,7 +43,6 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             try {
                 withContext(Dispatchers.IO) {
-                    userCache.setUserId(userId)
                     userCache.loadAndCacheUser()
                     trackedGamesCache.getMainGameCollection()
                 }

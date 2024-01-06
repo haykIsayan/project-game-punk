@@ -2,6 +2,8 @@ package com.example.project_game_punk.features.authentication
 
 import androidx.lifecycle.viewModelScope
 import com.example.game_punk_collection_data.data.user.EmailAlreadyInUseException
+import com.example.game_punk_collection_data.data.user.EmailFormatIncorrectException
+import com.example.game_punk_collection_data.data.user.PasswordWeakException
 import com.example.game_punk_domain.domain.entity.user.UserAuthModel
 import com.example.game_punk_domain.domain.entity.user.UserEntity
 import com.example.game_punk_domain.domain.interactors.user.UserSignUpInteractor
@@ -50,14 +52,27 @@ class SignUpViewModel @Inject constructor(
                     onUserSignUpSuccess(user)
                 }
             } catch (e: Exception) {
-                if (e is EmailAlreadyInUseException) {
-                    emit(ViewModelState.SuccessState(
-                        authUiModel.copy(authUiError = AuthUiError.EmailAlreadyInUse)
-                    ))
-                } else {
-                    emit(ViewModelState.SuccessState(
-                        authUiModel.copy(authUiError = AuthUiError.SignInFailed)
-                    ))
+                when (e) {
+                    is EmailAlreadyInUseException -> {
+                        emit(ViewModelState.SuccessState(
+                            authUiModel.copy(authUiError = AuthUiError.EmailAlreadyInUse)
+                        ))
+                    }
+                    is EmailFormatIncorrectException -> {
+                        emit(ViewModelState.SuccessState(
+                            authUiModel.copy(authUiError = AuthUiError.BadEmailFormat)
+                        ))
+                    }
+                    is PasswordWeakException -> {
+                        emit(ViewModelState.SuccessState(
+                            authUiModel.copy(authUiError = AuthUiError.PasswordWeak)
+                        ))
+                    }
+                    else -> {
+                        emit(ViewModelState.SuccessState(
+                            authUiModel.copy(authUiError = AuthUiError.SignInFailed)
+                        ))
+                    }
                 }
             }
         }

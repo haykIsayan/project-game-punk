@@ -15,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -43,22 +42,23 @@ import com.example.project_game_punk.features.game_details.largeRadialGradientBr
 import com.example.project_game_punk.ui.theme.gamePunkPrimary
 
 @Composable
-fun NowPlayingSection(nowPlayingViewModel: NowPlayingViewModel) {
+fun ProfileNowPlayingSection(nowPlayingViewModel: NowPlayingViewModel) {
     val state = nowPlayingViewModel.getState().observeAsState().value
-    Column {
-        SectionTitle(title = "Now Playing") {
 
-        }
-        LoadableStateWrapper(
-            state = state,
-            failState = { errorMessage ->
-                NowPlayingFailedState(
-                    errorMessage = errorMessage,
-                    nowPlayingViewModel = nowPlayingViewModel
-                )
-            },
-            loadingState = { NowPlayingSectionLoadingState() },
-        ) { nowPlayingState ->
+
+    LoadableStateWrapper(
+        state = state,
+        failState = { errorMessage ->
+            NowPlayingFailedState(
+                errorMessage = errorMessage,
+                nowPlayingViewModel = nowPlayingViewModel
+            ) },
+        loadingState = { NowPlayingSectionLoadingState() },
+    ) { nowPlayingState ->
+        Column {
+            SectionTitle(title = "Now Playing") {
+
+            }
             NowPlayingSectionLoadedState(nowPlayingState = nowPlayingState)
         }
     }
@@ -78,6 +78,10 @@ private fun NowPlayingFailedState(
 private fun NowPlayingSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
+        SectionTitle(
+            title = "Now Playing",
+            isLoading = true
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -255,37 +259,24 @@ private fun NowPlayingPlatformInfo(game: GameEntity) {
 
 @Composable
 private fun NowPlayingStoreInfo(game: GameEntity) {
-    Image(
-        modifier = Modifier
-            .size(35.dp),
-        painter = painterResource( when (game.gameExperience?.storeId) {
-            "xbox_marketplace" -> {
-                R.drawable.ic_xbox_marketplace
-            }
-            "microsoft" -> {
-                R.drawable.ic_microsoft
-            }
-            "steam" -> {
-                R.drawable.ic_steam
-            }
-            "epic_game_store" -> {
-                R.drawable.ic_epic_games
-            }
-            "xbox_game_pass_ultimate_cloud" -> {
-                R.drawable.ic_xbox_game_pass
-            }
-            "playstation_store_us" -> {
-                R.drawable.ic_playstation_store
-            }
-            "amazon" -> {
-                R.drawable.ic_amazon
-            }
-            else -> {
-                R.drawable.ic_playstation_store
-            }
-        }),
-        contentDescription = "Content description for visually impaired"
-    )
+    val imageResource = when (game.gameExperience?.storeId) {
+        "xbox_marketplace" -> R.drawable.ic_xbox_marketplace
+        "microsoft" -> R.drawable.ic_microsoft
+        "steam" -> R.drawable.ic_steam
+        "epic_game_store" -> R.drawable.ic_epic_games
+        "xbox_game_pass_ultimate_cloud" -> R.drawable.ic_xbox_game_pass
+        "playstation_store_us" -> R.drawable.ic_playstation_store
+        "amazon" -> R.drawable.ic_amazon
+        else -> null
+    }
+    if (imageResource != null) {
+        Image(
+            modifier = Modifier
+                .size(35.dp),
+            painter = painterResource(imageResource),
+            contentDescription = "Content description for visually impaired"
+        )
+    }
 }
 
 @Composable

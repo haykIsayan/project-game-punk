@@ -4,37 +4,25 @@ import com.example.game_punk_domain.domain.entity.user.UserEntity
 import com.example.game_punk_domain.domain.interfaces.UserRepository
 
 class UserCache(
-    private val userRepository: UserRepository,
-    private val getUserInteractor: GetUserInteractor
+    private val getCurrentUserInteractor: GetCurrentUserInteractor,
+    private val isUserSessionActiveInteractor: IsUserSessionActiveInteractor
 ) {
-
-    private var userId: String? = null
 
     private var user: UserEntity? = null
 
-    suspend fun setUserId(userId: String) {
-        userRepository.setUserSession(userId)
-        this.userId = userId
-    }
-
     suspend fun loadAndCacheUser(): UserEntity? {
-        if (userId == null) {
-            userId = userRepository.getUserSession()
-        }
-        user = userId?.let {
-            getUserInteractor.execute(it)
+        if (user == null) {
+            user = getCurrentUserInteractor.execute()
         }
         return user
     }
 
     suspend fun isActiveUserSession(): Boolean {
-        return userRepository.getUserSession().isNotEmpty()
+        return isUserSessionActiveInteractor.execute()
     }
 
     suspend fun clearCache() {
-        userId = null
         user = null
-        userRepository.setUserSession(null)
     }
 
 }

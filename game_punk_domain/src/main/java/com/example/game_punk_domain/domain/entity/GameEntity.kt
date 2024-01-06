@@ -21,6 +21,8 @@ interface GameEntity {
 
     fun updateUserScore(userScore: Float): GameEntity
 
+    fun updateUserReview(userReview: String): GameEntity
+
     fun updateGameExperience(gameExperience: GameExperienceEntity): GameEntity
 
     fun updateGameProgressStatus(gameProgressStatus: GameProgressStatus): GameEntity

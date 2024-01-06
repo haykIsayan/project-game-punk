@@ -220,6 +220,18 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesUpdateUserReviewInteractor(
+        gameCollectionRepository: GameCollectionRepository,
+        trackedGamesCache: TrackedGamesCache,
+    ): UpdateUserReviewInteractor {
+        return UpdateUserReviewInteractor(
+            gameCollectionRepository,
+            trackedGamesCache
+        )
+    }
+
+    @Provides
+    @Singleton
     fun providesUpdateGameExperiencePlatformInteractor(
         gameCollectionRepository: GameCollectionRepository,
         trackedGamesCache: TrackedGamesCache,
@@ -382,17 +394,29 @@ object InteractorModule {
     @Provides
     @Singleton
     fun provideUserSignInInteractor(
+        userCache: UserCache,
+        trackedGamesCache: TrackedGamesCache,
         userRepository: UserRepository
     ): UserSignInInteractor {
-        return UserSignInInteractor(userRepository)
+        return UserSignInInteractor(
+            userCache,
+            trackedGamesCache,
+            userRepository
+        )
     }
 
     @Provides
     @Singleton
     fun provideUserSignUpInteractor(
+        userCache: UserCache,
+        trackedGamesCache: TrackedGamesCache,
         userRepository: UserRepository
     ): UserSignUpInteractor {
-        return UserSignUpInteractor(userRepository)
+        return UserSignUpInteractor(
+            userCache,
+            trackedGamesCache,
+            userRepository
+        )
     }
 
     @Provides
@@ -415,6 +439,22 @@ object InteractorModule {
             trackedGamesCache,
             userRepository
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideIsUserSessionActiveInteractor(
+        userRepository: UserRepository
+    ): IsUserSessionActiveInteractor {
+        return IsUserSessionActiveInteractor(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCurrentUserInteractor(
+        userRepository: UserRepository
+    ): GetCurrentUserInteractor {
+        return GetCurrentUserInteractor(userRepository)
     }
 
 }

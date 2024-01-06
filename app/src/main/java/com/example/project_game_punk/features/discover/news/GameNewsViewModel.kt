@@ -28,7 +28,7 @@ class GameNewsViewModel @Inject constructor(
             viewModelScope.async {
                 game.id?.let { gameId ->
                     getNewsForGameInteractor.execute(gameId = gameId)
-                }?.first()?.let { news ->
+                }?.firstOrNull()?.let { news ->
                     GameNewsEntityState(game, news)
                 }
             }

@@ -82,6 +82,12 @@ data class GameModel(
         } ?: this
     }
 
+    override fun updateUserReview(userReview: String): GameEntity {
+        return gameExperienceModel?.copy(userReview = userReview)?.let { updatedGameExperience ->
+            updateGameExperience(updatedGameExperience)
+        } ?: this
+    }
+
 
     override fun updateGameProgressStatus(gameProgressStatus: GameProgressStatus): GameEntity {
         return gameExperienceModel?.copy(gameProgressStatus = gameProgressStatus)?.let { updatedGameExperience ->
