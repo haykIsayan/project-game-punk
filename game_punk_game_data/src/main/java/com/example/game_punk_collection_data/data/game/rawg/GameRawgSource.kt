@@ -84,6 +84,10 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
         return emptyList()
     }
 
+    override suspend fun getArtworks(id: String): List<String> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getGameImages(id: String): List<String> {
         return emptyList()
     }

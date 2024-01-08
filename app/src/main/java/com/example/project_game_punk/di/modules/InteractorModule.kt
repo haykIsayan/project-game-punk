@@ -352,6 +352,14 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun provideGetGameArtworksInteractor(
+        gameRepository: GameRepository
+    ): GetGameArtworksInteractor {
+        return GetGameArtworksInteractor(gameRepository)
+    }
+
+    @Provides
+    @Singleton
     fun provideGetSimilarGamesInteractor(
         gameRepository: GameRepository
     ): GetSimilarGamesInteractor {

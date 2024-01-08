@@ -31,6 +31,7 @@ fun NavigationComponent(
         composable(route = MainNavigationTab.ProfileMainNavigationTab.route) {
             ProfileScreen(
                 nowPlayingViewModel = hiltViewModel(),
+                profileArtworksViewModel = hiltViewModel(),
                 profileUserViewModel = hiltViewModel(),
                 profileViewModel = hiltViewModel(),
                 favoriteGamesViewModel = hiltViewModel(),

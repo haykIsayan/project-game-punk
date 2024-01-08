@@ -20,19 +20,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.project_game_punk.features.authentication.GamePunkAuthActivity
 import com.example.project_game_punk.features.common.composables.*
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
@@ -42,8 +38,8 @@ import com.example.project_game_punk.features.common.game_progress.GameProgressB
 import com.example.project_game_punk.features.discover.components.DiscoverGameCarouselLoading
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
 import com.example.project_game_punk.features.discover.playing.ProfileNowPlayingSection
-import com.example.project_game_punk.features.discover.playing.NowPlayingState
 import com.example.project_game_punk.features.discover.playing.NowPlayingViewModel
+import com.example.project_game_punk.features.profile.artworks.ProfileArtworksViewModel
 import com.example.project_game_punk.features.profile.favorite_games.ProfileFavoriteGamesSection
 import com.example.project_game_punk.features.profile.favorite_games.FavoriteGamesViewModel
 import com.example.project_game_punk.features.profile.game_collection.ProfileGameCollectionsSection
@@ -52,6 +48,7 @@ import com.example.project_game_punk.ui.theme.gamePunkPrimary
 @Composable
 fun ProfileScreen(
     nowPlayingViewModel: NowPlayingViewModel,
+    profileArtworksViewModel: ProfileArtworksViewModel,
     profileUserViewModel: ProfileUserViewModel,
     favoriteGamesViewModel: FavoriteGamesViewModel,
     profileViewModel: ProfileViewModel,
@@ -81,6 +78,7 @@ fun ProfileScreen(
                 }
             }
         }
+
         LazyColumn {
 
             item {
@@ -161,32 +159,6 @@ private fun SignOutIcon(onPressed: () -> Unit) {
 }
 
 @Composable
-private fun ProfileHeaderBackground(nowPlayingViewModel: NowPlayingViewModel) {
-
-    val state = nowPlayingViewModel.getState().observeAsState().value
-    LoadableStateWrapper(state = state) { nowPlayingState ->
-        val gameCover = when (nowPlayingState) {
-            is NowPlayingState.NowPlayingAvailable -> nowPlayingState.nowPlayingGames.random().backgroundImage
-            is NowPlayingState.NowPlayingUnavailable -> nowPlayingState.games.random().backgroundImage
-        }
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .padding(12.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .blur(22.dp),
-            model = ImageRequest.Builder(LocalContext.current)
-                    .data(gameCover)
-                    .crossfade(true)
-                    .build(),
-            contentDescription = "",
-            contentScale = ContentScale.FillWidth
-        )
-    }
-}
-
-@Composable
 private fun ProfileIconSection(profileUserViewModel: ProfileUserViewModel) {
     val state = profileUserViewModel.getState().observeAsState().value
     LoadableStateWrapper(
@@ -225,8 +197,7 @@ private fun ProfileNameSection(profileUserViewModel: ProfileUserViewModel) {
         user?.displayName?.let { displayName ->
             Text(
                 text = displayName,
-                modifier = Modifier
-                    .padding(12.dp),
+                modifier = Modifier.padding(12.dp),
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,
                 fontSize = 18.sp,
@@ -250,7 +221,7 @@ private fun ProfileGamesSection(
         loadingState = { GamesCarouselSectionLoadingState(title = "Your Games") },
     ) { games ->
         Column {
-            SectionTitle(title = "Your Games") {
+            SectionTitle(title = "All Games") {
 
             }
             ItemCarousel(

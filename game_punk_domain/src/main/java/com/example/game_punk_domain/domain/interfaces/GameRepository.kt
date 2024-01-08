@@ -30,6 +30,8 @@ interface GameRepository {
 
     suspend fun getScreenshots(id: String): List<String>
 
+    suspend fun getArtworks(id: String): List<String>
+
     suspend fun getGameImages(id: String): List<String>
 
     suspend fun getGameSteamId(gameId: String): String

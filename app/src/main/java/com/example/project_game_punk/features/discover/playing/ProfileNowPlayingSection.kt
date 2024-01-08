@@ -230,6 +230,7 @@ private fun NowPlayingSectionItem(game: GameEntity) {
                     Text(
                         text = name,
                         color = Color.White,
+                        maxLines = 1,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
