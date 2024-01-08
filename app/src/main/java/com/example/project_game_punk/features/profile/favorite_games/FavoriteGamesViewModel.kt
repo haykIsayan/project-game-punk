@@ -1,6 +1,5 @@
-package com.example.project_game_punk.features.profile
+package com.example.project_game_punk.features.profile.favorite_games
 
-import com.example.game_punk_domain.domain.TrackedGamesCache
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.game_punk_domain.domain.interactors.game.GetUserFavoriteGamesInteractor

@@ -18,10 +18,10 @@ data class UserAuthModel(
         }
     }
 
-    fun createUser(): UserEntity {
+    fun createUser(id: String? = null): UserEntity {
         return object : UserEntity {
             override val id: String?
-                get() = null
+                get() = id
             override val email: String
                 get() = this@UserAuthModel.email
             override val displayName: String?

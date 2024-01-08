@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -41,13 +42,13 @@ import com.example.project_game_punk.features.game_details.largeRadialGradientBr
 @Composable
 fun GameNewsSection(gameNewsViewModel: GameNewsViewModel) {
     val state = gameNewsViewModel.getState().observeAsState().value
-    Column {
-        SectionTitle(title = "What's New")
-        LoadableStateWrapper(
-            state = state,
-            failState = { errorMessage -> DiscoverGameFailState(errorMessage) { gameNewsViewModel.loadState() } },
-            loadingState = { GameNewsSectionLoadingState() },
-        ) { gameNewsStates ->
+    LoadableStateWrapper(
+        state = state,
+        failState = { errorMessage -> DiscoverGameFailState(errorMessage) { gameNewsViewModel.loadState() } },
+        loadingState = { GameNewsSectionLoadingState() },
+    ) { gameNewsStates ->
+        Column {
+            SectionTitle(title = "What's New")
             GameNewsSectionLoadedState(gameNewsStates = gameNewsStates)
         }
     }
@@ -58,6 +59,10 @@ fun GameNewsSection(gameNewsViewModel: GameNewsViewModel) {
 private fun GameNewsSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
+        SectionTitle(
+            title = "What's New",
+            isLoading = true
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -141,6 +146,8 @@ fun GameNewsCarouselItem(
                 Text(
                     text = gameNews.title,
                     color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 18.sp
                 )

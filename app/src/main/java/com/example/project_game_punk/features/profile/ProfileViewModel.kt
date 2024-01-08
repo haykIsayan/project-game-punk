@@ -38,7 +38,10 @@ class ProfileViewModel @Inject constructor(
     }
 
     override suspend fun loadData(param: Unit?): List<GameEntity> {
-        return trackedGamesCache.getMainGameCollection()?.games ?: emptyList()
+        val games = trackedGamesCache.getMainGameCollection()?.games ?: emptyList()
+        if (games.size > 10) {
+            return games.subList(0, 9)
+        }
+        return games
     }
-
 }

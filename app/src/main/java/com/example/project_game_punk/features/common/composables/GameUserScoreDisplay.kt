@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,11 +22,16 @@ fun GameUserScoreDisplay(game: GameEntity) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (i in 1..5) {
-            val isFilled = (score / 20).toInt() >= i
-            if (isFilled) {
+            val scoreIndexDiff = (score / 20f) - i.toFloat()
+            val star = when {
+                scoreIndexDiff >= 0 -> Icons.Filled.Star
+                scoreIndexDiff == -0.5f -> Icons.Filled.StarHalf
+                else -> null
+            }
+            if (star != null) {
                 Icon(
                     modifier = Modifier.size(15.dp),
-                    imageVector = Icons.Filled.Star,
+                    imageVector = star,
                     contentDescription = "",
                     tint = Color.White
                 )

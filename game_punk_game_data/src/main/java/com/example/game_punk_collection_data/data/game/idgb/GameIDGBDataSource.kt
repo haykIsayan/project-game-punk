@@ -301,7 +301,7 @@ class GameIDGBDataSource(
         }
         val fields = StringBuilder()
         fields.append("fields url,game;")
-        fields.append("where game = ($ids);")
+        fields.append("where game = ($ids); limit ${games.size};")
         val covers = withAuthenticatedHeaders { headers ->
             idgbApi.getCovers(
                 headers,
@@ -647,10 +647,24 @@ class GameIDGBDataSource(
         val body = StringBuilder()
             .append("fields image_id,url;")
             .append("where game = $id;")
-            //.append("where id = ($screenshotIds);")
 
         val screenshots = withAuthenticatedHeaders { headers ->
             idgbApi.getScreenshots(headers, body.toString())
+//            idgbApi.getArtworks(headers, body.toString())
+        }
+
+        return screenshots.map { screenshot -> screenshot.url ?: "" }.filter { it.isNotEmpty() }.map { screenshot ->
+            "https:" + screenshot.replace("t_thumb","t_720p")
+        }
+    }
+
+    override suspend fun getArtworks(id: String): List<String> {
+        val body = StringBuilder()
+            .append("fields image_id,url;")
+            .append("where game = $id;")
+
+        val screenshots = withAuthenticatedHeaders { headers ->
+            idgbApi.getArtworks(headers, body.toString())
         }
 
         return screenshots.map { screenshot -> screenshot.url ?: "" }.filter { it.isNotEmpty() }.map { screenshot ->

@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
@@ -19,19 +20,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.project_game_punk.features.authentication.GamePunkAuthActivity
 import com.example.project_game_punk.features.common.composables.*
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
@@ -40,14 +37,18 @@ import com.example.project_game_punk.features.common.composables.carousels.ItemC
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.discover.components.DiscoverGameCarouselLoading
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
-import com.example.project_game_punk.features.discover.playing.NowPlayingSection
-import com.example.project_game_punk.features.discover.playing.NowPlayingState
+import com.example.project_game_punk.features.discover.playing.ProfileNowPlayingSection
 import com.example.project_game_punk.features.discover.playing.NowPlayingViewModel
+import com.example.project_game_punk.features.profile.artworks.ProfileArtworksViewModel
+import com.example.project_game_punk.features.profile.favorite_games.ProfileFavoriteGamesSection
+import com.example.project_game_punk.features.profile.favorite_games.FavoriteGamesViewModel
+import com.example.project_game_punk.features.profile.game_collection.ProfileGameCollectionsSection
 import com.example.project_game_punk.ui.theme.gamePunkPrimary
 
 @Composable
 fun ProfileScreen(
     nowPlayingViewModel: NowPlayingViewModel,
+    profileArtworksViewModel: ProfileArtworksViewModel,
     profileUserViewModel: ProfileUserViewModel,
     favoriteGamesViewModel: FavoriteGamesViewModel,
     profileViewModel: ProfileViewModel,
@@ -77,6 +78,7 @@ fun ProfileScreen(
                 }
             }
         }
+
         LazyColumn {
 
             item {
@@ -88,7 +90,7 @@ fun ProfileScreen(
                 ) {
                     EditProfileIcon()
                     ProfileNameSection(profileUserViewModel = profileUserViewModel)
-                    SignOutIcon(profileUserViewModel = profileUserViewModel) {
+                    SignOutIcon {
                         openSignOutDialog.value = true
                     }
                 }
@@ -104,46 +106,32 @@ fun ProfileScreen(
                 }
             }
 
-//            item {
-//                Box(modifier = Modifier.fillMaxWidth()) {
-//                    Box(modifier = Modifier.align(Alignment.Center)) {
-//                        ProfileNameSection(profileUserViewModel = profileUserViewModel)
-//                    }
-//                }
-//            }
-
             item {
-                NowPlayingSection(
+                ProfileNowPlayingSection(
                     nowPlayingViewModel = nowPlayingViewModel
                 )
             }
 
             item {
-                YourGamesSection(
-                    profileUserViewModel = profileUserViewModel,
+                ProfileGamesSection(
                     profileViewModel = profileViewModel,
                     controller = controller
                 )
             }
 
             item {
-                FavoriteGamesSection(
-                    profileUserViewModel = profileUserViewModel,
+                ProfileFavoriteGamesSection(
                     favoriteGamesViewModel = favoriteGamesViewModel,
                     controller = controller
                 )
             }
+
+            item {
+                ProfileGameCollectionsSection()
+            }
         }
     }
 }
-
-
-@Composable
-private fun ProfileTitleSection() {
-
-}
-
-
 
 @Composable
 private fun EditProfileIcon() {
@@ -158,11 +146,7 @@ private fun EditProfileIcon() {
 }
 
 @Composable
-private fun SignOutIcon(
-    profileUserViewModel: ProfileUserViewModel,
-    onPressed: () -> Unit
-) {
-    val context = LocalContext.current
+private fun SignOutIcon(onPressed: () -> Unit) {
     Icon(
         modifier = Modifier
             .padding(12.dp)
@@ -172,33 +156,6 @@ private fun SignOutIcon(
         imageVector = Icons.Filled.Logout,
         contentDescription = ""
     )
-}
-
-@Composable
-private fun ProfileHeaderBackground(nowPlayingViewModel: NowPlayingViewModel) {
-
-    val state = nowPlayingViewModel.getState().observeAsState().value
-    LoadableStateWrapper(state = state) { nowPlayingState ->
-
-        val gameCover = when (nowPlayingState) {
-            is NowPlayingState.NowPlayingAvailable -> nowPlayingState.nowPlayingGames.random().backgroundImage
-            is NowPlayingState.NowPlayingUnavailable -> nowPlayingState.games.random().backgroundImage
-        }
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .padding(12.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .blur(22.dp),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(gameCover)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "",
-                contentScale = ContentScale.FillWidth
-            )
-        }
 }
 
 @Composable
@@ -216,7 +173,7 @@ private fun ProfileIconSection(profileUserViewModel: ProfileUserViewModel) {
                 SolidColor(Color.White),
                 CircleShape
             )
-            .size(110.dp)
+            .size(80.dp)
         ) {
             Icon(
                 modifier = Modifier
@@ -226,19 +183,6 @@ private fun ProfileIconSection(profileUserViewModel: ProfileUserViewModel) {
                 contentDescription = ""
             )
         }
-
-
-//        AsyncImage(
-//            modifier = Modifier
-//                .clip(CircleShape)
-//                .size(25.dp),
-//            model = ImageRequest.Builder(LocalContext.current)
-//                .data(user?.profileIcon)
-//                .crossfade(true)
-//                .build(),
-//            contentDescription = "",
-//            contentScale = ContentScale.FillHeight
-//        )
     }
 }
 
@@ -253,8 +197,7 @@ private fun ProfileNameSection(profileUserViewModel: ProfileUserViewModel) {
         user?.displayName?.let { displayName ->
             Text(
                 text = displayName,
-                modifier = Modifier
-                    .padding(12.dp),
+                modifier = Modifier.padding(12.dp),
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,
                 fontSize = 18.sp,
@@ -263,14 +206,11 @@ private fun ProfileNameSection(profileUserViewModel: ProfileUserViewModel) {
                 color = Color.White
             )
         }
-
-
     }
 }
 
 @Composable
-private fun YourGamesSection(
-    profileUserViewModel: ProfileUserViewModel,
+private fun ProfileGamesSection(
     profileViewModel: ProfileViewModel,
     controller: GameProgressBottomSheetController
 ) {
@@ -278,10 +218,10 @@ private fun YourGamesSection(
     LoadableStateWrapper(
         state = state,
         failState = { errorMessage -> DiscoverGameFailState(errorMessage) { profileViewModel.loadState() } },
-        loadingState = { DiscoverGameCarouselLoading() },
+        loadingState = { GamesCarouselSectionLoadingState(title = "Your Games") },
     ) { games ->
         Column {
-            SectionTitle(title = "Your Games") {
+            SectionTitle(title = "All Games") {
 
             }
             ItemCarousel(
@@ -299,35 +239,47 @@ private fun YourGamesSection(
     }
 }
 
-
 @Composable
-private fun FavoriteGamesSection(
-    profileUserViewModel: ProfileUserViewModel,
-    favoriteGamesViewModel: FavoriteGamesViewModel,
-    controller: GameProgressBottomSheetController
+fun GamesCarouselSectionLoadingState(
+    title: String
 ) {
-    val state = favoriteGamesViewModel.getState().observeAsState().value
-    LoadableStateWrapper(
-        state = state,
-        failState = { errorMessage -> DiscoverGameFailState(errorMessage) { favoriteGamesViewModel.loadState() } },
-        loadingState = { DiscoverGameCarouselLoading() },
-    ) { games ->
-        Column {
-            SectionTitle(title = "Favorite Games") {
-
-            }
-            ItemCarousel(
-                items = games,
-                itemDecorator = ItemCarouselDecorators.pillItemDecorator
-            ) { game ->
-                GameCarouselItem(
-                    game = game,
-                    sheetController = controller
-                ) { game, gameProgress ->
-                    favoriteGamesViewModel.updateGameProgress(game, gameProgress)
+    Column {
+        SectionTitle(title = title, isLoading = true)
+        LazyRow(content = {
+            items(4) {index ->
+                val showShimmer = remember { mutableStateOf(true) }
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(modifier = Modifier
+                        .size(
+                            120.dp,
+                            160.dp
+                        )
+                        .padding(
+                            start = if (index == 0) 12.dp else 6.dp,
+                            end = 6.dp,
+                            top = 6.dp,
+                            bottom = 6.dp
+                        )
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(shimmerBrush(showShimmer = showShimmer.value))
+                    )
+                    Box(modifier = Modifier
+                        .width(120.dp)
+                        .height(40.dp)
+                        .padding(
+                            start = if (index == 0) 12.dp else 6.dp,
+                            end = 6.dp,
+                            top = 6.dp,
+                            bottom = 6.dp
+                        )
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(shimmerBrush(showShimmer = showShimmer.value)))
                 }
             }
-        }
+        })
     }
 }
 
@@ -339,7 +291,6 @@ private fun SignOutDialog(
 ) {
     if (openSignOutDialog) {
         AlertDialog(
-
             onDismissRequest = {
                 onDismissPressed()
             },

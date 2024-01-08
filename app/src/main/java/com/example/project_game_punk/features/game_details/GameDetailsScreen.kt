@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
@@ -19,7 +20,8 @@ import com.example.project_game_punk.features.common.composables.LoadableStateWr
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
-import com.example.project_game_punk.features.game_details.sections.GameExperienceSection
+import com.example.project_game_punk.features.game_details.sections.GamePunkTab
+import com.example.project_game_punk.features.game_details.sections.experience.GameExperienceSection
 import com.example.project_game_punk.features.game_details.sections.header.GameDetailsHeader
 import com.example.project_game_punk.features.game_details.sections.GameSynopsisSection
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherViewModel
@@ -207,74 +209,182 @@ private fun GameDetailsScreenContentItems(
         }
 
         item {
-            GameExperienceSection(
+            GameDetailsTabContent(
+                gameId = gameId,
                 gameDetailsViewModel = gameDetailsViewModel,
-                gameStoresViewModel = gameStoresViewModel
-            )
-        }
-
-        item {
-            GameSynopsisSection(
-                gameDetailsViewModel = gameDetailsViewModel
-            )
-        }
-
-        item {
-            GamePlatformsSection(
-                gameDetailsViewModel = gameDetailsViewModel
-            ) {
-                gameId?.let {
-                    gamePlatformsViewModel.loadState(gameId)
-                }
-            }
-        }
-
-        item {
-            GameGenresSection(
-                gameDetailsViewModel = gameDetailsViewModel,
-            ) {
-                gameId?.let {
-                    gameGenresViewModel.loadState(gameId)
-                }
-            }
-        }
-
-        item {
-            GameStoresSection(
-                gameStoresViewModel = gameStoresViewModel
-            ) {
-                gameId?.let {
-                    gameStoresViewModel.loadState(gameId)
-                }
-            }
-        }
-
-        item {
-            GameDetailsNewsSection(
-                gameNewsViewModel = gameDetailsNewsViewModel
-            )
-        }
-
-        item {
-            GameDLCSection(
-                gameDLCsViewModel = gameDLCsViewModel
-            ) {
-                gameId?.let {
-                    gameDLCsViewModel.loadState(gameId)
-                }
-            }
-        }
-
-        item {
-            GameDetailsSimilarGamesSection(
+                gameStoresViewModel = gameStoresViewModel,
+                gamePlatformsViewModel = gamePlatformsViewModel,
+                gameGenresViewModel = gameGenresViewModel,
+                gameDetailsNewsViewModel = gameDetailsNewsViewModel,
+                gameDLCsViewModel = gameDLCsViewModel,
                 gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel
-            ) {
-                gameId?.let {
-                    gameDetailsSimilarGamesViewModel.loadState(gameId)
+            )
+        }
+    }
+}
+
+@Composable
+private fun GameDetailsTabContent(
+    gameId: String?,
+    gameDetailsViewModel: GameDetailsViewModel,
+    gameStoresViewModel: GameStoresViewModel,
+    gamePlatformsViewModel: GamePlatformsViewModel,
+    gameGenresViewModel: GameGenresViewModel,
+    gameDetailsNewsViewModel: GameDetailsNewsViewModel,
+    gameDLCsViewModel: GameDLCsViewModel,
+    gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel
+) {
+    val selectedItemIndex = remember { mutableStateOf(0) }
+    Box(modifier = Modifier
+        .fillMaxWidth()
+
+    ) {
+        val state = gameDetailsViewModel.getState().observeAsState().value
+        LoadableStateWrapper(
+            state = state,
+            loadingState = {
+                GamePunkTab(
+                    isLoading = true,
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    selectedItemIndex = selectedItemIndex.value,
+                    items = mutableListOf(
+                        "Info",
+                        "Experience"
+                    ),
+                    onClick = { index ->
+                        selectedItemIndex.value = index
+                    }
+                )
+            }
+        ) {
+            GamePunkTab(
+                modifier = Modifier.align(Alignment.CenterStart),
+                selectedItemIndex = selectedItemIndex.value,
+                items = mutableListOf(
+                    "Info",
+                    "Experience"
+                ),
+                onClick = { index ->
+                    selectedItemIndex.value = index
                 }
+            )
+        }
+    }
+
+    when (selectedItemIndex.value) {
+        0 -> GameDetailsInfoTab(
+            gameId = gameId,
+            gameDetailsViewModel = gameDetailsViewModel,
+            gameStoresViewModel = gameStoresViewModel,
+            gamePlatformsViewModel = gamePlatformsViewModel,
+            gameGenresViewModel = gameGenresViewModel,
+            gameDetailsNewsViewModel = gameDetailsNewsViewModel,
+            gameDLCsViewModel = gameDLCsViewModel,
+            gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel
+        )
+
+        1 -> GameDetailsExperienceTab(
+            gameDetailsViewModel = gameDetailsViewModel,
+            gameStoresViewModel = gameStoresViewModel
+        )
+
+//    HorizontalPager(
+//        state = pagerState,
+////        flingBehavior = FlingBehavior,
+//        count = 2,
+//    ) {index ->
+//        when (index) {
+//            0 -> GameDetailsInfoTab(
+//                gameId = gameId,
+//                gameDetailsViewModel = gameDetailsViewModel,
+//                gameStoresViewModel = gameStoresViewModel,
+//                gamePlatformsViewModel = gamePlatformsViewModel,
+//                gameGenresViewModel = gameGenresViewModel,
+//                gameDetailsNewsViewModel = gameDetailsNewsViewModel,
+//                gameDLCsViewModel = gameDLCsViewModel,
+//                gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel
+//            )
+//            1 -> GameDetailsExperienceTab(
+//                gameDetailsViewModel = gameDetailsViewModel,
+//                gameStoresViewModel = gameStoresViewModel
+//            )
+//        }
+//    }
+    }
+}
+
+
+@Composable
+private fun GameDetailsInfoTab(
+    gameId: String?,
+    gameDetailsViewModel: GameDetailsViewModel,
+    gameStoresViewModel: GameStoresViewModel,
+    gamePlatformsViewModel: GamePlatformsViewModel,
+    gameGenresViewModel: GameGenresViewModel,
+    gameDetailsNewsViewModel: GameDetailsNewsViewModel,
+    gameDLCsViewModel: GameDLCsViewModel,
+    gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel
+) {
+    Column {
+        GameSynopsisSection(
+            gameDetailsViewModel = gameDetailsViewModel
+        )
+
+        GamePlatformsSection(
+            gameDetailsViewModel = gameDetailsViewModel
+        ) {
+            gameId?.let {
+                gamePlatformsViewModel.loadState(gameId)
+            }
+        }
+
+        GameGenresSection(
+            gameDetailsViewModel = gameDetailsViewModel,
+        ) {
+            gameId?.let {
+                gameGenresViewModel.loadState(gameId)
+            }
+        }
+
+        GameStoresSection(
+            gameStoresViewModel = gameStoresViewModel
+        ) {
+            gameId?.let {
+                gameStoresViewModel.loadState(gameId)
+            }
+        }
+
+        GameDetailsNewsSection(
+            gameNewsViewModel = gameDetailsNewsViewModel
+        )
+
+        GameDLCSection(
+            gameDLCsViewModel = gameDLCsViewModel
+        ) {
+            gameId?.let {
+                gameDLCsViewModel.loadState(gameId)
+            }
+        }
+
+        GameDetailsSimilarGamesSection(
+            gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel
+        ) {
+            gameId?.let {
+                gameDetailsSimilarGamesViewModel.loadState(gameId)
             }
         }
     }
+}
+
+@Composable
+private fun GameDetailsExperienceTab(
+    gameDetailsViewModel: GameDetailsViewModel,
+    gameStoresViewModel: GameStoresViewModel
+) {
+    GameExperienceSection(
+        gameDetailsViewModel = gameDetailsViewModel,
+        gameStoresViewModel = gameStoresViewModel,
+    )
 }
 
 @Composable

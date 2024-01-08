@@ -27,15 +27,16 @@ fun TrendingGamesSection(
     sheetController: GameProgressBottomSheetController,
 ) {
     val state = viewModel.getState().observeAsState().value
-    Column {
-        SectionTitle(title = "Trending Games") {
 
-        }
-        LoadableStateWrapper(
-            state = state,
-            failState = { errorMessage -> DiscoverGameFailState(errorMessage) { viewModel.loadState() } },
-            loadingState = { TrendingGamesSectionLoadingState() },
-        ) { games ->
+    LoadableStateWrapper(
+        state = state,
+        failState = { errorMessage -> DiscoverGameFailState(errorMessage) { viewModel.loadState() } },
+        loadingState = { TrendingGamesSectionLoadingState() },
+    ) { games ->
+        Column {
+            SectionTitle(title = "Trending Games") {
+
+            }
             ItemCarousel(
                 items = games,
                 itemDecorator = ItemCarouselDecorators.pillItemDecorator,
@@ -53,39 +54,45 @@ fun TrendingGamesSection(
 
 @Composable
 private fun TrendingGamesSectionLoadingState() {
-    LazyRow(content = {
-        items(4) {index ->
-            val showShimmer = remember { mutableStateOf(true) }
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(modifier = Modifier
-                    .size(
-                        120.dp,
-                        160.dp
+    Column {
+        SectionTitle(
+            title = "Trending Games",
+            isLoading = true
+        )
+        LazyRow(content = {
+            items(4) {index ->
+                val showShimmer = remember { mutableStateOf(true) }
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(modifier = Modifier
+                        .size(
+                            120.dp,
+                            160.dp
+                        )
+                        .padding(
+                            start = if (index == 0) 12.dp else 6.dp,
+                            end = 6.dp,
+                            top = 6.dp,
+                            bottom = 6.dp
+                        )
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(shimmerBrush(showShimmer = showShimmer.value))
                     )
-                    .padding(
-                        start = if (index == 0) 12.dp else 6.dp,
-                        end = 6.dp,
-                        top = 6.dp,
-                        bottom = 6.dp
-                    )
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(shimmerBrush(showShimmer = showShimmer.value))
-                )
-                Box(modifier = Modifier
-                    .width(120.dp)
-                    .height(40.dp)
-                    .padding(
-                        start = if (index == 0) 12.dp else 6.dp,
-                        end = 6.dp,
-                        top = 6.dp,
-                        bottom = 6.dp
-                    )
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(shimmerBrush(showShimmer = showShimmer.value)))
+                    Box(modifier = Modifier
+                        .width(120.dp)
+                        .height(40.dp)
+                        .padding(
+                            start = if (index == 0) 12.dp else 6.dp,
+                            end = 6.dp,
+                            top = 6.dp,
+                            bottom = 6.dp
+                        )
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(shimmerBrush(showShimmer = showShimmer.value)))
+                }
             }
-        }
-    })
+        })
+    }
 }

@@ -8,6 +8,6 @@ class GetUserInteractor(
 ) {
 
     suspend fun execute(userId: String): UserEntity {
-        return userRepository.getUserId(userId)
+        return userRepository.getUser(userId)
     }
 }
