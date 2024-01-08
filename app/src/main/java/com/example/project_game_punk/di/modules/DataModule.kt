@@ -15,14 +15,12 @@ import com.example.game_punk_collection_data.data.game.rawg.RawgClientIntercepto
 import com.example.game_punk_collection_data.data.game_collection.GameCollectionFireStoreSource
 import com.example.game_punk_collection_data.data.news.GameNewsDataSource
 import com.example.game_punk_collection_data.data.news.SteamNewsApi
-import com.example.game_punk_collection_data.data.user.UserDatabase
-import com.example.game_punk_collection_data.data.user.UserLocalDataSource
+import com.example.game_punk_collection_data.data.user.UserFireStoreDataSource
 import com.example.project_game_punk.R
 import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
 import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.interfaces.UserRepository
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,29 +37,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
-
     val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
-//    @Provides
-//    @Singleton
-//    fun providesDataStore(
-//        @ApplicationContext context: Context,
-//    ): DataStore<Preferences> {
-//        return context.dataStore
-//    }
-
 
     @Provides
     @Singleton
     fun providesUserRepository(
         @ApplicationContext context: Context,
     ): UserRepository {
-        val userDatabase = Room.databaseBuilder(
-            context,
-            UserDatabase::class.java,
-            "user-database-name"
-        ).fallbackToDestructiveMigration().build()
-        return UserLocalDataSource(context.dataStore, userDatabase)
+        return UserFireStoreDataSource()
     }
 
 

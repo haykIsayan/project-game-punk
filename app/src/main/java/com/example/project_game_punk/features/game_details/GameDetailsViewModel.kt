@@ -8,6 +8,7 @@ import com.example.game_punk_domain.domain.interactors.game.GetGameInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameExperiencePlatformInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameExperienceStoreInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
+import com.example.game_punk_domain.domain.interactors.game.UpdateUserReviewInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateUserScoreInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.features.common.ViewModelState
@@ -22,6 +23,7 @@ class GameDetailsViewModel @Inject constructor(
     private val updateGameExperiencePlatformInteractor: UpdateGameExperiencePlatformInteractor,
     private val updateGameExperienceStoreInteractor: UpdateGameExperienceStoreInteractor,
     private val updateUserScoreInteractor: UpdateUserScoreInteractor,
+    private val updateUserReviewInteractor: UpdateUserReviewInteractor,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
     private val favoriteUnFavoriteGameInteractor: FavoriteUnFavoriteGameInteractor
 ): StateViewModel<GameEntity?, String>() {
@@ -71,6 +73,15 @@ class GameDetailsViewModel @Inject constructor(
             Dispatchers.IO,
             onBefore = { updateGames(game.updateUserScore(userScore)) },
             execute = { updateUserScoreInteractor.execute(game, userScore) },
+            onFail = { updateGames(game) },
+        )
+    }
+
+    fun updateUserReview(game: GameEntity, userReview: String) {
+        executeIO(
+            Dispatchers.IO,
+            onBefore = { updateGames(game.updateUserReview(userReview)) },
+            execute = { updateUserReviewInteractor.execute(game, userReview) },
             onFail = { updateGames(game) },
         )
     }

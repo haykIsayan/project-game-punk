@@ -5,8 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -14,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -42,9 +41,6 @@ fun GameDetailsTitle(
             GameTitleLoadedState(
                 game = game,
                 onBackPressed = onBackPressed,
-                onFavoritePressed = {
-                    gameDetailsViewModel.updateIsFavorite(game)
-                }
             )
         }
     }
@@ -66,16 +62,17 @@ private fun GameTitleLoadingState() {
 private fun GameTitleLoadedState(
     game: GameEntity,
     onBackPressed: () -> Unit,
-    onFavoritePressed: () -> Unit,
 ) {
     game.name?.let {
         Row(
             modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Icon(
                 modifier = Modifier
                     .padding(12.dp)
+                    .weight(1f)
                     .clickable { onBackPressed() },
                 imageVector = Icons.Filled.KeyboardArrowLeft,
                 contentDescription = "",
@@ -84,29 +81,16 @@ private fun GameTitleLoadedState(
             Text(
                 text = it,
                 modifier = Modifier
-                    .height(30.dp)
-                    .padding(12.dp),
+                    .weight(6f)
+                    .padding(6.dp),
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 maxLines = 1,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
-
-            game.gameExperience?.let { experience ->
-                Icon(
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .clickable { onFavoritePressed() },
-                    imageVector = if (experience.favorite == true)
-                        Icons.Filled.Favorite
-                    else
-                        Icons.Filled.FavoriteBorder,
-                    contentDescription = "",
-                    tint = Color.White
-                )
-            }
+            Box(modifier = Modifier.weight(1f))
         }
     }
 }

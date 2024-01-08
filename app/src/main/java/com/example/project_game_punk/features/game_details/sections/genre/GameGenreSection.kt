@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.example.game_punk_domain.domain.entity.GameGenreEntity
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
-import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.game_details.GameDetailsViewModel
@@ -51,7 +50,6 @@ fun GameGenresSection(
 private fun GameGenresSectionFailedState(reload: () -> Unit) {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Genres")
         Box(modifier = Modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -76,7 +74,6 @@ private fun GameGenresSectionFailedState(reload: () -> Unit) {
 @Composable
 private fun GameGenresSectionLoadingState() {
     Column {
-        SectionTitle(title = "Genres", isLoading = true)
         val showShimmer = remember { mutableStateOf(true) }
         Box(modifier = Modifier
             .padding(12.dp)
@@ -94,7 +91,6 @@ private fun GameGenresSectionLoadedState(
 ) {
     if (genres.isEmpty()) return
     Column {
-        SectionTitle(title = "Genres")
         ItemCarousel(
             items = genres,
             itemDecorator = ItemCarouselDecorators.pillItemDecorator

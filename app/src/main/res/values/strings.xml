@@ -29,4 +29,5 @@
     <string name="profile_nav_title">Profile</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_game_details">GameDetailsActivity</string>
+    <string name="title_activity_game_punk_grid">GamePunkGridActivity</string>
 </resources>

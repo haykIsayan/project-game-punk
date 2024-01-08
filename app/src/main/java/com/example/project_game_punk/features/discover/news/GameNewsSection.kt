@@ -42,13 +42,13 @@ import com.example.project_game_punk.features.game_details.largeRadialGradientBr
 @Composable
 fun GameNewsSection(gameNewsViewModel: GameNewsViewModel) {
     val state = gameNewsViewModel.getState().observeAsState().value
-    Column {
-        SectionTitle(title = "What's New")
-        LoadableStateWrapper(
-            state = state,
-            failState = { errorMessage -> DiscoverGameFailState(errorMessage) { gameNewsViewModel.loadState() } },
-            loadingState = { GameNewsSectionLoadingState() },
-        ) { gameNewsStates ->
+    LoadableStateWrapper(
+        state = state,
+        failState = { errorMessage -> DiscoverGameFailState(errorMessage) { gameNewsViewModel.loadState() } },
+        loadingState = { GameNewsSectionLoadingState() },
+    ) { gameNewsStates ->
+        Column {
+            SectionTitle(title = "What's New")
             GameNewsSectionLoadedState(gameNewsStates = gameNewsStates)
         }
     }
@@ -59,6 +59,10 @@ fun GameNewsSection(gameNewsViewModel: GameNewsViewModel) {
 private fun GameNewsSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
+        SectionTitle(
+            title = "What's New",
+            isLoading = true
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()

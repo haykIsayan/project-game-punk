@@ -17,31 +17,39 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".features.common.game_punk_grid.GamePunkGridActivity"
+            android:exported="false"
+            android:label="@string/title_activity_game_punk_grid"
+            android:theme="@style/Theme.Projectgamepunk" />
+        <activity
             android:name=".features.authentication.GamePunkAuthActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".features.game_details.GameWebViewActivity"
-            android:screenOrientation="portrait"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".features.game_details.GameDetailsActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/title_activity_game_details"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Projectgamepunk">
             <meta-data
                 android:name="android.app.lib_name"
@@ -49,14 +57,15 @@
         </activity>
         <activity
             android:name=".features.search.SearchActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
             android:label="@string/title_activity_search"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Projectgamepunk" />
+
         <activity
             android:name=".features.main.MainActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Projectgamepunk">
 
         </activity>

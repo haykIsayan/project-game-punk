@@ -8,9 +8,9 @@ interface UserRepository {
 
     suspend fun signIn(email: String, password: String): UserEntity
 
-    suspend fun getUserId(userId: String): UserEntity
+    suspend fun signOut()
 
-    suspend fun setUserSession(userId: String?)
+    suspend fun getUser(userId: String): UserEntity
 
-    suspend fun getUserSession(): String
+    suspend fun isUserSessionActive(): Boolean
 }

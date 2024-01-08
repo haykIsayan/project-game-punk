@@ -223,8 +223,8 @@ private fun FeaturedGameDetails(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = game.gameGenres?.joinToString(", ") { it.name } ?: "",
-                        fontWeight = FontWeight.Bold,
+                        text = game.gameGenres?.joinToString(" • ") { it.name } ?: "",
+                        fontWeight = FontWeight.ExtraBold,
                         fontSize = 10.sp,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis

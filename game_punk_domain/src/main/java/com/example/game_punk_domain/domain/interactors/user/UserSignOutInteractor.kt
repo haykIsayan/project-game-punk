@@ -11,6 +11,7 @@ class UserSignOutInteractor(
     suspend fun execute() {
         userCache.clearCache()
         trackedGamesCache.clearCache()
+        userRepository.signOut()
     }
 
 }

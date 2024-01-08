@@ -123,9 +123,11 @@ class GameCollectionFireStoreSource(
 
         val games = gameCollection?.games ?: return gameCollection
         val gameIds = games.mapNotNull { it.id }.toList()
+        if (gameIds.isEmpty()) return gameCollection
         val gamesWithMetaData = gameRepository.getGames(
             GameQueryModel(
                 ids = gameIds,
+                limit = gameIds.size,
                 gameMetaQuery = GameMetaQueryModel(
                     cover = true
                 )
@@ -140,7 +142,6 @@ class GameCollectionFireStoreSource(
         }.map {
             it as GameModel
         }
-
 
         return gameCollection.copy(gameModels = gamesWithMetaAndExperience)
     }
