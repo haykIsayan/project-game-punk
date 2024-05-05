@@ -37,13 +37,16 @@ import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.game_details.GameDetailsViewModel
+import com.example.project_game_punk.features.game_details.sections.achievements.GameAchievementsViewModel
 import com.example.project_game_punk.features.game_details.sections.game_stores.GameStoresViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun GameExperienceSection(
     gameDetailsViewModel: GameDetailsViewModel,
-    gameStoresViewModel: GameStoresViewModel
+    gameUserReviewViewModel: GameUserReviewViewModel,
+    gameStoresViewModel: GameStoresViewModel,
+    gameAchievementsViewModel: GameAchievementsViewModel
 ) {
     val state = gameDetailsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
@@ -54,7 +57,9 @@ fun GameExperienceSection(
                 game = game,
                 gameExperience = gameExperience,
                 gameDetailsViewModel = gameDetailsViewModel,
-                gameStoresViewModel = gameStoresViewModel
+                gameUserReviewViewModel = gameUserReviewViewModel,
+                gameStoresViewModel = gameStoresViewModel,
+                gameAchievementsViewModel = gameAchievementsViewModel
             )
         }
     }
@@ -65,7 +70,9 @@ private fun GameExperienceSectionLoadedState(
     game: GameEntity,
     gameExperience: GameExperienceEntity,
     gameDetailsViewModel: GameDetailsViewModel,
-    gameStoresViewModel: GameStoresViewModel
+    gameUserReviewViewModel: GameUserReviewViewModel,
+    gameStoresViewModel: GameStoresViewModel,
+    gameAchievementsViewModel: GameAchievementsViewModel
 ) {
     Box(
         modifier = Modifier
@@ -78,19 +85,20 @@ private fun GameExperienceSectionLoadedState(
             GameExperienceUserScoreAndFavorite(
                 game = game,
                 gameExperience = gameExperience,
-                gameDetailsViewModel = gameDetailsViewModel
+                gameDetailsViewModel = gameDetailsViewModel,
+                gameUserReviewViewModel = gameUserReviewViewModel
             )
             GameUserReview(
                 game = game,
                 gameExperience = gameExperience,
-                gameDetailsViewModel = gameDetailsViewModel
+                gameDetailsViewModel = gameDetailsViewModel,
+                gameUserReviewViewModel = gameUserReviewViewModel
             )
             SectionTitle(title = "Platform")
             PlatformsLol(
                 game = game,
                 gameDetailsViewModel = gameDetailsViewModel
             )
-            SectionTitle(title = "Store")
             StoresLol(
                 game = game,
                 gameStoresViewModel = gameStoresViewModel,
@@ -147,7 +155,7 @@ private fun PlatformItem(
         modifier = Modifier
             .border(
                 1.dp,
-                SolidColor(Color.White),
+                SolidColor(Color.White.copy(alpha = 0.1f)),
                 shape = RoundedCornerShape(15.dp)
             )
             .clip(RoundedCornerShape(15.dp))
@@ -183,33 +191,37 @@ private fun StoresLol(
     val state = gameStoresViewModel.getState().observeAsState().value
 
     LoadableStateWrapper(state = state) { stores ->
-
+        if (stores.isEmpty()) return@LoadableStateWrapper
         val selectedStoreSlug = game.gameExperience?.storeId
 
         val orderedStores = stores.sortedBy { store ->
             store.slug != selectedStoreSlug
         }
-        ItemCarousel(
-            items = orderedStores,
-            state = listState,
-            itemDecorator = ItemCarouselDecorators.pillItemDecorator
-        ) { store ->
-            Box(
-                modifier = Modifier
-                    .clickable {
-                        gameDetailsViewModel.updateGameExperienceStore(
-                            game,
-                            store.slug
-                        )
-                        scope.launch {
-                            listState.animateScrollToItem(0)
+
+        Column {
+            SectionTitle(title = "Store")
+            ItemCarousel(
+                items = orderedStores,
+                state = listState,
+                itemDecorator = ItemCarouselDecorators.pillItemDecorator
+            ) { store ->
+                Box(
+                    modifier = Modifier
+                        .clickable {
+                            gameDetailsViewModel.updateGameExperienceStore(
+                                game,
+                                store.slug
+                            )
+                            scope.launch {
+                                listState.animateScrollToItem(0)
+                            }
                         }
-                    }
-            ) {
-                GameExperienceStoreItem(
-                    isSelecting = store.slug == selectedStoreSlug,
-                    store = store
-                )
+                ) {
+                    GameExperienceStoreItem(
+                        isSelecting = store.slug == selectedStoreSlug,
+                        store = store
+                    )
+                }
             }
         }
     }

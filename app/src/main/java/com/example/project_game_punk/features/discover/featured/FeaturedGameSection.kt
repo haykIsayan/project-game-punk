@@ -1,6 +1,5 @@
 package com.example.project_game_punk.features.discover.featured
 
-import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
@@ -38,10 +37,12 @@ import com.example.project_game_punk.features.common.composables.carousels.ItemC
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
-import com.example.project_game_punk.features.game_details.GameDetailsActivity
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
-import com.example.project_game_punk.ui.theme.gamePunkAlt
-import com.example.project_game_punk.ui.theme.gamePunkPrimary
+import com.example.project_game_punk.features.main.GamePunkNavigator
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryLight
+//import com.example.project_game_punk.ui.theme.gamePunkAlt
+//import com.example.project_game_punk.ui.theme.gamePunkPrimary
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -95,14 +96,12 @@ private fun FeatureGameLoadedState(
     sheetController: GameProgressBottomSheetController,
     onProgressSelected: (GameEntity, GameProgressStatus) -> Unit,
 ) {
-    val context = LocalContext.current
-
     val scope = rememberCoroutineScope()
     val colorOne = remember {
-        Animatable(gamePunkAlt)
+        Animatable(gamePunkPrimaryLight)
     }
     val colorTwo = remember {
-        Animatable(gamePunkPrimary)
+        Animatable(gamePunkPrimaryDark)
     }
 
     val items = mutableListOf<FeaturedGameItem>()
@@ -114,17 +113,9 @@ private fun FeatureGameLoadedState(
     })
     Box(
         modifier = Modifier.clickable {
-            context.startActivity(
-                Intent(
-                    context,
-                    GameDetailsActivity::class.java
-                ).apply {
-                    putExtra(
-                        GameDetailsActivity.GAME_ID_INTENT_EXTRA,
-                        uiModel.game.id
-                    )
-                }
-            )
+            uiModel.game.id?.let { gameId ->
+                GamePunkNavigator.navigate("game/$gameId")
+            }
         }
     ) {
         ItemCarousel(
@@ -167,6 +158,7 @@ private fun FeatureGameLoadedState(
                     it.game?.let { game ->
                         FeaturedGameDetails(
                             game = game,
+                            artwork = uiModel.artwork,
                             colorOne = colorOne.value,
                             colorTwo = colorTwo.value
                         )
@@ -180,6 +172,7 @@ private fun FeatureGameLoadedState(
 @Composable
 private fun FeaturedGameDetails(
     game: GameEntity,
+    artwork: String?,
     colorOne: Color,
     colorTwo: Color
 ) {
@@ -189,8 +182,26 @@ private fun FeaturedGameDetails(
             192.dp
         )
         .clip(RoundedCornerShape(10.dp))
-        .background(Color.Black)
+//        .background(Color.Black)
     ) {
+
+
+        AsyncImage(
+            modifier = Modifier
+                .size(
+                    250.dp,
+                    192.dp
+                )
+//            .padding(12.dp)
+                .clip(RoundedCornerShape(10.dp)),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(game.backgroundImage)
+                .crossfade(true)
+                .build(),
+            contentDescription = "",
+            contentScale = ContentScale.Crop,
+        )
+
         Box(
             modifier = Modifier
                 .size(
@@ -199,17 +210,13 @@ private fun FeaturedGameDetails(
                 )
                 .clip(RoundedCornerShape(10.dp))
                 .background(
-                    largeRadialGradientBrush(
-                        listOf(
-                            colorOne.copy(alpha = 0.9f),
-                            colorTwo.copy(alpha = 0.7f),
-                        )
-                    )
+//                    Color.White.copy(alpha = 0.05f)
+                    gamePunkPrimaryDark.copy(alpha = 0.8f)
                 )
         ) {
             Column(modifier = Modifier.padding(12.dp)) {
                 Text(
-                    text = "Featured Game",
+                    text = "Featured game",
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 10.sp
                 )
@@ -233,6 +240,7 @@ private fun FeaturedGameDetails(
                     Text(
                         text = game.description ?: "",
                         fontWeight = FontWeight.Bold,
+                        color = Color.White/*.copy(alpha = 0.5f)*/,
                         fontSize = 14.sp,
                         overflow = TextOverflow.Ellipsis,
                     )

@@ -5,7 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -23,8 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
+import com.example.project_game_punk.features.common.composables.ScreenTitle
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.game_details.GameDetailsViewModel
+import com.example.project_game_punk.ui.theme.cyberPunk
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryLight
 
 
 @Composable
@@ -35,7 +44,9 @@ fun GameDetailsTitle(
     val state = gameDetailsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
-        loadingState = { GameTitleLoadingState() }
+        loadingState = {
+            GameTitleLoadingState()
+        }
     ) { game ->
         game?.let {
             GameTitleLoadedState(
@@ -63,34 +74,14 @@ private fun GameTitleLoadedState(
     game: GameEntity,
     onBackPressed: () -> Unit,
 ) {
-    game.name?.let {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Icon(
-                modifier = Modifier
-                    .padding(12.dp)
-                    .weight(1f)
-                    .clickable { onBackPressed() },
-                imageVector = Icons.Filled.KeyboardArrowLeft,
-                contentDescription = "",
-                tint = Color.White
-            )
-            Text(
-                text = it,
-                modifier = Modifier
-                    .weight(6f)
-                    .padding(6.dp),
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 16.sp,
-                maxLines = 1,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Box(modifier = Modifier.weight(1f))
-        }
+    game.name?.let { name ->
+        Text(
+            text = name,
+            modifier = Modifier
+                .padding(12.dp),
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 24.sp,
+            color = Color.White,
+        )
     }
 }

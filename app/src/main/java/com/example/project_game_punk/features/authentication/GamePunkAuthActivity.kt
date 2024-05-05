@@ -12,8 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
 import com.example.project_game_punk.ui.theme.ProjectGamePunkTheme
-import com.example.project_game_punk.ui.theme.gamePunkAlt
-import com.example.project_game_punk.ui.theme.gamePunkPrimary
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryLight
+//import com.example.project_game_punk.ui.theme.gamePunkAlt
+//import com.example.project_game_punk.ui.theme.gamePunkPrimary
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -32,8 +34,8 @@ class GamePunkAuthActivity : ComponentActivity() {
                         modifier = Modifier.background(
                             largeRadialGradientBrush(
                                 listOf(
-                                    gamePunkAlt,
-                                    gamePunkPrimary
+                                    gamePunkPrimaryLight,
+                                    gamePunkPrimaryDark
                                 )
                             )
                         )

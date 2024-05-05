@@ -17,24 +17,30 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.project_game_punk.ui.theme.gamePunkPrimary
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
+
+//import com.example.project_game_punk.ui.theme.gamePunkPrimary
 
 
 @Composable
 fun MainBottomNavigation(
     navController: NavController
 ) {
+    val entry by navController.currentBackStackEntryAsState()
+    if (
+        !MainNavigationTab.Items.mainRoutes()
+            .contains(entry?.destination?.route)
+    ) return
     val items = MainNavigationTab.Items.items
-
     Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
-                .background(gamePunkPrimary),
+                .background(gamePunkPrimaryDark),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            val entry by navController.currentBackStackEntryAsState()
+//            val entry by navController.currentBackStackEntryAsState()
             val currentRoute = entry?.destination?.route
             items.forEach { item ->
                 val isSelected = item.route == currentRoute

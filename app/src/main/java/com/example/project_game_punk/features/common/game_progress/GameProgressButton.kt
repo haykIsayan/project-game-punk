@@ -54,8 +54,8 @@ fun GameProgressButton(
         .height(30.dp)
         .clip(RoundedCornerShape(10.dp))
         .border(
-            1.dp,
-            SolidColor(borderColor),
+            /*0.5.dp*/1.dp,
+            SolidColor(borderColor.copy(alpha = 0.1f)),
             shape = RoundedCornerShape(10.dp)
         )
         .background(color)

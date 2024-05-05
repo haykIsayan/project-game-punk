@@ -17,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.game_punk_domain.domain.entity.GameEntity
@@ -43,8 +45,8 @@ fun GameDetailsScore(gameDetailsViewModel: GameDetailsViewModel) {
 private fun GameDetailsScoreLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Box(modifier = Modifier
-        .size(80.dp)
-        .padding(12.dp)
+        .size(60.dp)
+        .padding(horizontal = 12.dp, vertical = 4.dp)
         .aspectRatio(1f)
         .background(shimmerBrush(showShimmer = showShimmer.value), shape = CircleShape)
     )
@@ -59,25 +61,51 @@ private fun GameDetailsScoreLoadedState(game: GameEntity) {
         targetValue = progress.value,
         animationSpec = tween(durationMillis = progressAnimDuration, easing = FastOutSlowInEasing)
     )
-    Box(modifier = Modifier
-        .size(80.dp)
-        .padding(12.dp)
+
+
+
+
+
+
+    Row(
+        modifier = Modifier.padding(horizontal = 12.dp, /*vertical = 4.dp*/),
+        horizontalArrangement = Arrangement.Start
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier.width(80.dp),
-            progress = progressAnimation.value  / 100f,
-            color = Color.White,
-        )
         Text(
-            text = progressAnimation.value.toInt().toString(),
-            modifier = Modifier.align(
-                Alignment.Center
-            ),
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
+            modifier = Modifier.alignByBaseline(),
+            text = "Aggregate Score",
+            color = Color.LightGray,
+            fontSize = 12.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Start,
+            fontWeight = FontWeight.Bold
         )
+        Box(modifier = Modifier
+            .alignByBaseline()
+            .size(60.dp)
+            .padding(12.dp)
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.width(60.dp),
+                progress = progressAnimation.value  / 100f,
+                strokeWidth = 2.dp,
+                color = Color.White,
+            )
+            Text(
+                text = progressAnimation.value.toInt().toString(),
+                modifier = Modifier.align(
+                    Alignment.Center
+                ),
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+        }
     }
+
+
+
     LaunchedEffect(score) {
         progress.value = score
     }

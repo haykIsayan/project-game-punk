@@ -1,5 +1,6 @@
 package com.example.project_game_punk.features.profile.artworks
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.game_punk_domain.domain.interactors.game.GetGameArtworksInteractor
 import com.example.game_punk_domain.domain.interactors.game.GetNowPlayingGamesInteractor
@@ -15,12 +16,8 @@ class ProfileArtworksViewModel @Inject constructor(
     private val getGameArtworksInteractor: GetGameArtworksInteractor
 ): StateViewModel<List<String>, String>() {
 
-    init {
-        loadState()
-    }
-
     override suspend fun loadData(param: String?): List<String> {
-        val nowPlayingGames = getNowPlayingGamesInteractor.execute()
+        val nowPlayingGames = getNowPlayingGamesInteractor.execute(param)
         // todo reduce now playing games to 5
         val nowPlayingArtworks = nowPlayingGames.map { game ->
             viewModelScope.async {
@@ -29,6 +26,7 @@ class ProfileArtworksViewModel @Inject constructor(
                 }?.randomOrNull()
             }
         }.toList().awaitAll().filterNotNull()
+
         return nowPlayingArtworks
     }
 }

@@ -16,42 +16,44 @@ class IGDBClientInterceptor(
         val url = request.url()
         val newUrl = url.newBuilder()
             .build()
-        val newRequestBuilder = request.newBuilder()
+        val newRequestBuilder = request
+            .newBuilder()
+            .header(
+                "Cache-Control",
+                "public, max-age=" + /*60 * 60 * 24*/ 60
+//                "public, only-if-cached, max-stale=" + 60 * 60 * 24 /** 7*/
+            )
             .url(newUrl)
         val newRequest = newRequestBuilder.build()
 
 //        Log.d("Haykk", "in intercepting")
 
-        return try {
-            val response = chain.proceed(newRequest)
+        return chain.proceed(newRequest)
 
-            Log.d("Haykk", "in intercepting response $response")
 
-            if (response.code() == 429) {
-//                scope.launch {
-//                    delay(5000)
-//                    Log.d("Haykk", "Bruuuuh too many requests bruuuh")
-//                    response.close()
-//                    chain.proceed(newRequest)
+//        try {
+//            val response = chain.proceed(newRequest)
 //
+//            Log.d("Haykk", "in intercepting response $response")
 //
-//                    chain.call().
+//            if (response.code() == 429) {
 //
+//                response.close()
+//                chain.proceed(newRequest)
+//            } else {
+//                response
+//            }
 //
-//                }.
-
-                response.close()
-                chain.proceed(newRequest)
-            } else {
-                response
-            }
-
-        } catch (e: Exception) {
-            Log.d("Haykk", "in interceptor $e")
-            throw e
-        }
+//        } catch (e: Exception) {
+//            Log.d("Haykk", "in interceptor $e")
+//            throw e
+//        }
     }
 
 
 
 }
+
+
+
+//request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build()

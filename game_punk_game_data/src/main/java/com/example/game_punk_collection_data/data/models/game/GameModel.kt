@@ -11,7 +11,7 @@ import com.example.game_punk_domain.domain.entity.*
 data class GameModel(
     @PrimaryKey(autoGenerate = true) var uuid: Long = 0,
     @Ignore override val id: String? = null,
-    @Ignore val slug: String? = null,
+    @Ignore override val slug: String? = null,
     @Ignore override val name: String? = null,
     @Ignore val background_image: String? = null,
     @Ignore override val banner: String? = null,
@@ -25,10 +25,14 @@ data class GameModel(
     @Ignore val aggregated_rating: Float? = null,
     @Ignore override val gamePlatforms: List<GamePlatformEntity>? = null,
     @Ignore override val gameGenres: List<GameGenreEntity>? = null,
+    @Ignore override val similarGames: List<GameEntity>? = null,
+    @Ignore override val expansions: List<GameEntity>? = null,
     @Ignore val summary: String? = null,
     @Ignore val websites: List<String>? = null,
     @Ignore val age_ratings: List<String>? = null,
     @Ignore val similar_games: List<String>? = null,
+    @Ignore val player_perspectives: List<String>? = null,
+    @Ignore val themes: List<String>? = null,
     @Ignore val dlcs: List<String>? = null,
     @Ignore override val steamId: String? = null,
     @Ignore override val keywords: List<String>? = null,
@@ -134,7 +138,8 @@ data class GameExperienceModel(
     @ColumnInfo(name = "user_review") override val userReview: String? = null,
     @ColumnInfo(name = "game_progress_status") override var gameProgressStatus: GameProgressStatus? = null,
     @ColumnInfo(name = "user_id") override var userId: String = "",
-    @ColumnInfo(name = "game_id") override var gameId: String = ""
+    @ColumnInfo(name = "game_id") override var gameId: String = "",
+    @Ignore override val completedAchievements: List<String> = emptyList()
 ): GameExperienceEntity {
 
     override fun updateGameProgressStatus(

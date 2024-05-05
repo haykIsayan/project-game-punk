@@ -44,6 +44,10 @@ class SignUpViewModel @Inject constructor(
             ))
             return
         }
+        emit(ViewModelState.SuccessState(authUiModel.copy(
+            authUiError = null,
+            isLoading = true
+        )))
         viewModelScope.launch(Dispatchers.Main) {
             try {
                 withContext(Dispatchers.IO) {
@@ -55,23 +59,41 @@ class SignUpViewModel @Inject constructor(
                 when (e) {
                     is EmailAlreadyInUseException -> {
                         emit(ViewModelState.SuccessState(
-                            authUiModel.copy(authUiError = AuthUiError.EmailAlreadyInUse)
+                            authUiModel.copy(
+                                authUiError = AuthUiError.EmailAlreadyInUse,
+                                isLoading = false
+                            )
                         ))
                     }
                     is EmailFormatIncorrectException -> {
                         emit(ViewModelState.SuccessState(
-                            authUiModel.copy(authUiError = AuthUiError.BadEmailFormat)
-                        ))
+                            authUiModel.copy(authUiError = AuthUiError.BadEmailFormat,
+                                isLoading = false
+                            )
+                        )
+                        )
                     }
+
                     is PasswordWeakException -> {
-                        emit(ViewModelState.SuccessState(
-                            authUiModel.copy(authUiError = AuthUiError.PasswordWeak)
-                        ))
+                        emit(
+                            ViewModelState.SuccessState(
+                                authUiModel.copy(
+                                    authUiError = AuthUiError.PasswordWeak,
+                                    isLoading = false
+                                )
+                            )
+                        )
                     }
+
                     else -> {
-                        emit(ViewModelState.SuccessState(
-                            authUiModel.copy(authUiError = AuthUiError.SignInFailed)
-                        ))
+                        emit(
+                            ViewModelState.SuccessState(
+                                authUiModel.copy(
+                                    authUiError = AuthUiError.SignInFailed,
+                                    isLoading = false
+                                )
+                            )
+                        )
                     }
                 }
             }

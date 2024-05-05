@@ -1,4 +1,4 @@
-package com.example.project_game_punk.features.discover.news
+package com.example.project_game_punk.features.discover.updates_patches
 
 import android.content.Context
 import android.content.Intent
@@ -35,32 +35,32 @@ import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
-import com.example.project_game_punk.features.game_details.GameDetailsActivity
 import com.example.project_game_punk.features.game_details.GameWebViewActivity
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
+import com.example.project_game_punk.features.main.GamePunkNavigator
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
 
 @Composable
-fun GameNewsSection(gameNewsViewModel: GameNewsViewModel) {
-    val state = gameNewsViewModel.getState().observeAsState().value
+fun UpdatesAndPatchesSection(updatesAndPatchesViewModel: UpdatesAndPatchesViewModel) {
+    val state = updatesAndPatchesViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
-        failState = { errorMessage -> DiscoverGameFailState(errorMessage) { gameNewsViewModel.loadState() } },
+        failState = { errorMessage -> DiscoverGameFailState(errorMessage) { updatesAndPatchesViewModel.loadState() } },
         loadingState = { GameNewsSectionLoadingState() },
     ) { gameNewsStates ->
         Column {
-            SectionTitle(title = "What's New")
+            SectionTitle(title = "Updates and patches")
             GameNewsSectionLoadedState(gameNewsStates = gameNewsStates)
         }
     }
 }
-
 
 @Composable
 private fun GameNewsSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
         SectionTitle(
-            title = "What's New",
+            title = "Updates & Patches",
             isLoading = true
         )
         Box(
@@ -71,17 +71,20 @@ private fun GameNewsSectionLoadingState() {
                 .clip(RoundedCornerShape(10.dp))
                 .background(shimmerBrush(showShimmer = showShimmer.value))
         )
-        Box(modifier = Modifier
-            .padding(12.dp)
-            .fillMaxWidth()
-            .height(14.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(shimmerBrush(showShimmer = showShimmer.value)))
+        Box(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth()
+                .height(14.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(shimmerBrush(showShimmer = showShimmer.value))
+        )
     }
 }
 
 @Composable
 private fun GameNewsSectionLoadedState(gameNewsStates: List<GameNewsEntityState>) {
+    if (gameNewsStates.isEmpty()) return
     ItemPagerCarousel(items = gameNewsStates) { gameNewsState ->
         GameNewsCarouselItem(
             game = gameNewsState.game,
@@ -98,10 +101,9 @@ fun GameNewsCarouselItem(
     val context = LocalContext.current
     Box(modifier = Modifier
         .fillMaxWidth()
-        .height(180.dp)
-        .padding(12.dp)
+//        .padding(12.dp)
         .clip(RoundedCornerShape(10.dp))
-        .background(Color.Black)
+//        .background(Color.White.copy(alpha = 0.05f))
         .clickable {
             context.startActivity(
                 Intent(
@@ -116,10 +118,6 @@ fun GameNewsCarouselItem(
             )
         }
     ) {
-        GameNewsSectionItemGradientBackground(
-            context = context,
-            game = game
-        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -129,24 +127,24 @@ fun GameNewsCarouselItem(
         ) {
             GameNewsSectionItemGameCover(game = game)
             Column(
-                modifier = Modifier.padding(
-                    horizontal = 28.dp,
-                    vertical = 12.dp
-                )
-            ) {
-                game.name?.let { name ->
-                    Text(
-                        text = name,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
+                modifier = Modifier
+                    .background(Color.White.copy(alpha = 0.05f))
+                    .padding(
+                        horizontal = 28.dp,
+                        vertical = 12.dp
                     )
-                }
+            ) {
+                Text(
+                    text = gameNews.date,
+                    color = Color.White,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 12.sp
+                )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = gameNews.title,
                     color = Color.White,
-                    maxLines = 2,
+                    maxLines = 4,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 18.sp
@@ -158,13 +156,6 @@ fun GameNewsCarouselItem(
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 12.sp
                 )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = gameNews.date,
-                    color = Color.White,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 12.sp
-                )
             }
         }
     }
@@ -172,27 +163,16 @@ fun GameNewsCarouselItem(
 
 @Composable
 private fun GameNewsSectionItemGameCover(game: GameEntity) {
-    val context = LocalContext.current
     AsyncImage(
         modifier = Modifier
             .size(
-                110.dp,
-                150.dp
+                120.dp,
+                140.dp
             )
             .padding(12.dp)
             .clickable {
                 game.id?.let { gameId ->
-                    context.startActivity(
-                        Intent(
-                            context,
-                            GameWebViewActivity::class.java
-                        ).apply {
-                            putExtra(
-                                GameDetailsActivity.GAME_ID_INTENT_EXTRA,
-                                gameId
-                            )
-                        }
-                    )
+                    GamePunkNavigator.navigate("game/$gameId")
                 }
             }
             .clip(RoundedCornerShape(10.dp)),

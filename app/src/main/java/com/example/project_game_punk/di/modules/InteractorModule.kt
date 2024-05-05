@@ -1,20 +1,30 @@
 package com.example.project_game_punk.di.modules
 
 import com.example.game_punk_collection_data.data.models.game.GameCollectionFactoryImpl
+import com.example.game_punk_collection_data.data.review.GameReviewFactoryImpl
 import com.example.game_punk_domain.domain.TrackedGamesCache
+import com.example.game_punk_domain.domain.entity.GameCollectionFactory
 import com.example.game_punk_domain.domain.interactors.GetAllAvailableGameGenresInteractor
 import com.example.game_punk_domain.domain.interactors.GetAllAvailableGamePlatformsInteractor
 import com.example.game_punk_domain.domain.interactors.game.*
 import com.example.game_punk_domain.domain.interactors.game_collection.AddGameToGameCollectionInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.CreateGameCollectionInteractor
+import com.example.game_punk_domain.domain.interactors.game_collection.DeleteGameCollectionInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.GetGameCollectionInteractor
+import com.example.game_punk_domain.domain.interactors.game_collection.GetGameCollectionsInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.RemoveGameFromGameCollectionInteractor
+import com.example.game_punk_domain.domain.interactors.game_collection.UpdateGameCollectionInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
 import com.example.game_punk_domain.domain.interactors.news.GetNewsForGameInteractor
+import com.example.game_punk_domain.domain.interactors.reviews.GameReviewFactory
+import com.example.game_punk_domain.domain.interactors.reviews.GetUserReviewForGameInteractor
+import com.example.game_punk_domain.domain.interactors.reviews.GetUserReviewsInteractor
+import com.example.game_punk_domain.domain.interactors.reviews.UpdateUserReviewForGameInteractor
 import com.example.game_punk_domain.domain.interactors.user.*
 import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
 import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
 import com.example.game_punk_domain.domain.interfaces.GameRepository
+import com.example.game_punk_domain.domain.interfaces.ReviewRepository
 import com.example.game_punk_domain.domain.interfaces.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -61,9 +71,11 @@ object InteractorModule {
     @Provides
     @Singleton
     fun providesGetTrendingGamesInteractor(
-        getGamesInteractor: GetGamesInteractor
+        getGamesInteractor: GetGamesInteractor,
     ): GetTrendingGamesInteractor {
-        return GetTrendingGamesInteractor(getGamesInteractor)
+        return GetTrendingGamesInteractor(
+            getGamesInteractor
+        )
     }
 
     @Provides
@@ -124,6 +136,22 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesGameCollectionFactory(
+        gameCollectionRepository: GameCollectionRepository
+    ): GameCollectionFactory {
+        return GameCollectionFactoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetGameCollectionsInteractor(
+        gameCollectionRepository: GameCollectionRepository
+    ): GetGameCollectionsInteractor {
+        return GetGameCollectionsInteractor(gameCollectionRepository)
+    }
+
+    @Provides
+    @Singleton
     fun providesCreateGameCollectionInteractor(
         gameCollectionRepository: GameCollectionRepository
     ): CreateGameCollectionInteractor {
@@ -151,6 +179,23 @@ object InteractorModule {
             getGameCollectionInteractor,
             createGameCollectionInteractor
         )
+    }
+
+
+    @Provides
+    @Singleton
+    fun providesUpdateGameCollectionInteractor(
+        gameCollectionRepository: GameCollectionRepository
+    ): UpdateGameCollectionInteractor {
+        return UpdateGameCollectionInteractor(gameCollectionRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesDeleteGameCollectionInteractor(
+        gameCollectionRepository: GameCollectionRepository
+    ): DeleteGameCollectionInteractor {
+        return DeleteGameCollectionInteractor(gameCollectionRepository)
     }
 
     @Provides
@@ -256,11 +301,71 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun providesGameReviewFactory(): GameReviewFactory {
+        return GameReviewFactoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun providesUpdateUserReviewForGameInteractor(
+        reviewRepository: ReviewRepository
+    ): UpdateUserReviewForGameInteractor {
+        return UpdateUserReviewForGameInteractor(reviewRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetUserReviewForGameInteractor(
+        reviewRepository: ReviewRepository
+    ): GetUserReviewForGameInteractor {
+        return GetUserReviewForGameInteractor(
+            GameReviewFactoryImpl(),
+            reviewRepository
+        )
+    }
+
+
+
+    @Provides
+    @Singleton
+    fun providesGetGameRecentRedditPostsInteractor(
+        gameRepository: GameRepository
+    ): GetGameRecentRedditPostsInteractor {
+        return GetGameRecentRedditPostsInteractor(
+            gameRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetUserReviewsInteractor(
+        reviewRepository: ReviewRepository
+    ): GetUserReviewsInteractor {
+        return GetUserReviewsInteractor(
+            reviewRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetMainCollectionInteractor(
+        trackedGamesCache: TrackedGamesCache,
+        getGameCollectionInteractor: GetGameCollectionInteractor,
+    ): GetUserTrackedGamesInteractor {
+        return GetUserTrackedGamesInteractor(
+            trackedGamesCache,
+            getGameCollectionInteractor,
+        )
+    }
+
+    @Provides
+    @Singleton
     fun providesGetUserFavoriteGamesInteractor(
         trackedGamesCache: TrackedGamesCache,
+        getUserTrackedGamesInteractor: GetUserTrackedGamesInteractor
     ): GetUserFavoriteGamesInteractor {
         return GetUserFavoriteGamesInteractor(
-            trackedGamesCache
+            getUserTrackedGamesInteractor
         )
     }
 
@@ -269,13 +374,25 @@ object InteractorModule {
     fun providesGetNowPlayingInteractor(
         applyGameMetaInteractor: ApplyGameMetaInteractor,
         trackedGamesCache: TrackedGamesCache,
+        getUserTrackedGamesInteractor: GetUserTrackedGamesInteractor,
         gameRepository: GameRepository
     ): GetNowPlayingGamesInteractor {
         return GetNowPlayingGamesInteractor(
             applyGameMetaInteractor,
             trackedGamesCache,
+            getUserTrackedGamesInteractor,
             gameRepository
         )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetExcitedAndInterestedGamesInteractor(
+        applyGameMetaInteractor: ApplyGameMetaInteractor,
+        trackedGamesCache: TrackedGamesCache,
+        gameRepository: GameRepository
+    ): GetExcitedAndInterestedGamesInteractor {
+        return GetExcitedAndInterestedGamesInteractor(trackedGamesCache, gameRepository)
     }
 
     @Provides
@@ -289,6 +406,16 @@ object InteractorModule {
             applyGameMetaInteractor,
             gameRepository,
             trackedGamesCache
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetGameAchievementsInteractor(
+        gameRepository: GameRepository
+    ): GetGameAchievementsInteractor {
+        return GetGameAchievementsInteractor(
+            gameRepository,
         )
     }
 
@@ -401,6 +528,16 @@ object InteractorModule {
 
     @Provides
     @Singleton
+    fun provideSearchUsersInteractor(
+//        userCache: UserCache,
+//        trackedGamesCache: TrackedGamesCache,
+        userRepository: UserRepository
+    ): SearchUsersInteractor {
+        return SearchUsersInteractor(userRepository)
+    }
+
+    @Provides
+    @Singleton
     fun provideUserSignInInteractor(
         userCache: UserCache,
         trackedGamesCache: TrackedGamesCache,
@@ -433,6 +570,52 @@ object InteractorModule {
         userRepository: UserRepository
     ): GetUserInteractor {
         return GetUserInteractor(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFollowUserInteractor(
+        userCache: UserCache,
+        userRepository: UserRepository
+    ): FollowUserInteractor {
+        return FollowUserInteractor(
+            userCache,
+            userRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideUnfollowUserInteractor(
+        userCache: UserCache,
+        userRepository: UserRepository
+    ): UnfollowUserInteractor {
+        return UnfollowUserInteractor(
+            userCache,
+            userRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserFollowingInteractor(
+        userCache: UserCache,
+        userRepository: UserRepository
+    ): GetUserFollowingInteractor {
+        return GetUserFollowingInteractor(
+            userRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserFollowersInteractor(
+        userCache: UserCache,
+        userRepository: UserRepository
+    ): GetUserFollowersInteractor {
+        return GetUserFollowersInteractor(
+            userRepository
+        )
     }
 
     @Provides

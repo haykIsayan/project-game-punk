@@ -19,6 +19,7 @@ interface GameExperienceEntity {
     val platformId: String?
     val gameProgressStatus: GameProgressStatus?
     val userReview: String?
+    val completedAchievements: List<String>
 
     fun updateGameProgressStatus(
         gameProgressStatus: GameProgressStatus

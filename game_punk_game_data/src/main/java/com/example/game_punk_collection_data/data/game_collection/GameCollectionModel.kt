@@ -27,6 +27,9 @@ data class GameCollectionModel(
     override val games: List<GameEntity>
         get() = gameModels
 
+    override fun withName(name: String): GameCollectionEntity {
+        return copy(name = name)
+    }
     override fun withGames(games: List<GameEntity>): GameCollectionEntity {
         return copy(gameModels = games.map { it as GameModel }.toList())
     }

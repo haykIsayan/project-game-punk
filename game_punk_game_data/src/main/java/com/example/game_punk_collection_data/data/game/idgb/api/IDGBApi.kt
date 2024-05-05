@@ -94,6 +94,23 @@ interface IDGBApi {
     ): List<PlatformLogoModel>
 
 
+//    https://api.igdb.com/v4/player_perspectives
+
+    @POST("player_perspectives")
+    suspend fun getPlayerPerspectives(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<GenreModel>
+
+    @POST("themes")
+    suspend fun getThemes(
+        @HeaderMap headers: Map<String, String>,
+        @Body fields: String
+    ): List<GenreModel>
+
+
+//    name	String
+
 
 //    https://api.igdb.com/v4/game_videos
 
@@ -104,11 +121,10 @@ interface IDGBApi {
     ): List<VideoModel>
 
 
-//    https://api.igdb.com/v4/keywords
     @POST("keywords")
     suspend fun getKeywords(
         @HeaderMap headers: Map<String, String>,
         @Body fields: String
-): List<KeywordModel>
+    ): List<KeywordModel>
 
 }

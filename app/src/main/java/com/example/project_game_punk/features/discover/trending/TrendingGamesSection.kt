@@ -20,22 +20,24 @@ import com.example.project_game_punk.features.common.composables.carousels.ItemC
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
+import com.example.project_game_punk.features.main.GamePunkNavigator
 
 @Composable
 fun TrendingGamesSection(
     viewModel: TrendingGamesViewModel,
+//    onGameSelected: () -> Unit,
     sheetController: GameProgressBottomSheetController,
 ) {
     val state = viewModel.getState().observeAsState().value
 
     LoadableStateWrapper(
         state = state,
-        failState = { errorMessage -> DiscoverGameFailState(errorMessage) { viewModel.loadState() } },
+        failState = { errorMessage -> DiscoverGameFailState(errorMessage) { viewModel.loadState(force = true) } },
         loadingState = { TrendingGamesSectionLoadingState() },
     ) { games ->
         Column {
-            SectionTitle(title = "Trending Games") {
-
+            SectionTitle(title = "Trending games") {
+                GamePunkNavigator.navigate("trending_games")
             }
             ItemCarousel(
                 items = games,
@@ -56,7 +58,7 @@ fun TrendingGamesSection(
 private fun TrendingGamesSectionLoadingState() {
     Column {
         SectionTitle(
-            title = "Trending Games",
+            title = "Trending games",
             isLoading = true
         )
         LazyRow(content = {

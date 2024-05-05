@@ -10,11 +10,17 @@ class UserCache(
 
     private var user: UserEntity? = null
 
+    fun userId() = user?.id
+
     suspend fun loadAndCacheUser(): UserEntity? {
         if (user == null) {
             user = getCurrentUserInteractor.execute()
         }
         return user
+    }
+
+    fun updateUser(updatedUser: UserEntity) {
+        user = updatedUser
     }
 
     suspend fun isActiveUserSession(): Boolean {

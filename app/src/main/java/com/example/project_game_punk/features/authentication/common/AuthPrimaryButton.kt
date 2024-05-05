@@ -43,15 +43,15 @@ fun AuthPrimaryButton(
             .clip(RoundedCornerShape(10.dp))
             .border(
                 1.dp,
-                SolidColor(colorResource(id = R.color.blue)),
+                SolidColor(colorResource(id = R.color.white)),
                 shape = RoundedCornerShape(10.dp)
             )
-            .background(colorResource(id = R.color.blue))
+            .background(colorResource(id = R.color.white))
     ) {
         if (authUiModel.isLoading) {
             CircularProgressIndicator(
                 strokeWidth = 3.dp,
-                color = Color.White,
+                color = Color.Black,
                 modifier = Modifier
                     .size(24.dp)
                     .align(Alignment.Center)
@@ -64,7 +64,7 @@ fun AuthPrimaryButton(
                 letterSpacing = 1.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.ExtraBold,
-                color = Color.White
+                color = Color.Black
             )
         }
     }

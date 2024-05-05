@@ -10,6 +10,7 @@ import com.example.project_game_punk.features.common.composables.carousels.ItemC
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
+import com.example.project_game_punk.features.main.GamePunkNavigator
 import com.example.project_game_punk.features.profile.GamesCarouselSectionLoadingState
 
 
@@ -22,18 +23,19 @@ fun ProfileFavoriteGamesSection(
     LoadableStateWrapper(
         state = state,
         failState = { errorMessage -> DiscoverGameFailState(errorMessage) { favoriteGamesViewModel.loadState() } },
-        loadingState = { GamesCarouselSectionLoadingState(title = "Favorite Games") },
+        loadingState = { GamesCarouselSectionLoadingState(title = "Favorite games") },
     ) { games ->
+        if (games.isEmpty()) return@LoadableStateWrapper
         Column {
-            SectionTitle(title = "Favorite Games") {
-
+            SectionTitle(title = "Favorite games") {
+                GamePunkNavigator.navigate("favorite_games")
             }
             ItemCarousel(
                 items = games,
                 itemDecorator = ItemCarouselDecorators.pillItemDecorator
-            ) { game ->
+            ) { carouselGame ->
                 GameCarouselItem(
-                    game = game,
+                    game = carouselGame,
                     sheetController = controller
                 ) { game, gameProgress ->
                     favoriteGamesViewModel.updateGameProgress(game, gameProgress)

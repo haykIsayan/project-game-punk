@@ -12,8 +12,8 @@ class GetUpcomingGamesInteractor constructor(
         val gamesQuery = getGameQueryWithUpcomingDatesInteractor.execute()
         return getGamesInteractor.execute(
             gamesQuery.copy(
-                filter = GameFilter.highestRated,
-                sort = GameSort.recent
+//                filter = GameFilter.highestRated,
+                sort = GameSort.upcoming
             )
         )
     }

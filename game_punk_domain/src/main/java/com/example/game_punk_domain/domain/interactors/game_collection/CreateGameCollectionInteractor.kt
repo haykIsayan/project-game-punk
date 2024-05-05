@@ -7,10 +7,6 @@ class CreateGameCollectionInteractor(
     private val gameCollectionRepository: GameCollectionRepository,
 ) {
     suspend fun execute(gameCollection: GameCollectionEntity): GameCollectionEntity {
-        gameCollectionRepository.createGameCollection(gameCollection)
-        return gameCollectionRepository.getGameCollection(
-            gameCollection.id ?: "",
-            gameCollection.userId ?: ""
-        ) ?: gameCollection
+        return gameCollectionRepository.createGameCollection(gameCollection)
     }
 }

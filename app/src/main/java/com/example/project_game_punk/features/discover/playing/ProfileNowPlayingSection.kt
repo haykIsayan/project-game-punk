@@ -1,7 +1,6 @@
 package com.example.project_game_punk.features.discover.playing
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,19 +33,21 @@ import com.example.project_game_punk.R
 import com.example.project_game_punk.features.common.composables.GameUserScoreDisplay
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
 import com.example.project_game_punk.features.common.composables.grids.GamePunkGrid
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
-import com.example.project_game_punk.features.game_details.GameDetailsActivity
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
-import com.example.project_game_punk.ui.theme.gamePunkPrimary
+import com.example.project_game_punk.features.main.GamePunkNavigator
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
+
+//import com.example.project_game_punk.ui.theme.gamePunkPrimary
 
 @Composable
 fun ProfileNowPlayingSection(nowPlayingViewModel: NowPlayingViewModel) {
     val state = nowPlayingViewModel.getState().observeAsState().value
-
-
     LoadableStateWrapper(
         state = state,
         failState = { errorMessage ->
@@ -56,8 +58,10 @@ fun ProfileNowPlayingSection(nowPlayingViewModel: NowPlayingViewModel) {
         loadingState = { NowPlayingSectionLoadingState() },
     ) { nowPlayingState ->
         Column {
-            SectionTitle(title = "Now Playing") {
+            if (nowPlayingState is NowPlayingState.NowPlayingAvailable) {
+                SectionTitle(title = "Now playing") {
 
+                }
             }
             NowPlayingSectionLoadedState(nowPlayingState = nowPlayingState)
         }
@@ -79,7 +83,7 @@ private fun NowPlayingSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
         SectionTitle(
-            title = "Now Playing",
+            title = "Now playing",
             isLoading = true
         )
         Box(
@@ -90,12 +94,14 @@ private fun NowPlayingSectionLoadingState() {
                 .clip(RoundedCornerShape(10.dp))
                 .background(shimmerBrush(showShimmer = showShimmer.value))
         )
-        Box(modifier = Modifier
-            .padding(12.dp)
-            .fillMaxWidth()
-            .height(14.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(shimmerBrush(showShimmer = showShimmer.value)))
+        Box(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth()
+                .height(14.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(shimmerBrush(showShimmer = showShimmer.value))
+        )
     }
 }
 
@@ -109,66 +115,8 @@ private fun NowPlayingSectionLoadedState(nowPlayingState: NowPlayingState) {
             )
         }
         is NowPlayingState.NowPlayingUnavailable -> {
-            NowPlayingUnavailable(
-               nowPlayingUnavailable = nowPlayingState
-           )
-        }
-    }
-}
 
-@Composable
-private fun NowPlayingUnavailable(
-    nowPlayingUnavailable: NowPlayingState.NowPlayingUnavailable
-) {
-    val games = nowPlayingUnavailable.games
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
-            .padding(12.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(Color.Black)
-    ) {
-        GamePunkGrid(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(140.dp),
-            items = games,
-            span = games.size
-        ) { game ->
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(140.dp),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(game.backgroundImage)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-            )
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-
-                .background(
-                    largeRadialGradientBrush(
-                        listOf(
-                            gamePunkPrimary.copy(alpha = 0.9f),
-                            gamePunkPrimary.copy(alpha = 0.6f),
-                        )
-                    )
-                )
-        )
-        Text(
-            text = "No games being played",
-            modifier = Modifier.align(Alignment.Center),
-            color = Color.White,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
     }
 }
 
@@ -177,84 +125,97 @@ private fun NowPlayingAvailableState(
     nowPlayingAvailable: NowPlayingState.NowPlayingAvailable
 ) {
     val games = nowPlayingAvailable.nowPlayingGames
-    ItemPagerCarousel(items = games) { game ->
-        NowPlayingSectionItem(game = game)
+    ItemCarousel(
+        itemDecorator = ItemCarouselDecorators.pillItemDecorator,
+        items = games,
+    ) { state ->
+        NowPlayingSectionItemNewer(state = state)
     }
 }
 
 @Composable
-private fun NowPlayingSectionItem(game: GameEntity) {
-    val context = LocalContext.current
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(160.dp)
-        .padding(12.dp)
-        .clip(RoundedCornerShape(10.dp))
-        .background(Color.Black)
-        .clickable {
-            context.startActivity(
-                Intent(
-                    context,
-                    GameDetailsActivity::class.java
-                ).apply {
-                    putExtra(
-                        GameDetailsActivity.GAME_ID_INTENT_EXTRA,
-                        game.id
-                    )
-                }
+private fun NowPlayingSectionItemNewer(state: NowPlayingGameState) {
+    Box(
+        modifier = Modifier
+            .size(
+                220.dp,
+                140.dp,
             )
-        }
+            .clip(RoundedCornerShape(10.dp))
     ) {
-        NowPlayingSectionItemGradientBackground(
-            context = context,
-            game = game
-        )
-        Row(
+        AsyncImage(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
+                .size(
+                    220.dp,
+                    140.dp,
+                )
+                .clip(RoundedCornerShape(10.dp)),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(state.artwork)
+                .crossfade(true)
+                .build(),
+            contentDescription = "",
+            contentScale = ContentScale.Crop,
+        )
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(gamePunkPrimaryDark.copy(alpha = 0.8f))
+        )
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(6.dp)
         ) {
-            NowPlayingSectionItemGameCover(game = game)
-            Column(
-                modifier = Modifier
-                    .padding(
-                    horizontal = 28.dp,
-                    vertical = 6.dp
-                ),
-            ) {
-                GameUserScoreDisplay(game = game)
-                Spacer(modifier = Modifier.height(6.dp))
-                game.name?.let { name ->
-                    Text(
-                        text = name,
-                        color = Color.White,
-                        maxLines = 1,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                }
-                Spacer(modifier = Modifier.height(6.dp))
-                NowPlayingPlatformInfo(game = game)
-                Spacer(modifier = Modifier.height(6.dp))
-                NowPlayingStoreInfo(game = game)
+            NowPlayingStoreInfo(game = state.game)
+        }
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .clip(RoundedCornerShape(10.dp))
+                .width(220.dp)
+                .padding(6.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
+        ) {
+            GameUserScoreDisplay(game = state.game)
+            Spacer(modifier = Modifier.height(3.dp))
+            state.game.name?.let { name ->
+                Text(
+                    text = name,
+                    color = Color.White,
+                    maxLines = 1,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
             }
+            Spacer(modifier = Modifier.height(3.dp))
+            NowPlayingPlatformInfo(game = state.game)
         }
     }
 }
+
 
 @Composable
 private fun NowPlayingPlatformInfo(game: GameEntity) {
     game.gamePlatforms?.find {
         it.id == game.gameExperience?.platformId
     }?.let { platform ->
-        Text(
-            text = platform.name,
-            color = Color.White,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.ExtraBold
-        )
+        Box(
+            modifier = Modifier
+                .height(25.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color.White.copy(alpha = 0.2f))
+        ) {
+
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 6.dp)
+                    .align(Alignment.Center),
+                text = platform.name,
+                color = Color.White,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
     }
 }
 
@@ -278,63 +239,4 @@ private fun NowPlayingStoreInfo(game: GameEntity) {
             contentDescription = "Content description for visually impaired"
         )
     }
-}
-
-@Composable
-private fun NowPlayingSectionItemGameCover(game: GameEntity) {
-    AsyncImage(
-        modifier = Modifier
-            .size(
-                110.dp,
-                150.dp
-            )
-            .padding(12.dp)
-            .clip(RoundedCornerShape(10.dp)),
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(game.backgroundImage)
-            .crossfade(true)
-            .build(),
-        contentDescription = "",
-        contentScale = ContentScale.Crop,
-    )
-}
-
-@Composable
-private fun NowPlayingSectionItemGradientBackground(
-    context: Context,
-    game: GameEntity
-) {
-    val backgroundColor = remember { mutableStateOf(0) }
-    val loader = ImageLoader(LocalContext.current)
-    val req = ImageRequest.Builder(LocalContext.current)
-        .data(game.backgroundImage)
-        .allowHardware(false)
-        .target { result ->
-            val bitmap = (result as BitmapDrawable).bitmap
-            Palette.from(bitmap).generate {
-                it?.let { palette ->
-                    val dominantColor = palette.getDominantColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.black
-                        )
-                    )
-                    backgroundColor.value = dominantColor
-                }
-            }
-        }
-        .build()
-    loader.enqueue(req)
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight()
-        .background(
-            largeRadialGradientBrush(
-                listOf(
-                    Color(backgroundColor.value).copy(alpha = 0.9f),
-                    Color(backgroundColor.value).copy(alpha = 0.7f),
-                )
-            )
-        )
-    )
 }

@@ -44,5 +44,7 @@ sealed class MainNavigationTab(
             SearchMainNavigationTab,
             ProfileMainNavigationTab
         )
+
+        fun mainRoutes() = items.map { it.route }
     }
 }

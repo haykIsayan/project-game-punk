@@ -62,8 +62,9 @@ private fun GameDetailsNewsSectionLoadingState() {
 
 @Composable
 private fun GameDetailsNewsSectionLoadedState(gameNewsList: List<GameNewsEntity>) {
+    if (gameNewsList.isEmpty()) return
     Column {
-        SectionTitle(title = "What's New")
+        SectionTitle(title = "What's new")
         ItemPagerCarousel(
             gameNewsList
         ) { gameNews ->

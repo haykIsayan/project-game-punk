@@ -7,6 +7,6 @@ class GetCurrentUserInteractor(
     private val userRepository: UserRepository
 ) {
     suspend fun execute(): UserEntity {
-        return userRepository.getUser("")
+        return userRepository.getCurrentUser()
     }
 }

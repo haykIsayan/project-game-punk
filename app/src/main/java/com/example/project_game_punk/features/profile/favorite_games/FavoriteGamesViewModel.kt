@@ -16,14 +16,10 @@ import javax.inject.Inject
 class FavoriteGamesViewModel @Inject constructor(
     private val getUserFavoriteGamesInteractor: GetUserFavoriteGamesInteractor,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
-): StateViewModel<List<GameEntity>, Unit>() {
+): StateViewModel<List<GameEntity>, String>() {
 
-    init {
-        loadState()
-    }
-
-    override suspend fun loadData(param: Unit?): List<GameEntity> {
-        return getUserFavoriteGamesInteractor.execute()
+    override suspend fun loadData(param: String?): List<GameEntity> {
+        return getUserFavoriteGamesInteractor.execute(param)
     }
 
     fun updateGameProgress(game: GameEntity, gameProgress: GameProgressStatus) {

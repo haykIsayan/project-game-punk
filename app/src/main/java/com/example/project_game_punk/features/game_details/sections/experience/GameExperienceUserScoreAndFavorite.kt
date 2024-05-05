@@ -14,12 +14,15 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameExperienceEntity
+import com.example.game_punk_domain.domain.entity.GameReviewEntity
+import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 
 
@@ -27,7 +30,8 @@ import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 fun GameExperienceUserScoreAndFavorite(
     game: GameEntity,
     gameExperience: GameExperienceEntity,
-    gameDetailsViewModel: GameDetailsViewModel
+    gameDetailsViewModel: GameDetailsViewModel,
+    gameUserReviewViewModel: GameUserReviewViewModel
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -37,7 +41,8 @@ fun GameExperienceUserScoreAndFavorite(
         GameExperienceUserScore(
             game = game,
             gameExperience = gameExperience,
-            gameDetailsViewModel = gameDetailsViewModel
+            gameDetailsViewModel = gameDetailsViewModel,
+            gameUserReviewViewModel = gameUserReviewViewModel
         )
         GameExperienceFavorite(
             game = game,
@@ -51,9 +56,24 @@ fun GameExperienceUserScoreAndFavorite(
 private fun GameExperienceUserScore(
     game: GameEntity,
     gameExperience: GameExperienceEntity,
-    gameDetailsViewModel: GameDetailsViewModel
+    gameDetailsViewModel: GameDetailsViewModel,
+    gameUserReviewViewModel: GameUserReviewViewModel
 ) {
-    val score = gameExperience.userScore
+    val state = gameUserReviewViewModel.getState().observeAsState().value
+    LoadableStateWrapper(state = state) { gameReview ->
+        gameReview ?: return@LoadableStateWrapper
+        GameExperienceUserScoreLoadedState(gameReview) { newScore ->
+            gameUserReviewViewModel.updateUserScore(newScore)
+        }
+    }
+}
+
+@Composable
+private fun GameExperienceUserScoreLoadedState(
+    gameReview: GameReviewEntity,
+    updateUserScore: (Int) -> Unit
+) {
+    val score = gameReview.userScore
     Row(
         modifier = Modifier.padding(12.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -72,27 +92,48 @@ private fun GameExperienceUserScore(
                     .clickable {
                         when (star) {
                             Icons.Filled.Star -> {
-                                val newScore = (i - 0.5f) * 20f
-                                gameDetailsViewModel.updateUserScore(
-                                    game,
-                                    newScore
-                                )
+                                val newScore = (i - 0.5f) * 20
+
+
+//                                gameDetailsViewModel.updateUserScore(
+//                                    game,
+//                                    newScore
+//                                )
+
+
+//                                gameUserReviewViewModel.updateUserScore(newScore.toInt())
+                                updateUserScore.invoke(newScore.toInt())
+
                             }
 
                             Icons.Filled.StarHalf -> {
-                                val newScore = (i - 1) * 20f
-                                gameDetailsViewModel.updateUserScore(
-                                    game,
-                                    newScore
-                                )
+                                val newScore = (i - 1) * 20
+
+
+//                                gameDetailsViewModel.updateUserScore(
+//                                    game,
+//                                    newScore
+//                                )
+
+//                                gameUserReviewViewModel.updateUserScore(newScore)
+
+                                updateUserScore.invoke(newScore)
+
                             }
 
                             else -> {
-                                val newScore = i * 20f
-                                gameDetailsViewModel.updateUserScore(
-                                    game,
-                                    newScore
-                                )
+                                val newScore = i * 20
+
+
+//                                gameDetailsViewModel.updateUserScore(
+//                                    game,
+//                                    newScore
+//                                )
+
+
+//                                gameUserReviewViewModel.updateUserScore(newScore)
+
+                                updateUserScore.invoke(newScore)
                             }
                         }
                     },

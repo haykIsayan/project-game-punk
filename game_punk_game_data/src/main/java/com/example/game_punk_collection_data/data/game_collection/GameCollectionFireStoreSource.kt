@@ -8,12 +8,18 @@ import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.models.GameQueryModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class GameCollectionFireStoreSource(
+    private val scope: CoroutineScope,
     private val gameRepository: GameRepository,
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) : GameCollectionRepository {
@@ -47,14 +53,43 @@ class GameCollectionFireStoreSource(
         }
     }
 
-    override suspend fun createGameCollection(gameCollection: GameCollectionEntity) {
+    override suspend fun createGameCollection(
+        gameCollection: GameCollectionEntity
+    ): GameCollectionEntity {
 
         val gameCollectionMap = (gameCollection as GameCollectionModel).toMap()
 
-        suspendCoroutine<Unit> { continuation ->
+        return suspendCoroutine { continuation ->
             db.collection(GAME_COLLECTION_DB_COLLECTION_NAME)
                 .add(gameCollectionMap)
                 .addOnSuccessListener { document ->
+                    if (gameCollection.id.isNullOrEmpty()) {
+                        val id = document.id
+                        val updatedGameCollection = gameCollection.copy(id = id)
+                        db.collection(GAME_COLLECTION_DB_COLLECTION_NAME)
+                                .document(id)
+                                .update(updatedGameCollection.toMap())
+                                .addOnSuccessListener {
+                                    continuation.resume(updatedGameCollection)
+                                }
+                                .addOnFailureListener {
+                                    continuation.resumeWithException(it)
+                                }
+                    } else {
+                        continuation.resume(gameCollection)
+                    }
+                }.addOnFailureListener {
+                    continuation.resumeWithException(it)
+                }
+        }
+    }
+
+    override suspend fun deleteGameCollection(gameCollection: GameCollectionEntity) {
+        suspendCoroutine<Unit> { continuation ->
+            db.collection(GAME_COLLECTION_DB_COLLECTION_NAME)
+                .document(gameCollection.id!!)
+                .delete()
+                .addOnSuccessListener {
                     continuation.resume(Unit)
                 }.addOnFailureListener {
                     continuation.resumeWithException(it)
@@ -62,21 +97,53 @@ class GameCollectionFireStoreSource(
         }
     }
 
-    override suspend fun getGameCollections(): List<GameCollectionEntity> {
-//        return suspendCoroutine<GameCollectionModel?> { continuation ->
-//            db.collection(GAME_COLLECTION_DB_COLLECTION_NAME)
-//                .whereEqualTo(GameCollectionModel.USER_ID_FIELD, userId)
-//                .whereEqualTo(GameCollectionModel.ID_FIELD, id)
-//                .get()
-//                .addOnSuccessListener { documents ->
-//                    val document = documents.documents.first()
-//                    val gameCollection = document.toObject<GameCollectionModel>()
-//                    continuation.resume(gameCollection)
-//                }.addOnFailureListener {
-//                    continuation.resumeWithException(it)
-//                }
-//        }
-        TODO("Not yet implemented")
+    override suspend fun getGameCollections(userId: String): List<GameCollectionEntity> {
+        val gameCollections = suspendCoroutine<List<GameCollectionModel>> { continuation ->
+            db.collection(GAME_COLLECTION_DB_COLLECTION_NAME)
+                .whereEqualTo(GameCollectionModel.USER_ID_FIELD, userId)
+                .get()
+                .addOnSuccessListener { documents ->
+                    val gameCollections = documents
+                        .toObjects(GameCollectionModel::class.java)
+                        .map { gameCollectionModel ->
+
+                            val document = documents.find {
+                                it.reference.id == gameCollectionModel.id
+                            }
+                            val gameModels = (document?.get("games") as? ArrayList<*>)?.map {
+                                val map = it as? HashMap<*, *>
+                                val json = JSONObject(map?.toMutableMap()!!)
+                                Gson().fromJson(json.toString(), GameModel::class.java)
+                            } ?: emptyList()
+                            gameCollectionModel.copy(gameModels = gameModels)
+                        }
+                    println(gameCollections)
+                    continuation.resume(gameCollections)
+                }.addOnFailureListener {
+                    continuation.resumeWithException(it)
+                }
+        }
+        val updatedGameCollections =
+            gameCollections.map { gameCollection ->
+                scope.async {
+                    val games = gameCollection.games
+                    val gameIds = games.mapNotNull { it.id }.toList()
+                    if (gameIds.isEmpty()) return@async gameCollection
+                    val gamesWithMetaData = gameRepository.getGames(
+                        GameQueryModel(
+                            ids = gameIds,
+                            limit = gameIds.size,
+                            gameMetaQuery = GameMetaQueryModel(
+                                cover = true
+                            )
+                        )
+                    ).map {
+                        it as GameModel
+                    }
+                    gameCollection.copy(gameModels = gamesWithMetaData)
+                }
+            }.toList().awaitAll()
+        return updatedGameCollections
     }
 
     override suspend fun getGameCollection(id: String, userId: String): GameCollectionEntity? {
@@ -92,19 +159,8 @@ class GameCollectionFireStoreSource(
                         val document = documents.documents.first()
 
                         val gameModels = (document.get("games") as? ArrayList<*>)?.map {
-
                             val map = it as? HashMap<*, *>
-
-
-                            val betterMap = map?.filter {
-                                    entry ->
-                                entry.value != null
-                            }
-
-                            println(betterMap)
-
                             val json = JSONObject(map?.toMutableMap()!!)
-
                             Gson().fromJson(json.toString(), GameModel::class.java)
                         } ?: emptyList()
 

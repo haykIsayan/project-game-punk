@@ -19,8 +19,9 @@ class GetGameInteractor(
             synopsis = true,
             score = true
         )
+
         val game = gameRepository.getGame(id, metaQuery)
-        val games = applyGameMetaInteractor.execute(listOf(game), metaQuery)
-        return trackedGamesCache.applyCache(games).first()
+//        val games = applyGameMetaInteractor.execute(listOf(game), metaQuery)
+        return trackedGamesCache.applyCache(listOf(game)).first()
     }
 }

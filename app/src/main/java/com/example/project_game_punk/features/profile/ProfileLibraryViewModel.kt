@@ -3,7 +3,10 @@ package com.example.project_game_punk.features.profile
 import com.example.game_punk_domain.domain.TrackedGamesCache
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
+import com.example.game_punk_domain.domain.interactors.game.GetUserTrackedGamesInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
+import com.example.game_punk_domain.domain.interactors.game_collection.GetGameCollectionInteractor
+import com.example.game_punk_domain.domain.interactors.user.UserCache
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.features.common.executeIO
 import com.example.project_game_punk.features.common.update
@@ -13,14 +16,13 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
+class ProfileLibraryViewModel @Inject constructor(
+    private val getUserTrackedGamesInteractor: GetUserTrackedGamesInteractor,
+    private val userCache: UserCache,
+    private val getGameCollectionInteractor: GetGameCollectionInteractor,
     private val trackedGamesCache: TrackedGamesCache,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
-): StateViewModel<List<GameEntity>, Unit>() {
-
-    init {
-        loadState()
-    }
+): StateViewModel<List<GameEntity>, String>() {
 
     fun updateGameProgress(game: GameEntity, gameProgress: GameProgressStatus) {
         executeIO(
@@ -37,11 +39,16 @@ class ProfileViewModel @Inject constructor(
         updatedGames?.apply { emit(GameSuccessState(updatedGames)) }
     }
 
-    override suspend fun loadData(param: Unit?): List<GameEntity> {
-        val games = trackedGamesCache.getMainGameCollection()?.games ?: emptyList()
-        if (games.size > 10) {
-            return games.subList(0, 9)
-        }
-        return games
+    override suspend fun loadData(param: String?): List<GameEntity> {
+        return getUserTrackedGamesInteractor.execute(param)
+
+//        param?.let { userId ->
+//            getGameCollectionInteractor.execute(id = "main", userId = userId)?.games
+//        } ?: trackedGamesCache.getMainGameCollection()?.games ?: emptyList()
+
+
+//        val userId = param ?: userCache.loadAndCacheUser()?.id ?: return emptyList()
+//        val games = trackedGamesCache.getMainGameCollection()?.games ?: emptyList()
+//        return games
     }
 }

@@ -34,7 +34,7 @@ fun RecentGamesSection(
         loadingState = { RecentGamesSectionLoadingState() },
     ) { games ->
         Column {
-            SectionTitle(title = "Recent Releases") {
+            SectionTitle(title = "Recent releases") {
 
             }
             ItemCarousel(
@@ -56,11 +56,11 @@ fun RecentGamesSection(
 private fun RecentGamesSectionLoadingState() {
     Column {
         SectionTitle(
-            title = "Recent Releases",
+            title = "Recent releases",
             isLoading = true
         )
         LazyRow(content = {
-            items(4) {
+            items(4) {index ->
                 val showShimmer = remember { mutableStateOf(true) }
                 Column(
                     verticalArrangement = Arrangement.Center,
@@ -71,14 +71,24 @@ private fun RecentGamesSectionLoadingState() {
                             120.dp,
                             160.dp
                         )
-                        .padding(6.dp)
+                        .padding(
+                            start = if (index == 0) 12.dp else 6.dp,
+                            end = 6.dp,
+                            top = 6.dp,
+                            bottom = 6.dp
+                        )
                         .clip(RoundedCornerShape(10.dp))
                         .background(shimmerBrush(showShimmer = showShimmer.value))
                     )
                     Box(modifier = Modifier
                         .width(120.dp)
                         .height(40.dp)
-                        .padding(6.dp)
+                        .padding(
+                            start = if (index == 0) 12.dp else 6.dp,
+                            end = 6.dp,
+                            top = 6.dp,
+                            bottom = 6.dp
+                        )
                         .clip(RoundedCornerShape(10.dp))
                         .background(shimmerBrush(showShimmer = showShimmer.value)))
                 }

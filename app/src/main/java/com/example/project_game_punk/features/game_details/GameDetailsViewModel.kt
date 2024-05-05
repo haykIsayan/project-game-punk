@@ -35,8 +35,11 @@ class GameDetailsViewModel @Inject constructor(
     override suspend fun loadData(param: String?): GameEntity? {
         if (param == null) return null
         val metaQuery = GameMetaQueryModel(
+            banner = true,
             platforms = true,
-            genres = true
+            genres = true,
+            similarGames = true,
+            dlcs = true
         )
         return getGameInteractor.execute(param, metaQuery)
     }

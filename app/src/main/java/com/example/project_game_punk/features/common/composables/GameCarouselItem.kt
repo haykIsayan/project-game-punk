@@ -1,6 +1,5 @@
 package com.example.project_game_punk.features.common.composables
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,30 +19,27 @@ import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
-import com.example.project_game_punk.features.game_details.GameDetailsActivity
+import com.example.project_game_punk.features.main.GamePunkNavigator
 
 @Composable
 fun GameCarouselItem(
     game: GameEntity,
     sheetController: GameProgressBottomSheetController? = null,
     trailing: @Composable () -> Unit = {},
+    onGameSelected: (gameId: String) -> Unit = {},
     onProgressSelected: ((GameEntity, GameProgressStatus) -> Unit)? = null
 ) {
     val context = LocalContext.current
     Column(
-        modifier = Modifier.clickable {
-            context.startActivity(
-                Intent(
-                    context,
-                    GameDetailsActivity::class.java
-                ).apply {
-                    putExtra(
-                        GameDetailsActivity.GAME_ID_INTENT_EXTRA,
-                        game.id
-                    )
+        modifier = Modifier
+            .clickable {
+
+                game.id?.let { gameId ->
+                    GamePunkNavigator
+                        .navigate("game/${gameId}")
                 }
-            )
-        },
+
+            },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

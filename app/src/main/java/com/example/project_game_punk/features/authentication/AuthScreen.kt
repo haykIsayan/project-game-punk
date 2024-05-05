@@ -2,11 +2,8 @@ package com.example.project_game_punk.features.authentication
 
 import android.content.Intent
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,15 +13,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.project_game_punk.R
 import com.example.project_game_punk.features.authentication.common.AuthPrimaryButton
 import com.example.project_game_punk.features.authentication.common.AuthSecondaryButton
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
@@ -112,7 +106,9 @@ private fun AuthLoadingState() {
         }
     }
     Box(
-        modifier = Modifier.fillMaxSize().background(Color.Black)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
     ) {
         Row(
             modifier = Modifier.align(Alignment.Center)
@@ -195,10 +191,6 @@ private fun AuthButton(
             }
         }
     }
-
-
-
-
 }
 
 @Composable
@@ -273,39 +265,21 @@ private fun SignUpButton(signUpViewModel: SignUpViewModel) {
         ) {
             signUpViewModel.signUp { user ->
                 user.id?.let { userId ->
-                        context.startActivity(
-                            Intent(
-                                context,
-                                MainActivity::class.java
-                            ).apply {
-                                putExtra(
-                                    MainActivity.USER_ID_INTENT_EXTRA,
-                                    userId
-                                )
-                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            }
-                        )
+                    context.startActivity(
+                        Intent(
+                            context,
+                            MainActivity::class.java
+                        ).apply {
+                            putExtra(
+                                MainActivity.USER_ID_INTENT_EXTRA,
+                                userId
+                            )
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        }
+                    )
                 }
             }
         }
     }
 }
-
-@Composable
-fun GamePunkIcon() {
-    Image(
-        modifier = Modifier
-            .clip(CircleShape)
-            .border(
-                1.dp,
-                SolidColor(Color.White),
-                shape = CircleShape
-            ),
-        painter = painterResource(
-            id = R.mipmap.ic_game_punk_v2_foreground
-        ),
-        contentDescription = ""
-    )
-}
-
 

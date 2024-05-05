@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -53,13 +54,13 @@ fun GamePunkTab(
         modifier = if (isLoading) {
             modifier
                 .padding(12.dp)
-                .clip(CircleShape)
+                .clip(RoundedCornerShape(10.dp))
                 .background(shimmerBrush(showShimmer = showShimmer.value))
                 .height(intrinsicSize = IntrinsicSize.Min)
         } else {
             modifier
                 .padding(12.dp)
-                .clip(CircleShape)
+                .clip(RoundedCornerShape(10.dp))
                 .background(White.copy(alpha = 0.05f))
                 .height(intrinsicSize = IntrinsicSize.Min)
         }
@@ -71,7 +72,7 @@ fun GamePunkTab(
         )
         Row(
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.clip(CircleShape),
+            modifier = Modifier.clip(RoundedCornerShape(10.dp)),
         ) {
             items.mapIndexed { index, text ->
                 val isSelected = index == selectedItemIndex
@@ -109,7 +110,7 @@ private fun MyTabItem(
     )
     Text(
         modifier = Modifier
-            .clip(CircleShape)
+            .clip(RoundedCornerShape(10.dp))
             .clickable {
                 onClick()
             }
@@ -137,7 +138,7 @@ private fun MyTabIndicator(
             .fillMaxHeight()
             .width(width = indicatorWidth)
             .offset(x = indicatorOffset)
-            .clip(shape = CircleShape)
+            .clip(shape = RoundedCornerShape(10.dp))
             .background(color = indicatorColor),
     )
 }

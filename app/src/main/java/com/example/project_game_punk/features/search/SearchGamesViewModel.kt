@@ -1,6 +1,7 @@
 package com.example.project_game_punk.features.search
 
 import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.game_punk_domain.domain.interactors.game.GetGameQueryWithRecentDatesInteractor
 import com.example.project_game_punk.features.common.StateViewModel
@@ -16,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchResultsViewModel @Inject constructor(
+class SearchGamesViewModel @Inject constructor(
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
     private val getGamesInteractor: GetGamesInteractor,
 ): StateViewModel<List<GameEntity>, GameQueryModel>() {
@@ -53,7 +54,7 @@ class SearchResultsViewModel @Inject constructor(
     }
 
     fun searchGames(query: GameQueryModel) {
-        loadState(param = query)
+        loadState(param = query, force = true, debounce = true)
     }
 
 }
