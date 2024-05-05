@@ -4,9 +4,10 @@ import com.example.game_punk_domain.domain.TrackedGamesCache
 import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameMetaQueryModel
 import com.example.game_punk_domain.domain.interfaces.GameRepository
+import com.example.game_punk_domain.domain.models.GameFilter
 import com.example.game_punk_domain.domain.models.GameSort
 
-class GetFeaturedGameInteractor constructor(
+class GetFeaturedGameInteractor(
     private val gameRepository: GameRepository,
     private val trackedGamesCache: TrackedGamesCache
 ) {
@@ -14,18 +15,18 @@ class GetFeaturedGameInteractor constructor(
         val gameQuery = GetGameQueryWithRecentDatesInteractor().execute()
         val game = gameRepository.getGames(
             gameQuery.copy(
-                sort = GameSort.trending,
+                filter = GameFilter.highestRated,
+                sort = GameSort.recent,
                 gameMetaQuery = GameMetaQueryModel(
                     genres = true,
                     synopsis = true
                 ),
-                limit = 1
             )
         ).apply {
             sortedBy {
                 it.score
             }
-        }.random()
+        }.subList(0, 5).random()
         return trackedGamesCache.applyCache(game)
     }
 }

@@ -16,4 +16,9 @@ data class GameQueryModel(
     val onlyGames: Boolean = true,
     val ids: List<String> = emptyList(),
     val limit: Int = 10
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        val otherGame = other as? GameQueryModel ?: return false
+        return ids == otherGame.ids && gameMetaQuery == otherGame.gameMetaQuery
+    }
+}

@@ -1,6 +1,5 @@
 package com.example.project_game_punk.features.search
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,12 +7,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -23,37 +27,64 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.user.UserEntity
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
-import com.example.project_game_punk.features.game_details.GameDetailsActivity
+import com.example.project_game_punk.features.game_details.sections.GamePunkTab
+import com.example.project_game_punk.features.main.GamePunkNavigator
 
 @Composable
 fun SearchScreen(
     searchFiltersViewModel: SearchFiltersViewModel,
-    searchResultsViewModel: SearchResultsViewModel,
+    searchGamesViewModel: SearchGamesViewModel,
+    searchUsersViewModel: SearchUsersViewModel,
     sheetController: GameProgressBottomSheetController,
 ) {
+    val index = remember { mutableStateOf(0) }
     Column {
+        Spacer(modifier = Modifier.height(6.dp))
         SearchField(
-            searchResultsViewModel,
+            index.value,
+            searchGamesViewModel,
+            searchUsersViewModel,
             searchFiltersViewModel
         )
-        SearchResults(
-            searchResultsViewModel,
-            sheetController
+        GamePunkTab(
+            selectedItemIndex = index.value,
+            items = listOf(
+                "Games",
+                "Users"
+            ),
+            onClick = {
+                index.value = it
+            }
         )
+        when (index.value) {
+            0 -> {
+                SearchGamesResults(
+                    searchGamesViewModel,
+                    sheetController
+                )
+            }
+            1 -> {
+                SearchUsersResult(
+                    searchUsersViewModel
+                )
+            }
+        }
+
     }
 }
 
 
 @Composable
-private fun SearchResults(
-    searchResultsViewModel: SearchResultsViewModel,
+private fun SearchGamesResults(
+    searchGamesViewModel: SearchGamesViewModel,
     sheetController: GameProgressBottomSheetController
 ) {
-    val state = searchResultsViewModel.getState().observeAsState().value
+    val state = searchGamesViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
         loadingState = {
@@ -63,7 +94,7 @@ private fun SearchResults(
         SearchResultLoadedState(
             games,
             sheetController,
-            searchResultsViewModel
+            searchGamesViewModel
         )
     }
 }
@@ -100,15 +131,19 @@ private fun SearchResultLoadingState() {
 private fun SearchResultLoadedState(
     games: List<GameEntity>,
     sheetController: GameProgressBottomSheetController,
-    searchResultsViewModel: SearchResultsViewModel
+    searchGamesViewModel: SearchGamesViewModel
 ) {
     LazyColumn {
         items(games) { game ->
             GameSearchResultItem(
                 game,
                 sheetController,
-                searchResultsViewModel
+                searchGamesViewModel
             )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(60.dp))
         }
     }
 }
@@ -117,38 +152,47 @@ private fun SearchResultLoadedState(
 private fun GameSearchResultItem(
     game : GameEntity,
     sheetController: GameProgressBottomSheetController,
-    searchResultsViewModel: SearchResultsViewModel
+    searchGamesViewModel: SearchGamesViewModel
 ) {
-    val context = LocalContext.current
     Row(
         modifier = Modifier
             .padding(12.dp)
             .fillMaxWidth()
             .clickable {
-                context.startActivity(
-                    Intent(
-                        context,
-                        GameDetailsActivity::class.java
-                    ).apply {
-                        putExtra(
-                            GameDetailsActivity.GAME_ID_INTENT_EXTRA,
-                            game.id
-                        )
-                    }
-                )
+                game.id?.let { gameId ->
+                    GamePunkNavigator.navigate("game/$gameId")
+                }
             },
     ) {
-        AsyncImage(
+        game.backgroundImage?.let {
+            AsyncImage(
+                modifier = Modifier
+                    .size(100.dp, 120.dp)
+                    .clip(RoundedCornerShape(10.dp)),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(game.backgroundImage)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+            )
+        } ?: Box(
             modifier = Modifier
                 .size(100.dp, 120.dp)
-                .clip(RoundedCornerShape(10.dp)),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(game.backgroundImage)
-                .crossfade(true)
-                .build(),
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-        )
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color.White.copy(alpha = 0.05f)),
+        ) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .clip(RoundedCornerShape(10.dp))
+                    .size(80.dp),
+                imageVector = Icons.Filled.VideogameAsset,
+                contentDescription = ""
+            )
+        }
+
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -174,8 +218,107 @@ private fun GameSearchResultItem(
                         .width(100.dp),
                     controller = sheetController,
                     onProgressSelected = { game, gameProgress ->
-                        searchResultsViewModel.updateGameProgress(game, gameProgress)
+                        searchGamesViewModel.updateGameProgress(game, gameProgress)
                     }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SearchUsersResult(searchUsersViewModel: SearchUsersViewModel) {
+    val state = searchUsersViewModel.getState().observeAsState().value
+    LoadableStateWrapper(
+        state = state,
+        loadingState = {
+            SearchUsersResultLoadingState()
+        }
+    ) { users ->
+        SearchUsersResultLoadedState(users)
+    }
+}
+
+@Composable
+private fun SearchUsersResultLoadingState() {
+    val showShimmer = remember { mutableStateOf(true) }
+    LazyColumn {
+        items(10) {
+            Row(modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(shimmerBrush(showShimmer = showShimmer.value)),
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .padding(start = 12.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(shimmerBrush(showShimmer = showShimmer.value)),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SearchUsersResultLoadedState(users: List<UserEntity>) {
+    LazyColumn {
+        items(users) {user ->
+            UserResultItem(user = user)
+        }
+    }
+}
+
+@Composable
+private fun UserResultItem(user: UserEntity) {
+    Row(
+        modifier = Modifier
+            .padding(12.dp)
+            .fillMaxWidth()
+            .clickable {
+                 GamePunkNavigator.navigate("user/${user.id}")
+            },
+    ) {
+
+        user.profileIcon?.let {
+
+        } ?: Box(
+            modifier = Modifier
+                .size(80.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color.White.copy(alpha = 0.05f)),
+        ) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .clip(RoundedCornerShape(10.dp))
+                    .size(60.dp),
+                imageVector = Icons.Filled.Person,
+                contentDescription = ""
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            user.displayName?.let { displayName ->
+                Text(
+                    text = displayName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(12.dp),
+                    fontSize = 18.sp
                 )
             }
         }

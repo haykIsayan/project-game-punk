@@ -56,7 +56,7 @@ fun GameStoresSection(
 private fun GameStoresSectionFailedState(reload: () -> Unit) {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Stores", isLoading = true)
+//        SectionTitle(title = "Available on", isLoading = true)
         Box(modifier = Modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -81,7 +81,7 @@ private fun GameStoresSectionFailedState(reload: () -> Unit) {
 @Composable
 private fun GameStoresSectionLoadingState() {
     Column {
-        SectionTitle(title = "Stores", isLoading = true)
+//        SectionTitle(title = "Available on", isLoading = true)
         val showShimmer = remember { mutableStateOf(true) }
         LazyRow {
             items(4) {
@@ -107,7 +107,7 @@ private fun GameStoresSectionLoadedState(
 ) {
     if (stores.isEmpty()) return
     Column {
-        SectionTitle(title = "Stores")
+//        SectionTitle(title = "Available on")
         ItemCarousel(
             items = stores,
             itemDecorator = ItemCarouselDecorators.pillItemDecorator

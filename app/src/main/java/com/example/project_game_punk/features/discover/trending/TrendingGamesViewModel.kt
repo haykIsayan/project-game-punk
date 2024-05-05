@@ -16,7 +16,7 @@ import javax.inject.Inject
 class TrendingGamesViewModel @Inject constructor(
     private val trendingGamesInteractor: GetTrendingGamesInteractor,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
-): StateViewModel<List<GameEntity>, Unit>() {
+): StateViewModel<List<GameEntity>, String>() {
 
     init {
         loadState()
@@ -37,7 +37,7 @@ class TrendingGamesViewModel @Inject constructor(
         updatedGames?.apply { emit(GameSuccessState(updatedGames)) }
     }
 
-    override suspend fun loadData(param: Unit?): List<GameEntity> {
+    override suspend fun loadData(param: String?): List<GameEntity> {
         return trendingGamesInteractor.execute()
     }
 }

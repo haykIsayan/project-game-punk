@@ -39,7 +39,10 @@ fun <ItemType> ItemCarousel(
     itemDecorator: ItemCarouselDecorator? = null,
     itemComposer: @Composable (item: ItemType) -> Unit
 ) {
-        LazyRow(verticalAlignment = Alignment.CenterVertically) {
+        LazyRow(
+            verticalAlignment = Alignment.CenterVertically,
+            state = state
+        ) {
 
             label?.let {
                 item {

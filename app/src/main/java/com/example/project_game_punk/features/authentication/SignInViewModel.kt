@@ -46,27 +46,26 @@ class SignInViewModel @Inject constructor(
                         userSignInInteractor.execute(userAuthModel)
                     }
                 }?.let { user ->
-                    emit(ViewModelState.SuccessState(signInModel.copy(
-                        authUiError = null,
-                        isLoading = false
-                    )))
                     onUserSignInSuccess(user)
                 }
             } catch (e: Exception) {
-                if (e is IncorrectPasswordException) {
-                    emit(ViewModelState.SuccessState(signInModel.copy(
-                        authUiError = AuthUiError.PasswordIncorrect,
-                        isLoading = false
-                    )))
-                } else {
-                    emit(
-                        ViewModelState.SuccessState(
-                            signInModel.copy(
-                                authUiError = AuthUiError.SignInFailed,
-                                isLoading = false
+                when (e) {
+                    is IncorrectPasswordException -> {
+                        emit(ViewModelState.SuccessState(signInModel.copy(
+                            authUiError = AuthUiError.PasswordIncorrect,
+                            isLoading = false
+                        )))
+                    }
+                    else -> {
+                        emit(
+                            ViewModelState.SuccessState(
+                                signInModel.copy(
+                                    authUiError = AuthUiError.SignInFailed,
+                                    isLoading = false
+                                )
                             )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -101,6 +100,8 @@ enum class AuthUiError {
     FieldsEmpty,
     SignInFailed,
     EmailAlreadyInUse,
+    BadEmailFormat,
+    PasswordWeak,
     PasswordsDoNotMatch
 }
 

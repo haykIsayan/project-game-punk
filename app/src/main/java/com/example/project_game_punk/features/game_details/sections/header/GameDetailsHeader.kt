@@ -10,12 +10,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 import com.example.project_game_punk.features.game_details.sections.GameHeaderBackgroundSection
+import com.example.project_game_punk.features.game_details.sections.age_rating.GameAgeRatingViewModel
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherSection
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherViewModel
 import com.example.project_game_punk.features.game_details.sections.release_date.GameReleaseDateSection
@@ -26,19 +26,62 @@ import com.example.project_game_punk.features.game_details.sections.screenshots.
 @Composable
 fun GameDetailsHeader(
     gameDetailsViewModel: GameDetailsViewModel,
+    gameAgeRatingViewModel: GameAgeRatingViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
     gameReleaseDateViewModel: GameReleaseDateViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
     onColorLoaded: (Int) -> Unit
 ) {
-    Column {
+
+    Box {
         GameScreenshotsPager(
             gameScreenshotsViewModel,
         )
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+    }
+
+
+
+
+
+
+//
+//    Column {
+//        GameScreenshotsPager(
+//            gameScreenshotsViewModel,
+//        )
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(200.dp),
+//            horizontalArrangement = Arrangement.SpaceBetween
+//        ) {
+//            GameDetailsCover(
+//                gameDetailsViewModel,
+//                onColorLoaded
+//            )
+//            GameDetailsAdditional(
+//                gameDetailsViewModel,
+//                gameAgeRatingViewModel,
+//                gameDeveloperPublisherViewModel,
+//                gameReleaseDateViewModel
+//            )
+//        }
+//    }
+}
+
+@Composable
+fun GameCoverWithInfo(
+    gameDetailsViewModel: GameDetailsViewModel,
+    gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
+    gameReleaseDateViewModel: GameReleaseDateViewModel,
+    onColorLoaded: (Int) -> Unit
+) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp),
+//            horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             GameDetailsCover(
                 gameDetailsViewModel,
@@ -46,11 +89,11 @@ fun GameDetailsHeader(
             )
             GameDetailsAdditional(
                 gameDetailsViewModel,
+//                gameAgeRatingViewModel,
                 gameDeveloperPublisherViewModel,
                 gameReleaseDateViewModel
             )
         }
-    }
 }
 
 @Composable
@@ -62,6 +105,7 @@ private fun GameScreenshotsPager(
         state = state,
         loadingState = { GameScreenshotsPagerLoadingState() }
     ) { screenshots ->
+        if (screenshots.isEmpty()) return@LoadableStateWrapper
         GameHeaderBackgroundSection(screenshots = screenshots)
     }
 }
@@ -69,18 +113,24 @@ private fun GameScreenshotsPager(
 @Composable
 private fun GameScreenshotsPagerLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(220.dp)
-        .padding(12.dp)
-        .clip(RoundedCornerShape(10.dp))
-        .background(shimmerBrush(showShimmer = showShimmer.value))
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(280.dp)
+            .clip(
+                RoundedCornerShape(
+                    topStart = 10.dp,
+                    topEnd = 10.dp
+                )
+            )
+            .background(shimmerBrush(showShimmer = showShimmer.value))
     )
 }
 
 @Composable
 private fun GameDetailsAdditional(
     gameDetailsViewModel: GameDetailsViewModel,
+//    gameAgeRatingViewModel: GameAgeRatingViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
     gameReleaseDateViewModel: GameReleaseDateViewModel
 ) {
@@ -92,27 +142,20 @@ private fun GameDetailsAdditional(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            GameReleaseDateSection(
-                gameReleaseDateViewModel
-            )
-            Box(
-                modifier = Modifier
-                    .width(0.3.dp)
-                    .height(30.dp)
-                    .background(Color.White)
-            )
-            GameDetailsScore(
-                gameDetailsViewModel
-            )
-        }
+//        GameDetailsScore(
+//            gameDetailsViewModel
+//        )
+
+
+//        GameAgeRatingSection(
+//            gameAgeRatingViewModel
+//        )
+
+        GameReleaseDateSection(
+            gameReleaseDateViewModel
+        )
         GameDeveloperPublisherSection(
             gameDeveloperPublisherViewModel
         )
     }
 }
-

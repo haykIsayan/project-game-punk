@@ -4,6 +4,7 @@ import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.game_punk_domain.domain.interactors.game.GetFeaturedGameInteractor
+import com.example.game_punk_domain.domain.interactors.game.GetGameArtworksInteractor
 import com.example.game_punk_domain.domain.interactors.game.GetGameScreenshotsInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
 import com.example.project_game_punk.features.common.ViewModelState
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class FeaturedGameViewModel @Inject constructor(
     private val getFeaturedGameInteractor: GetFeaturedGameInteractor,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
-    private val getGameScreenshotsInteractor: GetGameScreenshotsInteractor
+    private val getGameScreenshotsInteractor: GetGameScreenshotsInteractor,
+    private val getGameArtworksInteractor: GetGameArtworksInteractor,
 ): StateViewModel<FeaturedGameUiModel, Unit>() {
 
     init {
@@ -30,7 +32,14 @@ class FeaturedGameViewModel @Inject constructor(
         val screenshots = game.id?.let { gameId ->
             getGameScreenshotsInteractor.execute(gameId)
         } ?: emptyList()
-        return FeaturedGameUiModel(game, screenshots)
+        val artwork = game.id?.let { gameId ->
+            getGameArtworksInteractor.execute(gameId).first()
+        }
+        return FeaturedGameUiModel(
+            game,
+            screenshots,
+            artwork,
+        )
     }
 
     fun updateGameProgress(game: GameEntity, gameProgress: GameProgressStatus) {
@@ -51,5 +60,6 @@ class FeaturedGameViewModel @Inject constructor(
 
 data class FeaturedGameUiModel(
     val game: GameEntity,
-    val screenshots: List<String>
+    val screenshots: List<String>,
+    val artwork: String?
 )

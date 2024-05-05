@@ -41,8 +41,6 @@ private fun GameDeveloperPublisherSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
     ) {
         Box(modifier = Modifier
             .fillMaxWidth()
@@ -66,9 +64,7 @@ private fun GameDeveloperPublisherSectionLoadedState(
     companies: List<GameCompanyEntity>
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+        modifier = Modifier,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         companies.find { it.isDeveloper }?.let { developer ->
@@ -92,7 +88,7 @@ private fun GameDeveloperPublisherItem(
     name: String
 ) {
     Row(
-        modifier = Modifier.padding(6.dp),
+        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.Start
     ) {
         Text(

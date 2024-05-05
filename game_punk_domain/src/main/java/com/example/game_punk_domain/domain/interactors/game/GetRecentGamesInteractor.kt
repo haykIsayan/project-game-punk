@@ -12,7 +12,7 @@ class GetRecentGamesInteractor constructor(
         val gamesQuery = getGameQueryWithRecentDatesInteractor.execute()
         return getGamesInteractor.execute(
             gamesQuery.copy(
-                filter = GameFilter.highestRated,
+                filter = /*GameFilter.highestRated*/GameFilter.highestRated,
                 sort = GameSort.recent
             )
         )

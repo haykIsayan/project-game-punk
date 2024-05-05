@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.room.Room
+import com.example.game_punk_collection_data.data.game.GameCache
 import com.example.game_punk_collection_data.data.game.idgb.GameIDGBDataSource
 import com.example.game_punk_collection_data.data.game.idgb.IGDBClientInterceptor
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
@@ -12,16 +12,17 @@ import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgClientInterceptor
-import com.example.game_punk_collection_data.data.game_collection.GameCollectionDataSource
-import com.example.game_punk_collection_data.data.game_collection.GameCollectionDatabase
+import com.example.game_punk_collection_data.data.game_collection.GameCollectionFireStoreSource
 import com.example.game_punk_collection_data.data.news.GameNewsDataSource
+import com.example.game_punk_collection_data.data.news.GamingNewsApi
 import com.example.game_punk_collection_data.data.news.SteamNewsApi
-import com.example.game_punk_collection_data.data.user.UserDatabase
-import com.example.game_punk_collection_data.data.user.UserLocalDataSource
+import com.example.game_punk_collection_data.data.review.ReviewFireStoreSource
+import com.example.game_punk_collection_data.data.user.UserFireStoreDataSource
 import com.example.project_game_punk.R
 import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
 import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
 import com.example.game_punk_domain.domain.interfaces.GameRepository
+import com.example.game_punk_domain.domain.interfaces.ReviewRepository
 import com.example.game_punk_domain.domain.interfaces.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -29,6 +30,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.GlobalScope
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -39,32 +41,25 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
-
     val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-//    @Provides
-//    @Singleton
-//    fun providesDataStore(
-//        @ApplicationContext context: Context,
-//    ): DataStore<Preferences> {
-//        return context.dataStore
-//    }
-
+    @Provides
+    @Singleton
+    fun providesReviewRepository(): ReviewRepository {
+        return ReviewFireStoreSource()
+    }
 
     @Provides
     @Singleton
     fun providesUserRepository(
         @ApplicationContext context: Context,
+        gameCollectionRepository: GameCollectionRepository
     ): UserRepository {
-        val userDatabase = Room.databaseBuilder(
-            context,
-            UserDatabase::class.java,
-            "user-database-name"
-        ).fallbackToDestructiveMigration().build()
-        return UserLocalDataSource(context.dataStore, userDatabase)
+        return UserFireStoreDataSource(
+            scope = GlobalScope,
+            gameCollectionRepository = gameCollectionRepository
+        )
     }
-
-
 
     @Provides
     @Singleton
@@ -72,12 +67,21 @@ object DataModule {
         @ApplicationContext context: Context,
         gameRepository: GameRepository
     ): GameNewsRepository {
+        val gamingNewsApi = Retrofit.Builder()
+            .client(OkHttpClient.Builder().build())
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(context.getString(R.string.news_api_base_url)).build()
+            .create(GamingNewsApi::class.java)
         val steamNewsApi = Retrofit.Builder()
             .client(OkHttpClient.Builder().build())
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(context.getString(R.string.steam_api_base_url)).build()
             .create(SteamNewsApi::class.java)
-        return GameNewsDataSource(steamNewsApi, gameRepository)
+        return GameNewsDataSource(
+            gamingNewsApi,
+            steamNewsApi,
+            gameRepository
+        )
     }
 
     @Provides
@@ -98,8 +102,16 @@ object DataModule {
             .baseUrl(context.getString(R.string.idgb_auth_api_base_url)).build()
             .create(IDGBAuthApi::class.java)
 
+        val cacheSize = (5 * 1024 * 1024).toLong()
+        val cache = Cache(context.cacheDir, cacheSize)
         val idgbApi = Retrofit.Builder()
-            .client(OkHttpClient.Builder().addInterceptor(IGDBClientInterceptor()).build())
+            .client(
+                OkHttpClient
+                .Builder()
+                    .cache(cache)
+                .addInterceptor(IGDBClientInterceptor())
+                .build()
+            )
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(context.getString(R.string.idgb_api_base_url)).build()
@@ -120,6 +132,7 @@ object DataModule {
             rawgApi,
             idgbAuthApi,
             twitchApi,
+            GameCache(),
             GlobalScope
         )
     }
@@ -127,14 +140,11 @@ object DataModule {
     @Provides
     @Singleton
     fun providesGameCollectionRepository(
-        @ApplicationContext context: Context,
         gameRepository: GameRepository
     ): GameCollectionRepository {
-        val gameCollectionDatabase = Room.databaseBuilder(
-            context,
-            GameCollectionDatabase::class.java,
-            "game-collection-database-name"
-        ).fallbackToDestructiveMigration().build()
-        return GameCollectionDataSource(gameCollectionDatabase, gameRepository)
+        return GameCollectionFireStoreSource(
+            scope = GlobalScope,
+            gameRepository
+        )
     }
 }

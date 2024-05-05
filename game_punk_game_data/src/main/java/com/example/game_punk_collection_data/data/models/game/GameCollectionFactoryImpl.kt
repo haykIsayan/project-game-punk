@@ -14,10 +14,11 @@ class GameCollectionFactoryImpl: GameCollectionFactory {
     ): GameCollectionEntity {
         return GameCollectionModel(
             userId = userId,
-            uuid = 0,
             id = id,
             name = name,
-            games = games
+            gameModels = games.map {
+                it as GameModel
+            }
         )
     }
 }

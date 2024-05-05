@@ -10,18 +10,16 @@ import com.example.game_punk_domain.domain.models.GameQueryModel
 class GetNowPlayingGamesInteractor(
     private val applyGameMetaInteractor: ApplyGameMetaInteractor,
     private val trackedGamesCache: TrackedGamesCache,
+    private val getUserTrackedGamesInteractor: GetUserTrackedGamesInteractor,
     private val gameRepository: GameRepository
 ) {
-    suspend fun execute(): List<GameEntity> {
-        val collection = trackedGamesCache.getMainGameCollection() ?: return emptyList()
-        val games = collection.games
+    suspend fun execute(userId: String?): List<GameEntity> {
+        val games = getUserTrackedGamesInteractor.execute(userId)    /*trackedGamesCache.getMainGameCollection()*/ ?: return emptyList()
+        /*collection.games*/
         val nowPlayingGames = games.filter {
             it.gameExperience?.gameProgressStatus == GameProgressStatus.playing
                     || it.gameExperience?.gameProgressStatus == GameProgressStatus.replaying
         }
-
-
-
         val updatedGames = if (nowPlayingGames.isNotEmpty()) gameRepository.getGames(
             gameQuery = GameQueryModel(
                 ids = nowPlayingGames.mapNotNull { it.id }.toList(),
@@ -31,11 +29,14 @@ class GetNowPlayingGamesInteractor(
             )
         ) else emptyList()
 
-        val cachedGames = trackedGamesCache.applyCache(updatedGames)
+        val gamesWithExperience = updatedGames.mapNotNull { game ->
+            nowPlayingGames.find { nowPlayingGame ->
+                nowPlayingGame.id == game.id
+            }?.gameExperience?.let { experience ->
+                game.updateGameExperience(experience)
+            }
 
-        return applyGameMetaInteractor.execute(
-            cachedGames,
-            GameMetaQueryModel()
-        )
+        }
+        return gamesWithExperience
     }
 }

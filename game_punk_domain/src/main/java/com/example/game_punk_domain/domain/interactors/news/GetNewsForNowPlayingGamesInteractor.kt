@@ -8,7 +8,7 @@ class GetNewsForNowPlayingGamesInteractor(
     private val getNowPlayingGamesInteractor: GetNowPlayingGamesInteractor,
 ) {
     suspend fun execute(): List<GameNewsEntity> {
-        val nowPlayingGames = getNowPlayingGamesInteractor.execute()
+        val nowPlayingGames = getNowPlayingGamesInteractor.execute(null)
         // todo reduce now playing games to 5
         val topNowPlayingNews = nowPlayingGames.map { game ->
             game.id?.let { gameId ->

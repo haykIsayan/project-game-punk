@@ -2,11 +2,13 @@ package com.example.game_punk_collection_data.data.game.idgb
 
 import android.os.Build
 import android.util.Log
+import com.example.game_punk_collection_data.data.game.GameCache
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.models.game.GameModel
+import com.example.game_punk_collection_data.data.models.game.GameRAWGModel
 import com.example.game_punk_collection_data.data.models.game.PlatformModel
 import com.example.game_punk_collection_data.data.models.game.availableStores
 import com.example.game_punk_domain.domain.entity.*
@@ -15,6 +17,7 @@ import com.example.game_punk_domain.domain.models.GameFilter
 import com.example.game_punk_domain.domain.models.GameQueryModel
 import com.example.game_punk_domain.domain.models.GameSort
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
@@ -34,6 +37,7 @@ class GameIDGBDataSource(
     private val rawgApi: RawgApi,
     private val idgbAuthApi: IDGBAuthApi,
     private val twitchApi: TwitchApi,
+    private val gameCache: GameCache,
     private val scope: CoroutineScope
     ): GameRepository {
 
@@ -47,8 +51,11 @@ class GameIDGBDataSource(
     }
 
     override suspend fun getGames(gameQuery: GameQueryModel): List<GameEntity> {
+//        val cachedGames = gameCache.getGames(gameQuery)
+//        if (cachedGames.isNotEmpty()) return cachedGames
+
         val games = withAuthenticatedHeaders { headers ->
-             val fields = StringBuilder()
+            val fields = StringBuilder()
             val ids = when {
                 gameQuery.filter == GameFilter.trending -> {
                     val twitchResponse = twitchApi.getTopGamesOnTwitch(headers)
@@ -78,6 +85,8 @@ class GameIDGBDataSource(
                     (if (gameQuery.gameMetaQuery.synopsis) ",summary" else "") +
                     (if (gameQuery.gameMetaQuery.platforms) ",platforms" else "") +
                     (if (gameQuery.gameMetaQuery.genres) ",genres" else "") +
+                    (if (gameQuery.gameMetaQuery.genres) ",player_perspectives" else "") +
+                    (if (gameQuery.gameMetaQuery.genres) ",themes" else "") +
                     (if (gameQuery.gameMetaQuery.screenshots) ",screenshots" else "") +
                     (if (gameQuery.gameMetaQuery.steamId) ",websites" else "") +
                     (if(gameQuery.gameMetaQuery.similarGames)",similar_games" else "") +
@@ -92,18 +101,19 @@ class GameIDGBDataSource(
                         (if (platformIds.isNotEmpty())  "& platforms = ($platformIds)" else "" ) +
                         (if (genreIds.isNotEmpty())  "& genres = ($genreIds)" else "" ) +
                         "${if (gameQuery.filter == GameFilter.highestRated) "& rating > 40" else ""} " +
-                        (if (gameQuery.dateRangeStart.isNotEmpty()) "& first_release_date >= ${gameQuery.dateRangeStart.dateToUnix()}" else "") +
-//                        (if (gameQuery.dateRangeEnd.isNotEmpty()) "& first_release_date <= ${gameQuery.dateRangeEnd.dateToUnix()}" else "") +
+                        (if (gameQuery.dateRangeStart.isNotEmpty()) "& first_release_date >= ${gameQuery.dateRangeStart.dateToMillis()}" else "") +
+                        (if (gameQuery.dateRangeEnd.isNotEmpty()) "& first_release_date <= ${gameQuery.dateRangeEnd.dateToMillis()}" else "") +
+
                         ";"
             )
-//            1668585600
             when (gameQuery.sort) {
                 GameSort.trending -> "follows"
                 GameSort.highestRated -> "rating"
+                GameSort.upcoming,
                 GameSort.recent -> "first_release_date"
                 else -> null
             }?.let { sort ->
-                fields.append("sort $sort desc;")
+                fields.append("sort $sort ${if (gameQuery.sort == GameSort.upcoming) "asc" else "desc"};")
             }
             fields.append("limit ${gameQuery.limit};")
 
@@ -115,6 +125,11 @@ class GameIDGBDataSource(
             }
         }
 
+
+
+
+
+
         val gamesWithPlatforms = if (gameQuery.gameMetaQuery.platforms) {
             games.map { game ->
                 scope.async {
@@ -123,41 +138,174 @@ class GameIDGBDataSource(
                     }
                     game.copy(gamePlatforms = platforms)
                 }
-            }.toList().awaitAll()
-        } else games
+            }.toList()/*.awaitAll()*/
+        } else games.map { scope.async { it } }
+
+
 
 
         val gamesWithGenres = if (gameQuery.gameMetaQuery.genres) {
-            gamesWithPlatforms.map { game ->
+            games.map { game ->
                 scope.async {
+
+                    val themes = game.themes?.let { themeIds ->
+                        getThemes(themeIds)
+                    } ?: emptyList()
+
                     val genres = game.genres?.let { genreIds ->
                         getGameGenres(genreIds)
-                    }
-                    game.copy(gameGenres = genres)
-                }
-            }.toList().awaitAll()
-        } else gamesWithPlatforms
+                    } ?: emptyList()
 
-        return applyCovers(gamesWithGenres)
+                    val fullGenres = mutableListOf<GameGenreEntity>().apply {
+                        addAll(genres)
+                        addAll(themes)
+                    }
+                    fullGenres.shuffle()
+
+                    game.copy(gameGenres = fullGenres)
+                }
+            }.toList()/*.awaitAll()*/
+        } else games.map { scope.async { it } }
+
+
+//        gam
+
+
+
+        val gamesWithSimilar = if (gameQuery.gameMetaQuery.similarGames) {
+            games.map { game ->
+                scope.async {
+                    val similarGames = game.similar_games?.let { similarGameIds ->
+                        getSimilarGames(game.similar_games)
+                    } ?: emptyList()
+                    game.copy(similarGames = similarGames)
+                }
+            }/*.*//*awaitAll()*//*.filterNotNull()*/
+        } else {
+            games.map { scope.async { it } }
+        }
+
+        val gamesWithDlcs = if (gameQuery.gameMetaQuery.dlcs) {
+            games.map { game ->
+                scope.async {
+                    val dlcs = game.dlcs?.let { dlcIds ->
+                        getGameDLCs(dlcIds)
+                    } ?: emptyList()
+                    game.copy(expansions = dlcs)
+                }
+            }/*.*//*awaitAll()*//*.filterNotNull()*/
+        } else {
+            games.map { scope.async { it } }
+        }
+
+
+        val gamesWithBanners = if (gameQuery.gameMetaQuery.banner) {
+            games.map { game ->
+                scope.async {
+                    val gameId = game.id ?: return@async null
+                    val banner = getApproximateRawgGame(gameId)?.background_image ?: ""
+                    game.copy(banner = banner)
+                }
+            }/*.*//*awaitAll()*//*.filterNotNull()*/
+        } else {
+            games.map { scope.async { it } }
+        }
+
+
+        val readyGames = mutableListOf<Deferred<GameModel>>().apply {
+            addAll(gamesWithGenres)
+            addAll(gamesWithPlatforms)
+            addAll(gamesWithSimilar)
+            addAll(gamesWithDlcs)
+//            addAll(gamesWithBanners.filterNotNull())
+        }.awaitAll().groupBy {
+            it.id
+        }.map {
+            val groupedGames = it.value
+            val platforms = groupedGames[1].platforms
+            val similarGames = groupedGames[2].similarGames
+            val expansions = groupedGames[3].expansions
+            return@map groupedGames.first().copy(
+                platforms = platforms,
+                similarGames = similarGames,
+                expansions = expansions
+            )
+        }
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//        val gamesWithPlatforms = if (gameQuery.gameMetaQuery.platforms) {
+//            games.map { game ->
+//                scope.async {
+//                    val platforms = game.platforms?.let { platforms ->
+//                        getPlatforms(platforms)
+//                    }
+//                    game.copy(gamePlatforms = platforms)
+//                }
+//            }.toList().awaitAll()
+//        } else games
+//
+//        val gamesWithGenres = if (gameQuery.gameMetaQuery.genres) {
+//            gamesWithPlatforms.map { game ->
+//                scope.async {
+//
+//                    val themes = game.themes?.let { themeIds ->
+//                        getThemes(themeIds)
+//                    } ?: emptyList()
+//
+//                    val genres = game.genres?.let { genreIds ->
+//                        getGameGenres(genreIds)
+//                    } ?: emptyList()
+//
+//                    val fullGenres = mutableListOf<GameGenreEntity>().apply {
+//                        addAll(genres)
+//                        addAll(themes)
+//                    }
+//                    fullGenres.shuffle()
+//
+//                    game.copy(gameGenres = fullGenres)
+//                }
+//            }.toList().awaitAll()
+//        } else gamesWithPlatforms
+//
+//        val gamesWithBanners = if (gameQuery.gameMetaQuery.banner) {
+//            gamesWithGenres.map { game ->
+//                scope.async {
+//                    val gameId = game.id ?: return@async null
+//                    val banner = getApproximateRawgGame(gameId)?.background_image ?: ""
+//                    game.copy(banner = banner)
+//                }
+//            }.awaitAll().filterNotNull()
+//        } else {
+//            gamesWithGenres
+//        }
+
+        val fullyFetchedGames = applyCovers(/*gamesWithBanners*/readyGames)
+        gameCache.cacheGames(gameQuery, fullyFetchedGames)
+        return fullyFetchedGames
     }
+
+
+
+
 
     override suspend fun getGameAgeRating(gameId: String): GameAgeRatingEntity {
 
         val gameWithAgeRatingsIds = (getGame(gameId, GameMetaQueryModel(ageRating = true)) as? GameModel)
 
-
-
-
-
         val ageRatingIds = gameWithAgeRatingsIds?.age_ratings?.joinToString(",").let {
             it?.substring(0, it.length - 1)
         } ?: ""
-
-
-
-
-
-
 
         val ageRatings = withAuthenticatedHeaders { headers ->
             val fields = StringBuilder()
@@ -172,6 +320,9 @@ class GameIDGBDataSource(
 
             idgbApi.getAgeRatings(headers, fields.toString())
         }
+
+
+
         println(ageRatings.toString())
         return ageRatings.first()
     }
@@ -235,6 +386,23 @@ class GameIDGBDataSource(
         }.distinctBy { it.slug }
     }
 
+    private suspend fun getGameDLCs(dlcsIds: List<String>): List<GameEntity> {
+        return dlcsIds.let { dlcs ->
+            val result = getGames(
+                gameQuery = GameQueryModel(
+                    ids = dlcs,
+                    onlyGames = false,
+
+                    gameMetaQuery = GameMetaQueryModel(
+                        cover = true
+                    )
+                )
+            )
+            println(result)
+            result
+        }
+    }
+
     override suspend fun getGameDLCs(gameId: String): List<GameEntity> {
         val gameWithDlcIds = getGame(gameId, GameMetaQueryModel(dlcs = true))
         println(gameWithDlcIds)
@@ -269,6 +437,21 @@ class GameIDGBDataSource(
         return keywords.map { it.name }
     }
 
+
+    private suspend fun getSimilarGames(similarGameIds: List<String>): List<GameEntity> {
+        return getGames(
+            gameQuery = GameQueryModel(
+                filter = GameFilter.highestRated,
+                sort = GameSort.trending,
+                ids = similarGameIds,
+
+                gameMetaQuery = GameMetaQueryModel(
+                    cover = true
+                )
+            )
+        )
+    }
+
     override suspend fun getSimilarGames(gameId: String): List<GameEntity> {
        val gameWithSimilarGameIds = getGame(gameId, GameMetaQueryModel(similarGames = true))
         return (gameWithSimilarGameIds as? GameModel)?.similar_games?.let { similarGameIds ->
@@ -301,7 +484,7 @@ class GameIDGBDataSource(
         }
         val fields = StringBuilder()
         fields.append("fields url,game;")
-        fields.append("where game = ($ids);")
+        fields.append("where game = ($ids); limit ${games.size};")
         val covers = withAuthenticatedHeaders { headers ->
             idgbApi.getCovers(
                 headers,
@@ -359,6 +542,92 @@ class GameIDGBDataSource(
         return gamesWithBanners
     }
 
+    fun getSteamReviews(gameId: String): List<GameSteamReviewEntity> {
+        return emptyList()
+    }
+
+    override suspend fun getRecentRedditPosts(gameId: String): List<GameRedditPostEntity> {
+        val rawgId = getApproximateRawgGame(gameId)?.id
+        Log.d("Haykk", "Here's Rawg Id $rawgId")
+        val gameRedditPosts = rawgApi.getRecentRedditPosts(rawgId).results.map {
+            val textWithoutImageTag = removeImageTag(it.text)
+            val cleanedText = textWithoutImageTag.replace(Regex("\\<.*?\\>"), "")
+                .trim()
+            it.copy(text = cleanedText)
+        }
+        return gameRedditPosts
+    }
+
+
+    private fun removeImageTag(input: String): String {
+        var newString = input
+        var a = input.indexOf("<img>")
+        var b = input.indexOf("</img>") + 6
+        while (a != -1 && b != -1 && a <= b) {
+            newString = newString.replaceRange(a, b, "")
+            a = newString.indexOf("<img>")
+            b = newString.indexOf("</img>") + 6
+        }
+        return newString
+    }
+
+    override suspend fun getAchievements(gameId: String): List<GameAchievementEntity> {
+//        val game = getGame(gameId, gameMetaQuery = GameMetaQueryModel(slug = true, releaseDate = true))
+//
+//
+//
+//        val year = getGameReleaseDate(gameId).split(",").last()
+
+
+//        val slug = game.slug
+
+        val customSlug = ""
+//            game.name?.lowercase()?.replace(" ","-")?.replace("'", "")?.replace(":","")
+//            .replaceAll("\\s+","-").replaceAll("'", "");
+
+
+
+        val rawgId = getApproximateRawgGame(gameId)?.id ?: customSlug
+
+        Log.d("Haykk", "SLUG $customSlug")
+
+        var page = 1
+        var next: String? = ""
+        val achievements = mutableListOf<GameAchievementEntity>()
+        while (next != null) {
+            val response = rawgApi.getAchievements(
+//                slug
+//                customSlug,
+                slug = rawgId,
+                page = page
+            )
+            achievements.addAll(response.results)
+            page += 1
+            next = response.next
+        }
+        Log.d("Haykk", "All done with achievements ")
+        return achievements
+    }
+
+    private suspend fun getApproximateRawgGame(gameId: String): GameRAWGModel? {
+        val game = getGame(gameId, gameMetaQuery = GameMetaQueryModel(slug = true))
+        val igdbYear = getGameReleaseDate(gameId).split(",").last().trim()
+        val games = rawgApi.getGames(
+            search = game.name,
+            searchExact = false,
+            searchPrecise = false
+        )
+        println(game)
+        println(games)
+        val foundGame = games.results.find { it.released?.split("-")?.first() == igdbYear }
+
+
+        println(foundGame)
+        return foundGame
+    }
+
+
+
     override suspend fun getGamePlatforms(id: String): List<GamePlatformEntity> {
         val game = getGame(
             id = id,
@@ -379,6 +648,13 @@ class GameIDGBDataSource(
         val platforms = withAuthenticatedHeaders { headers ->
             idgbApi.getPlatforms(headers, "fields platform_logo, name, slug; where id = ($platformIds);")
         }
+
+        val playerPerspectives = withAuthenticatedHeaders { headers ->
+            idgbApi.getPlayerPerspectives(headers, "fields *; where id = ($platformIds);")
+        }
+
+
+        println(playerPerspectives)
 
         println(platforms)
 
@@ -401,6 +677,10 @@ class GameIDGBDataSource(
                 headers, fields.toString())
         }
         println(platformLogos)
+//        val fullPlatforms = mutableListOf<PlatformModel>().apply {
+//            addAll(playerPerspectives)
+//            addAll(platforms)
+//        }
         return platforms.filter { isProperPlatform(it) }.map { platform ->
             object : GamePlatformEntity {
                 override val id: String
@@ -567,7 +847,13 @@ class GameIDGBDataSource(
         }
     }
 
-     suspend fun getGameGenres(genresIds: List<String>): List<GameGenreEntity> {
+    private suspend fun getGameBanner(gameId: String): String {
+        val rawgId = getApproximateRawgGame(gameId)?.id ?: return ""
+        val rawgGame = rawgApi.getGame(rawgId)
+        return rawgGame.background_image ?: ""
+    }
+
+     private suspend fun getGameGenres(genresIds: List<String>): List<GameGenreEntity> {
         val ids = genresIds.joinToString(",").let {
             if (it[it.length - 1] == ',') {
                 it.substring(0, it.length - 1)
@@ -587,6 +873,57 @@ class GameIDGBDataSource(
 
                 override val url: String
                     get() = genre.url
+
+            }
+        }
+    }
+
+
+    private suspend fun getThemes(themeIds: List<String>): List<GameGenreEntity> {
+        val ids = themeIds.joinToString(",").let {
+            if (it[it.length - 1] == ',') {
+                it.substring(0, it.length - 1)
+            } else {
+                it
+            }
+        }
+        val themes = withAuthenticatedHeaders { headers ->
+            idgbApi.getThemes(headers, "fields name, slug; where id = ($ids);")
+        }
+        return themes.map { theme ->
+            object : GameGenreEntity {
+                override val id: String
+                    get() = theme.id
+                override val name: String
+                    get() = theme.name
+
+                override val url: String
+                    get() = theme.url
+
+            }
+        }
+    }
+
+    private suspend fun getPlayerPerspectives(perspectivesId: List<String>): List<GameGenreEntity> {
+        val ids = perspectivesId.joinToString(",").let {
+            if (it[it.length - 1] == ',') {
+                it.substring(0, it.length - 1)
+            } else {
+                it
+            }
+        }
+        val perspectives = withAuthenticatedHeaders { headers ->
+            idgbApi.getPlayerPerspectives(headers, "fields name, slug; where id = ($ids);")
+        }
+        return perspectives.map { perspective ->
+            object : GameGenreEntity {
+                override val id: String
+                    get() = perspective.id
+                override val name: String
+                    get() = perspective.name
+
+                override val url: String
+                    get() = perspective.url
 
             }
         }
@@ -647,14 +984,41 @@ class GameIDGBDataSource(
         val body = StringBuilder()
             .append("fields image_id,url;")
             .append("where game = $id;")
-            //.append("where id = ($screenshotIds);")
 
         val screenshots = withAuthenticatedHeaders { headers ->
             idgbApi.getScreenshots(headers, body.toString())
+//            idgbApi.getArtworks(headers, body.toString())
         }
 
         return screenshots.map { screenshot -> screenshot.url ?: "" }.filter { it.isNotEmpty() }.map { screenshot ->
-            "https:" + screenshot.replace("t_thumb","t_720p")
+            "https:" + screenshot.replace("t_thumb","t_1080p")
+        }
+    }
+
+    override suspend fun getArtworks(id: String): List<String> {
+        val body = StringBuilder()
+            .append("fields image_id,url,width,height;")
+            .append("where game = $id;")
+
+        val screenshots = withAuthenticatedHeaders { headers ->
+            idgbApi.getArtworks(headers, body.toString())
+        }
+
+        println(screenshots)
+
+        Log.d("Haykk", screenshots.toString())
+
+
+
+
+        val banner = getApproximateRawgGame(id)?.background_image
+
+        return screenshots.map { screenshot -> screenshot.url ?: "" }.filter { it.isNotEmpty() }.map { screenshot ->
+            "https:" + screenshot.replace("t_thumb","t_1080p")
+        }.toMutableList().apply {
+            banner?.let {
+                add(0, banner)
+            }
         }
     }
 
@@ -718,24 +1082,22 @@ class GameIDGBDataSource(
     }
 
     private suspend fun <T> withAuthenticatedHeaders(
-        onHeadersCreated: suspend (Map<String, String>) -> T,
+        attempt: Int = 0,
+        onHeadersCreated: suspend (Map<String, String>) -> T
     ): T {
         val idgbAuth = getAuthModel()
         val headers = mutableMapOf<String, String>().apply {
             put("Client-ID", clientId)
             put("Authorization", "Bearer ${idgbAuth.access_token}")
         }
-
         return try {
             onHeadersCreated.invoke(headers)
         } catch (e: Exception) {
-
-            if (e is HttpException && 429 == e.code()) {
+            if (e is HttpException && 429 == e.code() && attempt < 12) {
                 Log.d("Haykk", "With headers $e")
                 delay(1000)
-                return onHeadersCreated.invoke(headers)
+                return withAuthenticatedHeaders(attempt + 1, onHeadersCreated)
             }
-
             throw e
         }
     }
@@ -746,7 +1108,9 @@ fun String.dateToUnix(): String {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val localDate = LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val string = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()).time.toString()
-        return  string.split("00").first() + "00"
+//        return  string.split("00").first() + "00"
+        return string
+
     }
     return this
 }
@@ -760,9 +1124,22 @@ fun String.unixToFormatted(): String {
 }
 
 
+fun String.dateToMillis(): Long {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val date =  SimpleDateFormat("yyyy-mm-dd").parse(this)
+        return date.time
+    }
+    return 0L
+}
+
+
 
 fun <T> List<T>.commaSeparated(collapse: (T) -> String): String {
     return joinToString(",") { element ->
         collapse.invoke(element)
     }
 }
+
+// TODO Add code for Rawg database approximation
+
+

@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 fun SectionTitle(
     title: String,
     isLoading: Boolean = false,
+    trailing: (@Composable () -> Unit)? = null,
     onArrowPressed: (() -> Unit)? = null
 ) {
     val showShimmer = remember {
@@ -48,7 +49,7 @@ fun SectionTitle(
                 Modifier.padding(12.dp)
             }
         )
-        onArrowPressed?.let {
+        trailing?.invoke() ?: onArrowPressed?.let {
             IconButton(
                 modifier = Modifier.size(50.dp),
                 onClick = onArrowPressed

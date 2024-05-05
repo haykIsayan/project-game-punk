@@ -6,5 +6,8 @@ interface GameCollectionEntity {
     val name: String?
     val games: List<GameEntity>
 
+
+    fun withName(name: String): GameCollectionEntity
+
     fun withGames(games: List<GameEntity>): GameCollectionEntity
 }

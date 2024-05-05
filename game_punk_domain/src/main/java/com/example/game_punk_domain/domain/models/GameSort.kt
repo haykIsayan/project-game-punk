@@ -4,5 +4,6 @@ enum class GameSort {
     trending,
     highestRated,
     recent,
+    upcoming,
     none,
 }

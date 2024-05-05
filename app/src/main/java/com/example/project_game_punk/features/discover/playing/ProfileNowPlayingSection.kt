@@ -1,0 +1,242 @@
+package com.example.project_game_punk.features.discover.playing
+
+import android.content.Context
+import android.graphics.drawable.BitmapDrawable
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.palette.graphics.Palette
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.project_game_punk.R
+import com.example.project_game_punk.features.common.composables.GameUserScoreDisplay
+import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
+import com.example.project_game_punk.features.common.composables.SectionTitle
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
+import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
+import com.example.project_game_punk.features.common.composables.grids.GamePunkGrid
+import com.example.project_game_punk.features.common.composables.shimmerBrush
+import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
+import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
+import com.example.project_game_punk.features.main.GamePunkNavigator
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
+
+//import com.example.project_game_punk.ui.theme.gamePunkPrimary
+
+@Composable
+fun ProfileNowPlayingSection(nowPlayingViewModel: NowPlayingViewModel) {
+    val state = nowPlayingViewModel.getState().observeAsState().value
+    LoadableStateWrapper(
+        state = state,
+        failState = { errorMessage ->
+            NowPlayingFailedState(
+                errorMessage = errorMessage,
+                nowPlayingViewModel = nowPlayingViewModel
+            ) },
+        loadingState = { NowPlayingSectionLoadingState() },
+    ) { nowPlayingState ->
+        Column {
+            if (nowPlayingState is NowPlayingState.NowPlayingAvailable) {
+                SectionTitle(title = "Now playing") {
+
+                }
+            }
+            NowPlayingSectionLoadedState(nowPlayingState = nowPlayingState)
+        }
+    }
+}
+
+@Composable
+private fun NowPlayingFailedState(
+    errorMessage: String,
+    nowPlayingViewModel: NowPlayingViewModel
+) {
+    DiscoverGameFailState(errorMessage) {
+        nowPlayingViewModel.loadState()
+    }
+}
+
+@Composable
+private fun NowPlayingSectionLoadingState() {
+    val showShimmer = remember { mutableStateOf(true) }
+    Column {
+        SectionTitle(
+            title = "Now playing",
+            isLoading = true
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(160.dp)
+                .padding(12.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(shimmerBrush(showShimmer = showShimmer.value))
+        )
+        Box(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth()
+                .height(14.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(shimmerBrush(showShimmer = showShimmer.value))
+        )
+    }
+}
+
+@Composable
+private fun NowPlayingSectionLoadedState(nowPlayingState: NowPlayingState) {
+
+    when (nowPlayingState) {
+        is NowPlayingState.NowPlayingAvailable -> {
+            NowPlayingAvailableState(
+                nowPlayingAvailable = nowPlayingState
+            )
+        }
+        is NowPlayingState.NowPlayingUnavailable -> {
+
+        }
+    }
+}
+
+@Composable
+private fun NowPlayingAvailableState(
+    nowPlayingAvailable: NowPlayingState.NowPlayingAvailable
+) {
+    val games = nowPlayingAvailable.nowPlayingGames
+    ItemCarousel(
+        itemDecorator = ItemCarouselDecorators.pillItemDecorator,
+        items = games,
+    ) { state ->
+        NowPlayingSectionItemNewer(state = state)
+    }
+}
+
+@Composable
+private fun NowPlayingSectionItemNewer(state: NowPlayingGameState) {
+    Box(
+        modifier = Modifier
+            .size(
+                220.dp,
+                140.dp,
+            )
+            .clip(RoundedCornerShape(10.dp))
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .size(
+                    220.dp,
+                    140.dp,
+                )
+                .clip(RoundedCornerShape(10.dp)),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(state.artwork)
+                .crossfade(true)
+                .build(),
+            contentDescription = "",
+            contentScale = ContentScale.Crop,
+        )
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(gamePunkPrimaryDark.copy(alpha = 0.8f))
+        )
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(6.dp)
+        ) {
+            NowPlayingStoreInfo(game = state.game)
+        }
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .clip(RoundedCornerShape(10.dp))
+                .width(220.dp)
+                .padding(6.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
+        ) {
+            GameUserScoreDisplay(game = state.game)
+            Spacer(modifier = Modifier.height(3.dp))
+            state.game.name?.let { name ->
+                Text(
+                    text = name,
+                    color = Color.White,
+                    maxLines = 1,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+            }
+            Spacer(modifier = Modifier.height(3.dp))
+            NowPlayingPlatformInfo(game = state.game)
+        }
+    }
+}
+
+
+@Composable
+private fun NowPlayingPlatformInfo(game: GameEntity) {
+    game.gamePlatforms?.find {
+        it.id == game.gameExperience?.platformId
+    }?.let { platform ->
+        Box(
+            modifier = Modifier
+                .height(25.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color.White.copy(alpha = 0.2f))
+        ) {
+
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 6.dp)
+                    .align(Alignment.Center),
+                text = platform.name,
+                color = Color.White,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
+    }
+}
+
+@Composable
+private fun NowPlayingStoreInfo(game: GameEntity) {
+    val imageResource = when (game.gameExperience?.storeId) {
+        "xbox_marketplace" -> R.drawable.ic_xbox_marketplace
+        "microsoft" -> R.drawable.ic_microsoft
+        "steam" -> R.drawable.ic_steam
+        "epic_game_store" -> R.drawable.ic_epic_games
+        "xbox_game_pass_ultimate_cloud" -> R.drawable.ic_xbox_game_pass
+        "playstation_store_us" -> R.drawable.ic_playstation_store
+        "amazon" -> R.drawable.ic_amazon
+        else -> null
+    }
+    if (imageResource != null) {
+        Image(
+            modifier = Modifier
+                .size(35.dp),
+            painter = painterResource(imageResource),
+            contentDescription = "Content description for visually impaired"
+        )
+    }
+}

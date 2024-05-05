@@ -24,13 +24,16 @@ import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.shimmerBrush
+import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 
 @Composable
 fun GameDetailsSimilarGamesSection(
+    gameDetailsViewModel: GameDetailsViewModel,
     gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel,
     reload: () -> Unit = {}
 ) {
-    val state = gameDetailsSimilarGamesViewModel.getState().observeAsState().value
+//    val state = gameDetailsSimilarGamesViewModel.getState().observeAsState().value
+    val state = gameDetailsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
         failState = {
@@ -40,7 +43,7 @@ fun GameDetailsSimilarGamesSection(
         },
         loadingState = { GameDetailsSimilarGamesSectionLoadingState() }
     ) { similarGames ->
-        GameDetailsSimilarGamesSectionLoadedState(similarGames)
+        GameDetailsSimilarGamesSectionLoadedState(similarGames?.similarGames ?: emptyList())
     }
 }
 
@@ -50,7 +53,10 @@ fun GameDetailsSimilarGamesSection(
 private fun GameDetailsSimilarGamesSectionFailedState(reload: () -> Unit) {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Similar Games")
+        SectionTitle(
+            title = "Similar games",
+            trailing = {  }
+        )
         Box(modifier = Modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -76,7 +82,7 @@ private fun GameDetailsSimilarGamesSectionFailedState(reload: () -> Unit) {
 private fun GameDetailsSimilarGamesSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Similar Games", isLoading = true)
+        SectionTitle(title = "Similar games", isLoading = true)
         LazyRow(content = {
             items(4) {index ->
                 Column(
@@ -108,9 +114,7 @@ private fun GameDetailsSimilarGamesSectionLoadedState(
     similarGames: List<GameEntity>
 ) {
     Column {
-        SectionTitle(title = "Similar Games") {
-
-        }
+        SectionTitle(title = "Similar games")
         ItemCarousel(
             items = similarGames,
             itemDecorator = ItemCarouselDecorators.pillItemDecorator

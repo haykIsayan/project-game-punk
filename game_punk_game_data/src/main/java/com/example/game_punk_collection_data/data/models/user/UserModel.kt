@@ -1,19 +1,34 @@
 package com.example.game_punk_collection_data.data.models.user
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.example.game_punk_collection_data.data.game_collection.GameCollectionModel
+import com.example.game_punk_collection_data.data.models.game.GameExperienceModel
+import com.example.game_punk_collection_data.data.models.game.GameModel
 import com.example.game_punk_domain.domain.entity.user.UserEntity
 
 
-@Entity
 data class UserModel(
-    @PrimaryKey(autoGenerate = true) var uuid: Long = 0,
-    @ColumnInfo(name = "email") override val email: String,
-    @ColumnInfo(name = "display_name") override val displayName: String,
-    @ColumnInfo(name = "password") override val password: String,
-    @ColumnInfo(name = "profile_icon") override val profileIcon: String
+    override val id: String? = null,
+    override val email: String? = null,
+    override val displayName: String? = null,
+    override val password: String? = null,
+    override val profileIcon: String? = null,
+    override val following: List<String>? = emptyList(),
+    override val followers: List<String>? = emptyList()
 ): UserEntity {
-    override val id: String?
-        get() = uuid.toString()
+    override fun withFollowing(following: List<String>): UserEntity {
+        return copy(following = following)
+    }
+
+    override fun withFollowers(followers: List<String>): UserEntity {
+        return copy(followers = followers)
+    }
+
+    override fun toMap(): HashMap<String, Any?> = hashMapOf(
+        "id" to (id ?: ""),
+        "email" to (email ?: ""),
+        "displayName" to (displayName ?: ""),
+        "following" to following,
+        "followers" to followers
+    )
+
 }
