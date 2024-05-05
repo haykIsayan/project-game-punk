@@ -1,7 +1,6 @@
 package com.example.project_game_punk.features.game_details.sections.platforms
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,22 +16,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.game_punk_domain.domain.entity.GamePlatformEntity
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
-import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.shimmerBrush
+import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 
 @Composable
 fun GamePlatformsSection(
-    gamePlatformsViewModel: GamePlatformsViewModel,
+    gameDetailsViewModel: GameDetailsViewModel,
     reload: () -> Unit = {}
 ) {
-    val state = gamePlatformsViewModel.getState().observeAsState().value
+    val state = gameDetailsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
         failState = {
@@ -41,7 +39,8 @@ fun GamePlatformsSection(
             }
         },
         loadingState = { GamePlatformSectionLoadingState() }
-    ) { platforms ->
+    ) { game ->
+        val platforms = game?.gamePlatforms ?: return@LoadableStateWrapper
         GamePlatformSectionLoadedState(platforms)
     }
 }
@@ -51,7 +50,6 @@ fun GamePlatformsSection(
 private fun GamePlatformSectionFailedState(reload: () -> Unit) {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Platforms")
         Box(modifier = Modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -76,7 +74,6 @@ private fun GamePlatformSectionFailedState(reload: () -> Unit) {
 @Composable
 private fun GamePlatformSectionLoadingState() {
     Column {
-        SectionTitle(title = "Platforms", isLoading = true)
         val showShimmer = remember { mutableStateOf(true) }
         Box(modifier = Modifier
             .padding(12.dp)
@@ -94,7 +91,6 @@ private fun GamePlatformSectionLoadedState(
 ) {
     if (platforms.isEmpty()) return
     Column {
-        SectionTitle(title = "Platforms")
         ItemCarousel(
             items = platforms,
             itemDecorator = ItemCarouselDecorators.pillItemDecorator
@@ -106,21 +102,17 @@ private fun GamePlatformSectionLoadedState(
 
 @Composable
 private fun GamePlatformSectionItem(platform: GamePlatformEntity) {
-
-        Box(
-            modifier = Modifier
-                .border(
-                    1.dp,
-                    SolidColor(Color.White),
-                    shape = RoundedCornerShape(15.dp)
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = platform.name,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(8.dp)
-            )
-        }
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(15.dp))
+            .background(Color.White.copy(0.05f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = platform.name,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(8.dp)
+        )
+    }
 }

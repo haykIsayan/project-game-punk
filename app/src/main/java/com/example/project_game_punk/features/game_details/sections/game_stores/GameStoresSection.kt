@@ -28,6 +28,7 @@ import com.example.project_game_punk.features.common.composables.LoadableStateWr
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
+import com.example.project_game_punk.features.common.composables.grids.GamePunkGrid
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.game_details.GameWebViewActivity
 
@@ -55,7 +56,7 @@ fun GameStoresSection(
 private fun GameStoresSectionFailedState(reload: () -> Unit) {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Stores", isLoading = true)
+//        SectionTitle(title = "Available on", isLoading = true)
         Box(modifier = Modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -80,7 +81,7 @@ private fun GameStoresSectionFailedState(reload: () -> Unit) {
 @Composable
 private fun GameStoresSectionLoadingState() {
     Column {
-        SectionTitle(title = "Stores", isLoading = true)
+//        SectionTitle(title = "Available on", isLoading = true)
         val showShimmer = remember { mutableStateOf(true) }
         LazyRow {
             items(4) {
@@ -93,7 +94,7 @@ private fun GameStoresSectionLoadingState() {
                             ),
                             shape = CircleShape
                         )
-                    .size(45.dp)
+                        .size(45.dp)
                 )
             }
         }
@@ -106,7 +107,7 @@ private fun GameStoresSectionLoadedState(
 ) {
     if (stores.isEmpty()) return
     Column {
-        SectionTitle(title = "Stores")
+//        SectionTitle(title = "Available on")
         ItemCarousel(
             items = stores,
             itemDecorator = ItemCarouselDecorators.pillItemDecorator
@@ -149,6 +150,9 @@ private fun GameStoresSectionItem(store: GameStoreEntity) {
                 }
                 "playstation_store_us" -> {
                     com.example.project_game_punk.R.drawable.ic_playstation_store
+                }
+                "amazon" -> {
+                    com.example.project_game_punk.R.drawable.ic_amazon
                 }
                 else -> {
                     com.example.project_game_punk.R.drawable.ic_playstation_store

@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
@@ -13,30 +12,35 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.project_game_punk.ui.theme.gamePunkPrimary
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
+
+//import com.example.project_game_punk.ui.theme.gamePunkPrimary
 
 
 @Composable
 fun MainBottomNavigation(
     navController: NavController
 ) {
+    val entry by navController.currentBackStackEntryAsState()
+    if (
+        !MainNavigationTab.Items.mainRoutes()
+            .contains(entry?.destination?.route)
+    ) return
     val items = MainNavigationTab.Items.items
-
     Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
-                .background(gamePunkPrimary),
+                .background(gamePunkPrimaryDark),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            val entry by navController.currentBackStackEntryAsState()
+//            val entry by navController.currentBackStackEntryAsState()
             val currentRoute = entry?.destination?.route
             items.forEach { item ->
                 val isSelected = item.route == currentRoute
@@ -65,7 +69,10 @@ fun MainBottomNavigation(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
-                        imageVector = item.icon,
+                        imageVector = if (isSelected)
+                            item.selectedIcon
+                        else
+                            item.unselectedIcon,
                         tint = if (isSelected)
                             Color.White
                         else
@@ -74,15 +81,6 @@ fun MainBottomNavigation(
                             ),
                         contentDescription = null
                     )
-                    if (isSelected) {
-                        Box(
-                            modifier = Modifier
-                                .width(50.dp)
-                                .height(2.dp)
-                                .background(Color.White)
-                                .clip(RoundedCornerShape(10.dp))
-                        )
-                    }
                 }
             }
         }

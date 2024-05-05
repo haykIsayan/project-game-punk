@@ -1,0 +1,35 @@
+package com.example.game_punk_domain.domain.entity
+
+enum class GameProgressStatus {
+    following,
+    notFollowing,
+    playing,
+    stopped,
+    finished,
+    replaying,
+    excited
+}
+
+interface GameExperienceEntity {
+    val userId: String
+    val gameId: String
+    val userScore: Float
+    val favorite: Boolean?
+    val storeId: String?
+    val platformId: String?
+    val gameProgressStatus: GameProgressStatus?
+    val userReview: String?
+    val completedAchievements: List<String>
+
+    fun updateGameProgressStatus(
+        gameProgressStatus: GameProgressStatus
+    ): GameExperienceEntity
+
+    fun updateIsFavorite(
+        isFavorite: Boolean
+    ): GameExperienceEntity
+
+    fun updateStoreId(storeId: String): GameExperienceEntity
+
+    fun updatePlatformId(platformId: String): GameExperienceEntity
+}

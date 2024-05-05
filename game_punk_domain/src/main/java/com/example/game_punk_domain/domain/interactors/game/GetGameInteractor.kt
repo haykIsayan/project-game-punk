@@ -10,14 +10,18 @@ class GetGameInteractor(
     private val gameRepository: GameRepository,
     private val trackedGamesCache: TrackedGamesCache,
 ) {
-    suspend fun execute(id: String): GameEntity {
-        val gameMetaQuery = GameMetaQueryModel(
+    suspend fun execute(
+        id: String,
+        gameMetaQuery: GameMetaQueryModel = GameMetaQueryModel()
+    ): GameEntity {
+        val metaQuery = gameMetaQuery.copy(
             banner = true,
             synopsis = true,
             score = true
         )
-        val game = gameRepository.getGame(id, gameMetaQuery)
-        val games = applyGameMetaInteractor.execute(listOf(game), gameMetaQuery)
-        return trackedGamesCache.applyCache(games).first()
+
+        val game = gameRepository.getGame(id, metaQuery)
+//        val games = applyGameMetaInteractor.execute(listOf(game), metaQuery)
+        return trackedGamesCache.applyCache(listOf(game)).first()
     }
 }

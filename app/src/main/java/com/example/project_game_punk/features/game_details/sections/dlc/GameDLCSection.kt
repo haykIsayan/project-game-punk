@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sync
@@ -22,14 +23,18 @@ import com.example.project_game_punk.features.common.composables.GameCarouselIte
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.shimmerBrush
+import com.example.project_game_punk.features.game_details.GameDetailsViewModel
 
 @Composable
 fun GameDLCSection(
+    gameDetailsViewModel: GameDetailsViewModel,
     gameDLCsViewModel: GameDLCsViewModel,
     reload: () -> Unit = {},
 ) {
-    val state = gameDLCsViewModel.getState().observeAsState().value
+    val state = gameDetailsViewModel.getState().observeAsState().value
+//    val state = gameDLCsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
         failState =  {
@@ -39,7 +44,7 @@ fun GameDLCSection(
         },
         loadingState = { GameDLCSectionLoadingState() }
     ) { stores ->
-        GameDLCSectionLoadedState(stores)
+        GameDLCSectionLoadedState(stores?.expansions ?: emptyList())
     }
 }
 
@@ -47,7 +52,7 @@ fun GameDLCSection(
 private fun GameDLCsSectionFailedState(reload: () -> Unit) {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Add Ons")
+        SectionTitle(title = "Add ons")
         Box(modifier = Modifier
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -73,15 +78,20 @@ private fun GameDLCsSectionFailedState(reload: () -> Unit) {
 private fun GameDLCSectionLoadingState() {
     val showShimmer = remember { mutableStateOf(true) }
     Column {
-        SectionTitle(title = "Add Ons", isLoading = true)
+        SectionTitle(title = "Add ons", isLoading = true)
         LazyRow(content = {
-            items(4) {
+            items(4) { index ->
                 Box(modifier = Modifier
                     .size(
                         120.dp,
                         160.dp
                     )
-                    .padding(6.dp)
+                    .padding(
+                        start = if (index == 0) 12.dp else 6.dp,
+                        end = 6.dp,
+                        top = 6.dp,
+                        bottom = 6.dp
+                    )
                     .clip(RoundedCornerShape(10.dp))
                     .background(shimmerBrush(showShimmer = showShimmer.value))
                 )
@@ -94,8 +104,11 @@ private fun GameDLCSectionLoadingState() {
 private fun GameDLCSectionLoadedState(dlcs: List<GameEntity>) {
     if (dlcs.isEmpty()) return
     Column {
-        SectionTitle(title = "Add Ons")
-        ItemCarousel(items = dlcs) { game ->
+        SectionTitle(title = "Add ons")
+        ItemCarousel(
+            itemDecorator = ItemCarouselDecorators.pillItemDecorator,
+            items = dlcs
+        ) { game ->
             GameCarouselItem(game = game)
         }
     }

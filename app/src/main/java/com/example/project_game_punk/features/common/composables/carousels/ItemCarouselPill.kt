@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 
@@ -23,45 +24,29 @@ import androidx.compose.ui.unit.dp
 fun ItemCarouselPill(
     text: String,
     color: Color = Color.Transparent,
-    displayCross: Boolean = false,
     onTap: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(15.dp))
+            .clip(RoundedCornerShape(10.dp))
             .background(color)
+            .padding(horizontal = 12.dp, vertical = 24.dp)
             .clickable { onTap.invoke() }
             .border(
                 1.dp,
                 SolidColor(Color.White),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(10.dp)
             ),
         contentAlignment = Alignment.Center
     ) {
-        if (displayCross) {
-            Row(
-                modifier = Modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = "",
-                    tint = Color.White,
-                    modifier = Modifier.size(15.dp)
-                )
-                Box(modifier = Modifier.width(5.dp))
-                Text(
-                    text = text,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
-        } else {
-            Text(
-                text = text,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-            )
-        }
+        Text(
+            modifier = Modifier
+                .width(100.dp)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            textAlign = TextAlign.Center,
+            text = text,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+        )
     }
 }

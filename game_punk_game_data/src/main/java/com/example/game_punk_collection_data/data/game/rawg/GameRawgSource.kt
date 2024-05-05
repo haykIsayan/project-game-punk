@@ -12,6 +12,7 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
             GameSort.highestRated -> "-rating"
             GameSort.none -> null
             GameSort.recent -> null
+            GameSort.upcoming -> null
         }
         val dates = if (gameQuery.dateRangeEnd.isNotEmpty() && gameQuery.dateRangeStart.isNotEmpty()) {
             val x = "${gameQuery.dateRangeStart},${gameQuery.dateRangeEnd}"
@@ -41,6 +42,14 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
     }
 
     override suspend fun getSimilarGames(gameId: String): List<GameEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getRecentRedditPosts(gameId: String): List<GameRedditPostEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAchievements(gameId: String): List<GameAchievementEntity> {
         TODO("Not yet implemented")
     }
 
@@ -84,6 +93,10 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
         return emptyList()
     }
 
+    override suspend fun getArtworks(id: String): List<String> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getGameImages(id: String): List<String> {
         return emptyList()
     }
@@ -93,6 +106,10 @@ class GameRawgSource(private val api: RawgApi): GameRepository {
     }
 
     override suspend fun getGame(id: String, gameMetaQuery: GameMetaQueryModel): GameEntity {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getVideos(gameId: String): List<GameVideoEntity> {
         TODO("Not yet implemented")
     }
 }

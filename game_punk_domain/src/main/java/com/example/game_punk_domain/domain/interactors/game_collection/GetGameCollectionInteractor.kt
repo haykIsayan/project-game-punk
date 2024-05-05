@@ -6,7 +6,7 @@ import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
 class GetGameCollectionInteractor(
     private val gameCollectionRepository: GameCollectionRepository,
 ) {
-    suspend fun execute(id: String): GameCollectionEntity? {
-        return gameCollectionRepository.getGameCollection(id)
+    suspend fun execute(id: String, userId: String): GameCollectionEntity? {
+        return gameCollectionRepository.getGameCollection(id, userId)
     }
 }

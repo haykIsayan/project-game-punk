@@ -7,8 +7,6 @@ class GetUserGameQueryInteractor(
 ) {
     suspend fun execute(): GameQueryModel {
         val gameQueryModel = getGameQueryWithRecentDatesInteractor.execute()
-        return GameQueryModel(
-//            sort = GameSort.trending
-        )
+        return GameQueryModel()
     }
 }

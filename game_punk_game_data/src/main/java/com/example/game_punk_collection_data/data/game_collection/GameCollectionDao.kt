@@ -6,8 +6,11 @@ import androidx.room.*
 @Dao
 interface GameCollectionDao {
 
-    @Query("SELECT * FROM gamecollectionmodel WHERE id == :id")
-    fun getGameCollection(id: String): GameCollectionModel
+    @Query("SELECT * FROM gamecollectionmodel WHERE id == :id AND user_id = :userId")
+    fun getGameCollection(
+        id: String,
+        userId: String
+    ): GameCollectionModel
 
     @Update
     fun updateGameCollection(gameCollection: GameCollectionModel)

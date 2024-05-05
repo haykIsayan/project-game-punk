@@ -3,6 +3,7 @@ package com.example.project_game_punk.features.common
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -13,7 +14,7 @@ fun <T> ViewModel.executeIO(
     onFail: (Exception) -> Unit,
     onSuccess: (T) -> Unit = {}
 ) {
-    viewModelScope.launch {
+    viewModelScope.launch(Dispatchers.Main) {
         try {
             onBefore.invoke()
             val data = withContext(ioDispatcher) { execute.invoke() }

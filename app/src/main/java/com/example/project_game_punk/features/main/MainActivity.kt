@@ -2,7 +2,11 @@
 
 package com.example.project_game_punk.features.main
 
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -11,20 +15,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
 import androidx.navigation.compose.rememberNavController
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
+import com.example.project_game_punk.features.common.GamePunkDialogController
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressModalBottomSheet
+import com.example.project_game_punk.features.game_details.GameWebViewActivity
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
 import com.example.project_game_punk.ui.theme.ProjectGamePunkTheme
-import com.example.project_game_punk.ui.theme.gamePunkAlt
-import com.example.project_game_punk.ui.theme.gamePunkPrimary
+//import com.example.project_game_punk.ui.theme.gamePunkAlt
+//import com.example.project_game_punk.ui.theme.gamePunkPrimary
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryLight
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -33,29 +47,51 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             ProjectGamePunkTheme {
+
+                window.statusBarColor = gamePunkPrimaryDark.toArgb()
+                window.navigationBarColor = gamePunkPrimaryDark.toArgb()
+
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     val navController = rememberNavController()
                     val sheetController = GameProgressBottomSheetController()
 
+                    LaunchedEffect(Unit) {
+                        GamePunkNavigator.setOnNavigateRoute { route ->
+                            navController.navigate(route = route)
+                        }
+
+                        GamePunkNavigator.setOnGoBack {
+                            navController.popBackStack()
+                        }
+                    }
+
+
+
                     Scaffold(
                         bottomBar = {
-                            MainBottomNavigation(navController)
+//                            MainBottomNavigation(navController)
                         }
                     ) {
+                        val padding = it
                         Box(modifier = Modifier
                             .background(
                                 largeRadialGradientBrush(
                                     listOf(
-                                        gamePunkAlt,
-                                        gamePunkPrimary
+//                                        gamePunkAlt,
+//                                        gamePunkPrimary
+                                        gamePunkPrimaryLight,
+                                    gamePunkPrimaryDark,
                                     )
                                 )
                             )
-                            .padding(bottom = 60.dp)
+//                            .padding(bottom = 60.dp)
                             .fillMaxSize()
                         ) {
                             NavigationComponent(
@@ -69,6 +105,11 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    companion object {
+        const val USER_ID_INTENT_EXTRA = "intent_extra_user_id"
+    }
+
 }
 
 @Composable
@@ -77,7 +118,7 @@ fun MainGameProgressBottomSheet(controller: GameProgressBottomSheetController) {
     val state = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
-    val onGameProgressSelectedState = remember { mutableStateOf<(((GameProgress) -> Unit))?>(null) }
+    val onGameProgressSelectedState = remember { mutableStateOf<(((GameProgressStatus) -> Unit))?>(null) }
     val gameState = remember { mutableStateOf<GameEntity?>(null)}
 
     controller.onPropagate { game, onProgressSelected ->
@@ -92,5 +133,26 @@ fun MainGameProgressBottomSheet(controller: GameProgressBottomSheetController) {
             onGameProgressSelectedState.value = null
             gameState.value = null
         }
+    }
+}
+
+object GamePunkNavigator {
+    private var onNavigateRoute: ((route: String) -> Unit)? = null
+    private var onGoBack: (() -> Unit)? = null
+
+    fun setOnNavigateRoute(callback: (route: String) -> Unit) {
+        onNavigateRoute = callback
+    }
+
+    fun setOnGoBack(callback: () -> Unit) {
+        onGoBack = callback
+    }
+
+    fun navigate(route: String) {
+        onNavigateRoute?.invoke(route)
+    }
+
+    fun goBack() {
+        onGoBack?.invoke()
     }
 }

@@ -45,8 +45,10 @@ private fun GameCoverLoadingState() {
     Box(
         modifier = Modifier
             .size(
-                150.dp,
-                200.dp
+                120.dp,
+                150.dp
+//                150.dp,
+//                200.dp
             )
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -60,8 +62,10 @@ private fun GameCoverLoadedState(game: GameEntity, onColorLoaded: (Int) -> Unit)
     Box(
         modifier = Modifier
             .size(
-                150.dp,
-                200.dp
+                120.dp,
+                150.dp
+//                150.dp,
+//                200.dp
             )
             .padding(12.dp)
             .clip(RoundedCornerShape(10.dp))) {

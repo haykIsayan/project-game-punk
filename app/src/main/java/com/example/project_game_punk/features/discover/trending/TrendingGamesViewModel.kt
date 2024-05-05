@@ -1,7 +1,7 @@
 package com.example.project_game_punk.features.discover.trending
 
 import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameProgress
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.game_punk_domain.domain.interactors.game.GetTrendingGamesInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
@@ -16,16 +16,16 @@ import javax.inject.Inject
 class TrendingGamesViewModel @Inject constructor(
     private val trendingGamesInteractor: GetTrendingGamesInteractor,
     private val updateGameProgressInteractor: UpdateGameProgressInteractor,
-): StateViewModel<List<GameEntity>, Unit>() {
+): StateViewModel<List<GameEntity>, String>() {
 
     init {
         loadState()
     }
 
-    fun updateGameProgress(game: GameEntity, gameProgress: GameProgress) {
+    fun updateGameProgress(game: GameEntity, gameProgress: GameProgressStatus) {
         executeIO(
             Dispatchers.IO,
-            onBefore = { updateGames(game.updateGameProgress(gameProgress)) },
+            onBefore = { updateGames(game.updateGameProgressStatus(gameProgress)) },
             execute = { updateGameProgressInteractor.execute(game, gameProgress) },
             onFail = { updateGames(game) },
         )
@@ -37,7 +37,7 @@ class TrendingGamesViewModel @Inject constructor(
         updatedGames?.apply { emit(GameSuccessState(updatedGames)) }
     }
 
-    override suspend fun loadData(param: Unit?): List<GameEntity> {
+    override suspend fun loadData(param: String?): List<GameEntity> {
         return trendingGamesInteractor.execute()
     }
 }

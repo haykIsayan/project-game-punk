@@ -48,7 +48,7 @@ fun UpcomingGamesSection(
         }
         LoadableStateWrapper(
             state = state,
-            failState = { errorMessage -> DiscoverGameFailState(errorMessage) { viewModel.loadState() } },
+            failState = { errorMessage -> DiscoverGameFailState(errorMessage) { viewModel.loadState(force = true) } },
             loadingState = { UpcomingGamesSectionLoadingState() },
         ) { games ->
             ItemCarousel(items = games) { game ->
@@ -59,6 +59,7 @@ fun UpcomingGamesSection(
                     viewModel.updateGameProgress(game, gameProgress)
                 }
             }
+//            DiscoverGameFailState("errorMessage") { viewModel.loadState(force = true) }
         }
     }
 }
