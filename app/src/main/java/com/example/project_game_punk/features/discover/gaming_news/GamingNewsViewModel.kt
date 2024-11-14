@@ -1,17 +1,16 @@
 package com.example.project_game_punk.features.discover.gaming_news
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameNewsEntity
 import com.example.game_punk_domain.domain.interactors.game.GetGameArtworksInteractor
 import com.example.game_punk_domain.domain.interactors.game.GetRecentGamesInteractor
 import com.example.game_punk_domain.domain.interactors.game.GetTrendingGamesInteractor
 import com.example.game_punk_domain.domain.interactors.news.GetNewsForGameInteractor
 import com.example.project_game_punk.features.common.StateViewModel
-import com.example.project_game_punk.features.common.dateToMillis
-import com.example.project_game_punk.features.discover.updates_patches.GameNewsEntityState
+import com.example.project_game_punk.features.common.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import javax.inject.Inject
@@ -28,27 +27,19 @@ class GamingNewsViewModel @Inject constructor(
         loadState()
     }
 
-    override suspend fun loadData(param: String?): List<GamingNewsEntityState> {
-        val trendingGames = getTrendingGamesInteractor.execute().shuffled()
-         val recentGames = getRecentGamesInteractor.execute().shuffled()
-        val gamesToGetNewsFor = mutableListOf<GameEntity>().apply {
-            addAll(trendingGames)
-            addAll(recentGames)
-        }
 
-        val artworks = gamesToGetNewsFor.map { game ->
+
+    override suspend fun loadData(param: String?): List<GamingNewsEntityState> {
+        val gamesToGetNewsFor = awaitAll(
             viewModelScope.async {
-                game.id?.let { gameId ->
-                    getGameArtworksInteractor.execute(id = gameId)
-                }?.firstOrNull()?.let { artwork ->
-                    GamingNewsEntityState(
-                        artwork = artwork,
-                        game = game,
-                        gameNews = null
-                    )
-                }
+                getTrendingGamesInteractor.execute().shuffled()
+            },
+            viewModelScope.async {
+                getRecentGamesInteractor.execute().shuffled()
             }
-        }
+
+
+        ).flatten()/*.subList(0, 5)*/
 
         val gamingNews = gamesToGetNewsFor.map { game ->
             viewModelScope.async {
@@ -62,24 +53,40 @@ class GamingNewsViewModel @Inject constructor(
                     )
                 }
             }
+        }.awaitAll().filter {
+            it?.gameNews?.author != "Community Announcements"
         }
-        val gamingNewsState = mutableListOf<Deferred<GamingNewsEntityState?>>().apply {
-            addAll(artworks)
-            addAll(gamingNews)
-        }.awaitAll().asSequence().filterNotNull().groupBy {
-            it.game.id
-        }.map {
-            if (it.value.size >= 2) {
-                it.value[1].copy(artwork = it.value.first().artwork)
-            } else {
-                null
-            }
-        }.toList().filterNotNull().sortedByDescending {
-            it.gameNews?.date?.dateToMillis()
-        }.toList().filter { it.gameNews?.author != "Community Announcements"
 
+        val states = gamingNews.filterNotNull()
+
+        emitAsync(ViewModelState.SuccessState(states))
+
+
+
+        val artworks = gamesToGetNewsFor.map { game ->
+            viewModelScope.async {
+                game.id?.let { gameId ->
+                    getGameArtworksInteractor.execute(id = gameId)
+                }?.firstOrNull()?.let { artwork ->
+                    GamingNewsEntityState(
+                        artwork = artwork,
+                        game = game,
+                        gameNews = null
+                    )
+                }
+            }
+        }.awaitAll().filterNotNull()
+
+
+
+        val updatedStates = states.map { newsState ->
+            val artwork = artworks.find {it.game.id == newsState.game.id }
+            newsState.copy(artwork = artwork?.artwork)
         }
-        return gamingNewsState
+
+        Log.d("Haykk", "$updatedStates")
+
+        return updatedStates
     }
 }
 

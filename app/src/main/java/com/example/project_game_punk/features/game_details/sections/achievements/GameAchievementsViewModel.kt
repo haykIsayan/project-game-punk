@@ -2,9 +2,8 @@ package com.example.project_game_punk.features.game_details.sections.achievement
 
 import android.util.Log
 import com.example.game_punk_domain.domain.TrackedGamesCache
-import com.example.game_punk_domain.domain.entity.GameAchievementEntity
+import com.example.game_punk_domain.domain.entity.game.GameAchievementEntity
 import com.example.game_punk_domain.domain.interactors.game.GetGameAchievementsInteractor
-import com.example.game_punk_domain.domain.interactors.user.UserCache
 import com.example.project_game_punk.features.common.StateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

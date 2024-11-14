@@ -27,15 +27,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.GameReviewEntity
 import com.example.game_punk_domain.domain.entity.user.UserEntity
-import com.example.project_game_punk.features.common.composables.GameCarouselItem
-import com.example.project_game_punk.features.common.composables.GameUserScoreDisplay
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
-import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorator
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.main.GamePunkNavigator
 

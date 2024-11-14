@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,13 +34,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.game_punk_domain.domain.entity.GameCollectionEntity
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
-import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
-import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
-import com.example.project_game_punk.features.common.composables.grids.GamePunkGrid
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.main.GamePunkNavigator
 

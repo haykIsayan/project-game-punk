@@ -1,17 +1,26 @@
 package com.example.game_punk_collection_data.data.game.idgb
 
-import android.util.Log
+import com.google.common.util.concurrent.RateLimiter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
-import java.lang.Exception
+
 
 class IGDBClientInterceptor(
     val scope: CoroutineScope = GlobalScope
 ): Interceptor {
 
+//    private val limiter = RateLimiter.create(4.0)
+
+
+    private val requestQueue = ArrayDeque<Request>()
+
     override fun intercept(chain: Interceptor.Chain): Response {
+
+//        limiter.acquire(4)
+
         val request = chain.request()
         val url = request.url()
         val newUrl = url.newBuilder()
@@ -20,40 +29,29 @@ class IGDBClientInterceptor(
             .newBuilder()
             .header(
                 "Cache-Control",
-                "public, max-age=" + /*60 * 60 * 24*/ 60
-//                "public, only-if-cached, max-stale=" + 60 * 60 * 24 /** 7*/
+                "public, max-age="
             )
             .url(newUrl)
         val newRequest = newRequestBuilder.build()
+        // add to request queue
 
-//        Log.d("Haykk", "in intercepting")
+
+//        if (requestQueue.size >= 4) {
+//
+//        }
+//
+//        requestQueue.addLast(newRequest)
+
+
+
+
 
         return chain.proceed(newRequest)
-
-
-//        try {
-//            val response = chain.proceed(newRequest)
-//
-//            Log.d("Haykk", "in intercepting response $response")
-//
-//            if (response.code() == 429) {
-//
-//                response.close()
-//                chain.proceed(newRequest)
-//            } else {
-//                response
-//            }
-//
-//        } catch (e: Exception) {
-//            Log.d("Haykk", "in interceptor $e")
-//            throw e
-//        }
     }
 
 
+//    private fun enqueueIGDBRequest(request: Request): Request {
+//        if (requestQueue.size >= 4)
+//    }
 
 }
-
-
-
-//request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build()

@@ -1,6 +1,6 @@
 package com.example.project_game_punk.features.discover.featured
 
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.game_punk_domain.domain.interactors.game.GetFeaturedGameInteractor
@@ -9,8 +9,6 @@ import com.example.game_punk_domain.domain.interactors.game.GetGameScreenshotsIn
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
 import com.example.project_game_punk.features.common.ViewModelState
 import com.example.project_game_punk.features.common.executeIO
-import com.example.project_game_punk.features.common.update
-import com.example.project_game_punk.features.discover.recommended.GameSuccessState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -29,12 +27,45 @@ class FeaturedGameViewModel @Inject constructor(
 
     override suspend fun loadData(param: Unit?): FeaturedGameUiModel {
         val game = getFeaturedGameInteractor.execute()
-        val screenshots = game.id?.let { gameId ->
-            getGameScreenshotsInteractor.execute(gameId)
-        } ?: emptyList()
+
+        emitAsync(
+            ViewModelState.SuccessState(
+                FeaturedGameUiModel(
+                    game,
+                    listOf(
+                        "",
+                        "",
+                        "",
+                        ""
+                    ),
+                    null
+                )
+            )
+        )
+
         val artwork = game.id?.let { gameId ->
             getGameArtworksInteractor.execute(gameId).first()
         }
+
+        emitAsync(
+            ViewModelState.SuccessState(
+                FeaturedGameUiModel(
+                    game,
+                    emptyList(),
+                    null
+                )
+            )
+        )
+
+//        val stores = game.id?.let { gameId ->
+//            getGameStoresInteractor.execute(gameId)
+//        }
+
+
+        val screenshots = game.id?.let { gameId ->
+            getGameScreenshotsInteractor.execute(gameId)
+        } ?: emptyList()
+
         return FeaturedGameUiModel(
             game,
             screenshots,

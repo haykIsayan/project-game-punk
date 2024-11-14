@@ -1,6 +1,6 @@
 package com.example.project_game_punk.features.discover.upcoming
 
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.game_punk_domain.domain.interactors.game.GetUpcomingGamesInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor
@@ -25,12 +25,12 @@ class UpcomingGamesViewModel @Inject constructor(
     }
 
     fun updateGameProgress(game: GameEntity, gameProgress: GameProgressStatus) {
-        executeIO(
-            Dispatchers.IO,
-            onBefore = { updateGames(game.updateGameProgressStatus(gameProgress)) },
-            execute = { updateGameProgressInteractor.execute(game, gameProgress) },
-            onFail = { updateGames(game) },
-        )
+//        executeIO(
+//            Dispatchers.IO,
+//            onBefore = { updateGames(game.updateGameProgressStatus(gameProgress)) },
+//            execute = { updateGameProgressInteractor.execute(game, gameProgress) },
+//            onFail = { updateGames(game) },
+//        )
     }
 
     private fun updateGames(game: GameEntity) {

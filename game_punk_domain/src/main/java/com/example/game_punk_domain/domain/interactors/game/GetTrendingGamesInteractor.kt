@@ -1,7 +1,6 @@
 package com.example.game_punk_domain.domain.interactors.game
 
-import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.models.GameFilter
 import com.example.game_punk_domain.domain.models.GameQueryModel
 import com.example.game_punk_domain.domain.models.GameSort

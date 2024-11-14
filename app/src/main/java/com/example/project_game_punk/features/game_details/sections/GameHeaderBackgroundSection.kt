@@ -9,6 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.project_game_punk.features.game_details.GameDetailsViewModel
+import com.example.project_game_punk.features.game_details.sections.header.GameDetailsTitle
+import com.example.project_game_punk.features.main.GamePunkNavigator
+import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -38,13 +48,16 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun GameHeaderBackgroundSection(screenshots: List<String>) {
+fun GameHeaderBackgroundSection(
+    gameDetailsViewModel: GameDetailsViewModel,
+    screenshots: List<String>
+) {
 
     val state = rememberPagerState()
 
     Box(
         modifier = Modifier
-            .height(280.dp)
+            .height(260.dp)
             .clip(
                 RoundedCornerShape(
                     topStart = 10.dp,
@@ -63,10 +76,16 @@ fun GameHeaderBackgroundSection(screenshots: List<String>) {
 
         GameHeaderBackgroundSectionCap(
             modifier = Modifier
-                .padding(12.dp)
                 .align(Alignment.TopCenter),
             pagerState = state
         )
+
+        GameDetailsTitle(
+            modifier = Modifier.align(Alignment.BottomStart),
+            gameDetailsViewModel
+        ) {
+
+        }
 
     }
 }
@@ -78,7 +97,8 @@ private fun GameHeaderBackgroundSectionCap(
     pagerState: PagerState,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
+            .padding(6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -86,27 +106,45 @@ private fun GameHeaderBackgroundSectionCap(
 
         Box(
             Modifier
-                .padding(12.dp)
-                .weight(1f),
+//                .padding(horizontal = 12.dp)
+                .weight(1f)
+                .clip(RoundedCornerShape(10.dp))
+                .background(gamePunkPrimaryDark.copy(alpha = 0.8f))
+            ,
         ) {
+            IconButton(onClick = {
+                GamePunkNavigator.goBack()
+            }) {
+                Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription = "", tint = Color.White)
+            }
 //            leading?.invoke()
         }
 
 
+        Box(modifier = Modifier.weight(6f).padding(6.dp)) {
+            HorizontalPagerIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                pagerState = pagerState,
+                activeColor = Color.White,
+                inactiveColor = Color.White.copy(alpha = 0.5f),
+            )
+        }
 
-        HorizontalPagerIndicator(
-            modifier = Modifier.weight(6f),
-            pagerState = pagerState,
-            activeColor = Color.White,
-            inactiveColor = Color.White.copy(alpha = 0.5f),
-        )
+
 
         Box(
             Modifier
-                .padding(12.dp)
+//                .padding(horizontal = 12.dp)
                 .weight(1f)
+                .clip(RoundedCornerShape(10.dp))
+                .background(gamePunkPrimaryDark.copy(alpha = 0.8f))
+            ,
         ) {
-//            trailing?.invoke()
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "", tint = Color.White)
+            }
+//            leading?.invoke()
         }
     }
 }
@@ -116,7 +154,7 @@ private fun GameScreenshotItem(screenshot: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(280.dp)
+            .height(260.dp)
     ) {
         AsyncImage(
             modifier = Modifier.fillMaxSize(),

@@ -1,4 +1,4 @@
-package com.example.game_punk_domain.domain.entity
+package com.example.game_punk_domain.domain.entity.game
 
 interface GameCompanyEntity {
     val name: String

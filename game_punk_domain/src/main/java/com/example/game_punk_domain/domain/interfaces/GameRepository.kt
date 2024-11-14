@@ -1,6 +1,10 @@
 package com.example.game_punk_domain.domain.interfaces
 
 import com.example.game_punk_domain.domain.entity.*
+import com.example.game_punk_domain.domain.entity.game.GameAchievementEntity
+import com.example.game_punk_domain.domain.entity.game.GameAgeRatingEntity
+import com.example.game_punk_domain.domain.entity.game.GameCompanyEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.models.GameQueryModel
 
 interface GameRepository {

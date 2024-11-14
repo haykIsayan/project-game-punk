@@ -1,13 +1,11 @@
 package com.example.project_game_punk.features.game_details
 
 import androidx.compose.animation.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -30,7 +28,6 @@ import com.example.project_game_punk.features.game_details.sections.achievements
 import com.example.project_game_punk.features.game_details.sections.achievements.GameAchievementsViewModel
 import com.example.project_game_punk.features.game_details.sections.age_rating.GameAgeRatingViewModel
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherViewModel
-import com.example.project_game_punk.features.game_details.sections.discussions.GameDiscussionsSection
 import com.example.project_game_punk.features.game_details.sections.discussions.GameFollowingUserReviewsSection
 import com.example.project_game_punk.features.game_details.sections.discussions.GameFollowingUserReviewsViewModel
 import com.example.project_game_punk.features.game_details.sections.discussions.GameRecentRedditPostsSection
@@ -43,24 +40,21 @@ import com.example.project_game_punk.features.game_details.sections.game_stores.
 import com.example.project_game_punk.features.game_details.sections.genre.GameGenresViewModel
 import com.example.project_game_punk.features.game_details.sections.genre.GameGenresSection
 import com.example.project_game_punk.features.game_details.sections.header.GameCoverWithInfo
-import com.example.project_game_punk.features.game_details.sections.header.GameDetailsTitle
 import com.example.project_game_punk.features.game_details.sections.news.GameDetailsNewsSection
 import com.example.project_game_punk.features.game_details.sections.news.GameDetailsNewsViewModel
 import com.example.project_game_punk.features.game_details.sections.platforms.GamePlatformsSection
 import com.example.project_game_punk.features.game_details.sections.platforms.GamePlatformsViewModel
 import com.example.project_game_punk.features.game_details.sections.release_date.GameReleaseDateViewModel
+import com.example.project_game_punk.features.game_details.sections.screenshots.GameArtworksViewModel
+import com.example.project_game_punk.features.game_details.sections.screenshots.GameScreenshotsSection
 import com.example.project_game_punk.features.game_details.sections.screenshots.GameScreenshotsViewModel
 import com.example.project_game_punk.features.game_details.sections.similar_games.GameDetailsSimilarGamesSection
 import com.example.project_game_punk.features.game_details.sections.similar_games.GameDetailsSimilarGamesViewModel
-import com.example.project_game_punk.features.main.GamePunkNavigator
 import com.example.project_game_punk.features.main.MainGameProgressBottomSheet
 //import com.example.project_game_punk.ui.theme.gamePunkAlt
 //import com.example.project_game_punk.ui.theme.gamePunkPrimary
 import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
 import com.example.project_game_punk.ui.theme.gamePunkPrimaryLight
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
 
 @Composable
 fun GameDetailsScreen(
@@ -74,6 +68,7 @@ fun GameDetailsScreen(
     gamePlatformsViewModel: GamePlatformsViewModel,
     gameGenresViewModel: GameGenresViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
+    gameArtworksViewModel: GameArtworksViewModel,
     gameDLCsViewModel: GameDLCsViewModel,
     gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel,
     gameUserReviewViewModel: GameUserReviewViewModel,
@@ -94,6 +89,7 @@ fun GameDetailsScreen(
 //                gamePlatformsViewModel.loadState(param = gameId)
 //                gameGenresViewModel.loadState(param = gameId)
                 gameScreenshotsViewModel.loadState(param = gameId)
+                gameArtworksViewModel.loadState(param = gameId)
                 gameDetailsNewsViewModel.loadState(param = gameId)
 //                gameDLCsViewModel.loadState(param = gameId)
                 gameUserReviewViewModel.loadState(param = gameId)
@@ -112,6 +108,7 @@ fun GameDetailsScreen(
                 gameGenresViewModel = gameGenresViewModel,
                 gameDetailsNewsViewModel = gameDetailsNewsViewModel,
                 gameScreenshotsViewModel = gameScreenshotsViewModel,
+                gameArtworksViewModel = gameArtworksViewModel,
                 gameDLCsViewModel = gameDLCsViewModel,
                 gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel,
                 gameUserReviewViewModel = gameUserReviewViewModel,
@@ -141,6 +138,7 @@ private fun GameDetailsScreenContent(
     gameGenresViewModel: GameGenresViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
+    gameArtworksViewModel: GameArtworksViewModel,
     gameDLCsViewModel: GameDLCsViewModel,
     gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel,
     gameUserReviewViewModel: GameUserReviewViewModel,
@@ -164,6 +162,7 @@ private fun GameDetailsScreenContent(
             gameGenresViewModel = gameGenresViewModel,
             gameDetailsNewsViewModel = gameDetailsNewsViewModel,
             gameScreenshotsViewModel = gameScreenshotsViewModel,
+            gameArtworksViewModel = gameArtworksViewModel,
             gameDLCsViewModel = gameDLCsViewModel,
             gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel,
             gameUserReviewViewModel = gameUserReviewViewModel,
@@ -173,6 +172,19 @@ private fun GameDetailsScreenContent(
             onBackPressed = onBackPressed,
             sheetController = sheetController
         )
+//        Box(
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .background(
+//                    gamePunkPrimaryLight,
+//                    RoundedCornerShape(
+//                        topStart = 12.dp,
+//                        topEnd = 12.dp
+//                    )
+//                )
+//        ) {
+//
+//        }
         MainGameProgressBottomSheet(sheetController)
     }
 }
@@ -189,6 +201,7 @@ private fun GameDetailsScreenContentItems(
     gameGenresViewModel: GameGenresViewModel,
     gameDetailsNewsViewModel: GameDetailsNewsViewModel,
     gameScreenshotsViewModel: GameScreenshotsViewModel,
+    gameArtworksViewModel: GameArtworksViewModel,
     gameDLCsViewModel: GameDLCsViewModel,
     gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel,
     gameUserReviewViewModel: GameUserReviewViewModel,
@@ -235,7 +248,7 @@ private fun GameDetailsScreenContentItems(
                     gameAgeRatingViewModel = gameAgeRatingViewModel,
                     gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
                     gameReleaseDateViewModel = gameReleaseDateViewModel,
-                    gameScreenshotsViewModel = gameScreenshotsViewModel
+                    gameArtworksViewModel = gameArtworksViewModel
                 ) {
                 }
                 Box(
@@ -260,23 +273,18 @@ private fun GameDetailsScreenContentItems(
                         ),
 
                     )
-                Box(modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(
-                        10.dp
-//                        28.dp
-                    )
-                    .clip(
-                        RoundedCornerShape(
-//                            topStart = 28.dp,
-//                            topEnd = 28.dp
-                                    topStart = 10.dp,
-                            topEnd = 10.dp
-                        )
-                    )
-                    .background(colorOne.value)
-                )
+//                Box(modifier = Modifier
+//                    .align(Alignment.BottomCenter)
+//                    .fillMaxWidth()
+//                    .height(10.dp)
+//                    .clip(
+//                        RoundedCornerShape(
+//                            topStart = 10.dp,
+//                            topEnd = 10.dp
+//                        )
+//                    )
+//                    .background(colorOne.value)
+//                )
 
 //                Box(
 //                    modifier = Modifier
@@ -296,11 +304,18 @@ private fun GameDetailsScreenContentItems(
             }
         }
 
-        item {
-            GameDetailsTitle(gameDetailsViewModel) {
+//        item {
+//            GameDetailsTitle(gameDetailsViewModel) {
+//
+//            }
+//        }
 
-            }
-        }
+//        item {
+//            GameDetailsProgressButton(
+//                gameDetailsViewModel = gameDetailsViewModel,
+//                controller = sheetController
+//            )
+//        }
 
         item {
             GameDetailsProgressButton(
@@ -331,7 +346,8 @@ private fun GameDetailsScreenContentItems(
                 gameDLCsViewModel = gameDLCsViewModel,
                 gameDetailsSimilarGamesViewModel = gameDetailsSimilarGamesViewModel,
                 gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
-                gameReleaseDateViewModel = gameReleaseDateViewModel
+                gameReleaseDateViewModel = gameReleaseDateViewModel,
+                gameScreenshotsViewModel = gameScreenshotsViewModel
             )
 
             1 -> gameDetailsExperienceTab(
@@ -339,6 +355,13 @@ private fun GameDetailsScreenContentItems(
                 gameUserReviewViewModel = gameUserReviewViewModel,
                 gameStoresViewModel = gameStoresViewModel,
                 gameAchievementsViewModel = gameAchievementsViewModel
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .height(35.dp)
             )
         }
     }
@@ -390,7 +413,8 @@ private fun LazyListScope.gameDetailsInfoTab(
     gameDLCsViewModel: GameDLCsViewModel,
     gameDetailsSimilarGamesViewModel: GameDetailsSimilarGamesViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
-    gameReleaseDateViewModel: GameReleaseDateViewModel
+    gameReleaseDateViewModel: GameReleaseDateViewModel,
+    gameScreenshotsViewModel: GameScreenshotsViewModel
 ) {
 
     item {
@@ -403,13 +427,9 @@ private fun LazyListScope.gameDetailsInfoTab(
     }
 
     item {
-        GamePlatformsSection(
+        GameSynopsisSection(
             gameDetailsViewModel = gameDetailsViewModel
-        ) {
-            gameId?.let {
-                gamePlatformsViewModel.loadState(gameId)
-            }
-        }
+        )
     }
 
     item {
@@ -423,13 +443,13 @@ private fun LazyListScope.gameDetailsInfoTab(
     }
 
     item {
-        GameDiscussionsSection()
-    }
-
-    item {
-        GameSynopsisSection(
+        GamePlatformsSection(
             gameDetailsViewModel = gameDetailsViewModel
-        )
+        ) {
+            gameId?.let {
+                gamePlatformsViewModel.loadState(gameId)
+            }
+        }
     }
 
     item {
@@ -440,6 +460,12 @@ private fun LazyListScope.gameDetailsInfoTab(
                 gameStoresViewModel.loadState(gameId)
             }
         }
+    }
+
+    item {
+        GameScreenshotsSection(
+            gameScreenshotsViewModel = gameScreenshotsViewModel
+        )
     }
 
     item {
@@ -458,6 +484,7 @@ private fun LazyListScope.gameDetailsInfoTab(
             }
         }
     }
+
 
     item {
         GameDetailsSimilarGamesSection(

@@ -109,20 +109,20 @@ fun DiscoverScreen(
             }
 
 
-            item {
-                GamePunkTab(
-                    selectedItemIndex = index.value,
-                    items = listOf(
-                        "Explore",
-                        "Dashboard",
-                        "Community"
-
-                    ),
-                    onClick = {
-                        index.value = it
-                    }
-                )
-            }
+//            item {
+//                GamePunkTab(
+//                    selectedItemIndex = index.value,
+//                    items = listOf(
+//                        "Explore",
+//                        "Dashboard",
+//                        "Community"
+//
+//                    ),
+//                    onClick = {
+//                        index.value = it
+//                    }
+//                )
+//            }
 
             when (index.value) {
                 0 -> {
@@ -131,19 +131,20 @@ fun DiscoverScreen(
                         trendingGamesViewModel = trendingGamesViewModel,
                         recentGamesViewModel = recentGamesViewModel,
                         gamingNewsViewModel = gamingNewsViewModel,
+                        updatesAndPatchesViewModel = updatesAndPatchesViewModel,
                         upcomingGamesViewModel = upcomingGamesViewModel,
                         sheetController = sheetController
                     )
                 }
                 1 -> {
-                    dashboardSection(
-                        updatesAndPatchesViewModel = updatesAndPatchesViewModel,
-                        countdownViewModel = countdownViewModel,
-                        recentFollowingReviewsViewModel = recentFollowingReviewsViewModel
-                    )
+//                    dashboardSection(
+//                        updatesAndPatchesViewModel = updatesAndPatchesViewModel,
+//                        countdownViewModel = countdownViewModel,
+//                        recentFollowingReviewsViewModel = recentFollowingReviewsViewModel
+//                    )
                 }
                 2 -> {
-                    communitySection()
+//                    communitySection()
                 }
             }
         }
@@ -178,6 +179,7 @@ private fun LazyListScope.exploreSection(
     recentGamesViewModel: RecentGamesViewModel?,
     gamingNewsViewModel: GamingNewsViewModel?,
     upcomingGamesViewModel: UpcomingGamesViewModel?,
+    updatesAndPatchesViewModel: UpdatesAndPatchesViewModel?,
     sheetController: GameProgressBottomSheetController
 ) {
     featuredGameViewModel?.let {
@@ -204,6 +206,11 @@ private fun LazyListScope.exploreSection(
             )
         }
     }
+//    updatesAndPatchesViewModel?.let {
+//        item {
+//            UpdatesAndPatchesSection(updatesAndPatchesViewModel = it)
+//        }
+//    }
     gamingNewsViewModel?.let {
         item {
             GamingNewsSection(

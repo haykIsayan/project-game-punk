@@ -1,6 +1,6 @@
 package com.example.game_punk_collection_data.data.models.game
 
-import com.example.game_punk_domain.domain.entity.GameAchievementEntity
+import com.example.game_punk_domain.domain.entity.game.GameAchievementEntity
 
 data class GameRAWGAchievementsDto(
     override val id: Int,

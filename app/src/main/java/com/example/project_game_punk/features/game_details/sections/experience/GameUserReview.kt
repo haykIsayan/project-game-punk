@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameExperienceEntity
 import com.example.game_punk_domain.domain.entity.GameReviewEntity
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper

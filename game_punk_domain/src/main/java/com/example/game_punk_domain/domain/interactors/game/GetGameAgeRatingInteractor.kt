@@ -1,6 +1,6 @@
 package com.example.game_punk_domain.domain.interactors.game
 
-import com.example.game_punk_domain.domain.entity.GameAgeRatingEntity
+import com.example.game_punk_domain.domain.entity.game.GameAgeRatingEntity
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 
 class GetGameAgeRatingInteractor(

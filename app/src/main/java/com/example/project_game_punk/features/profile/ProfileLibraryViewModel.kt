@@ -1,7 +1,7 @@
 package com.example.project_game_punk.features.profile
 
 import com.example.game_punk_domain.domain.TrackedGamesCache
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.game_punk_domain.domain.interactors.game.GetUserTrackedGamesInteractor
 import com.example.game_punk_domain.domain.interactors.game.UpdateGameProgressInteractor

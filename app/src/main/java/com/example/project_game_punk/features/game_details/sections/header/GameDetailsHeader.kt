@@ -20,7 +20,7 @@ import com.example.project_game_punk.features.game_details.sections.developer_pu
 import com.example.project_game_punk.features.game_details.sections.developer_publisher.GameDeveloperPublisherViewModel
 import com.example.project_game_punk.features.game_details.sections.release_date.GameReleaseDateSection
 import com.example.project_game_punk.features.game_details.sections.release_date.GameReleaseDateViewModel
-import com.example.project_game_punk.features.game_details.sections.screenshots.GameScreenshotsViewModel
+import com.example.project_game_punk.features.game_details.sections.screenshots.GameArtworksViewModel
 
 
 @Composable
@@ -29,44 +29,16 @@ fun GameDetailsHeader(
     gameAgeRatingViewModel: GameAgeRatingViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
     gameReleaseDateViewModel: GameReleaseDateViewModel,
-    gameScreenshotsViewModel: GameScreenshotsViewModel,
+    gameArtworksViewModel: GameArtworksViewModel,
     onColorLoaded: (Int) -> Unit
 ) {
 
     Box {
         GameScreenshotsPager(
-            gameScreenshotsViewModel,
+            gameDetailsViewModel,
+            gameArtworksViewModel,
         )
     }
-
-
-
-
-
-
-//
-//    Column {
-//        GameScreenshotsPager(
-//            gameScreenshotsViewModel,
-//        )
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(200.dp),
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
-//            GameDetailsCover(
-//                gameDetailsViewModel,
-//                onColorLoaded
-//            )
-//            GameDetailsAdditional(
-//                gameDetailsViewModel,
-//                gameAgeRatingViewModel,
-//                gameDeveloperPublisherViewModel,
-//                gameReleaseDateViewModel
-//            )
-//        }
-//    }
 }
 
 @Composable
@@ -98,15 +70,19 @@ fun GameCoverWithInfo(
 
 @Composable
 private fun GameScreenshotsPager(
-    gameScreenshotsViewModel: GameScreenshotsViewModel
+    gameDetailsViewModel: GameDetailsViewModel,
+    gameArtworksViewModel: GameArtworksViewModel
 ) {
-    val state = gameScreenshotsViewModel.getState().observeAsState().value
+    val state = gameArtworksViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
         loadingState = { GameScreenshotsPagerLoadingState() }
     ) { screenshots ->
         if (screenshots.isEmpty()) return@LoadableStateWrapper
-        GameHeaderBackgroundSection(screenshots = screenshots)
+        GameHeaderBackgroundSection(
+            gameDetailsViewModel,
+            screenshots = screenshots
+        )
     }
 }
 
@@ -116,7 +92,7 @@ private fun GameScreenshotsPagerLoadingState() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(280.dp)
+            .height(220.dp)
             .clip(
                 RoundedCornerShape(
                     topStart = 10.dp,

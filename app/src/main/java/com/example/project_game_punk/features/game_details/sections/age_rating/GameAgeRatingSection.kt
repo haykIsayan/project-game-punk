@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.game_punk_domain.domain.entity.GameAgeRatingEntity
+import com.example.game_punk_domain.domain.entity.game.GameAgeRatingEntity
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 
 @Composable

@@ -8,14 +8,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameScreenshotsViewModel @Inject constructor(
-    private val getGameScreenshotsInteractor: GetGameScreenshotsInteractor,
-    private val getGameArtworksInteractor: GetGameArtworksInteractor,
+    private val getGameScreenshotsInteractor: GetGameScreenshotsInteractor
 ): StateViewModel<List<String>, String>() {
 
     override suspend fun loadData(param: String?): List<String> {
         if (param == null) return emptyList()
-//        return getGameScreenshotsInteractor.execute(param)
-        return getGameArtworksInteractor.execute(param)
+        return getGameScreenshotsInteractor.execute(param)
     }
 
 }

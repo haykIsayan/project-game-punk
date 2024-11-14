@@ -1,6 +1,6 @@
 package com.example.project_game_punk.features.discover.recommended
 
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.game_punk_domain.domain.interactors.game.GetRecommendedGamesInteractor

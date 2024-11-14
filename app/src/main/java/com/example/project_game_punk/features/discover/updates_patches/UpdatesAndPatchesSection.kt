@@ -27,18 +27,18 @@ import androidx.palette.graphics.Palette
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameNewsEntity
 import com.example.project_game_punk.R
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
-import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
+import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
 import com.example.project_game_punk.features.game_details.GameWebViewActivity
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
 import com.example.project_game_punk.features.main.GamePunkNavigator
-import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
 
 @Composable
 fun UpdatesAndPatchesSection(updatesAndPatchesViewModel: UpdatesAndPatchesViewModel) {
@@ -85,7 +85,10 @@ private fun GameNewsSectionLoadingState() {
 @Composable
 private fun GameNewsSectionLoadedState(gameNewsStates: List<GameNewsEntityState>) {
     if (gameNewsStates.isEmpty()) return
-    ItemPagerCarousel(items = gameNewsStates) { gameNewsState ->
+    ItemCarousel(
+        items = gameNewsStates,
+        itemDecorator = ItemCarouselDecorators.pillItemDecorator
+    ) { gameNewsState ->
         GameNewsCarouselItem(
             game = gameNewsState.game,
             gameNews = gameNewsState.gameNews
@@ -129,10 +132,12 @@ fun GameNewsCarouselItem(
             Column(
                 modifier = Modifier
                     .background(Color.White.copy(alpha = 0.05f))
-                    .padding(
-                        horizontal = 28.dp,
-                        vertical = 12.dp
+                    .size(
+                        220.dp,
+                        160.dp
                     )
+                    .padding(12.dp)
+                    .clip(RoundedCornerShape(10.dp))
             ) {
                 Text(
                     text = gameNews.date,
@@ -167,7 +172,7 @@ private fun GameNewsSectionItemGameCover(game: GameEntity) {
         modifier = Modifier
             .size(
                 120.dp,
-                140.dp
+                160.dp
             )
             .padding(12.dp)
             .clickable {

@@ -1,14 +1,10 @@
 package com.example.project_game_punk.features.game_details.sections.discussions
 
 import androidx.lifecycle.viewModelScope
-import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameExperienceEntity
 import com.example.game_punk_domain.domain.entity.GameReviewEntity
 import com.example.game_punk_domain.domain.entity.user.UserEntity
 import com.example.game_punk_domain.domain.interactors.game.GetUserTrackedGamesInteractor
 import com.example.game_punk_domain.domain.interactors.reviews.GetUserReviewForGameInteractor
-import com.example.game_punk_domain.domain.interactors.reviews.GetUserReviewsInteractor
-import com.example.game_punk_domain.domain.interactors.user.GetFollowingUserReviewsForGameInteractor
 import com.example.game_punk_domain.domain.interactors.user.GetUserFollowingInteractor
 import com.example.game_punk_domain.domain.interactors.user.UserCache
 import com.example.project_game_punk.features.common.StateViewModel

@@ -1,6 +1,6 @@
 package com.example.project_game_punk.features.common.game_progress
 
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 
 class GameProgressBottomSheetController {

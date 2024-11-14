@@ -1,6 +1,8 @@
 package com.example.game_punk_domain.domain.entity
 
-    fun gameProgressStatusItems(
+import com.example.game_punk_domain.domain.entity.game.GameEntity
+
+fun gameProgressStatusItems(
         game: GameEntity?
     ): List<GameProgressStatus> {
         val currentStatus = game?.gameExperience?.gameProgressStatus

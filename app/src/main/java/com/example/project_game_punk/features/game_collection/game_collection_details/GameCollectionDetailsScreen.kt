@@ -56,7 +56,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.game_punk_domain.domain.entity.GameCollectionEntity
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.project_game_punk.features.common.composables.GameCarouselItem
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselPill
@@ -64,7 +64,6 @@ import com.example.project_game_punk.features.common.composables.grids.GamePunkG
 import com.example.project_game_punk.features.game_details.sections.GamePunkTab
 import com.example.project_game_punk.features.main.GamePunkNavigator
 import com.example.project_game_punk.features.profile.ProfileLibraryViewModel
-import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
 import com.example.project_game_punk.ui.theme.gamePunkPrimaryLight
 //import com.example.project_game_punk.ui.theme.gamePunkPrimary
 import kotlinx.coroutines.launch

@@ -2,37 +2,27 @@
 
 package com.example.project_game_punk.features.main
 
-import android.os.Build
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PostAdd
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigator
 import androidx.navigation.compose.rememberNavController
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
-import com.example.project_game_punk.features.common.GamePunkDialogController
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressModalBottomSheet
-import com.example.project_game_punk.features.game_details.GameWebViewActivity
 import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
 import com.example.project_game_punk.ui.theme.ProjectGamePunkTheme
 //import com.example.project_game_punk.ui.theme.gamePunkAlt
@@ -58,6 +48,7 @@ class MainActivity : ComponentActivity() {
 
                 Surface(
                     modifier = Modifier.fillMaxSize()
+
                 ) {
                     val navController = rememberNavController()
                     val sheetController = GameProgressBottomSheetController()
@@ -72,12 +63,20 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-
-
                     Scaffold(
                         bottomBar = {
 //                            MainBottomNavigation(navController)
-                        }
+                        },
+//                        floatingActionButton = {
+//                            FloatingActionButton(
+//                                backgroundColor = gamePunkPrimaryLight,
+//                                onClick = {
+//                                    GamePunkNavigator.navigate("create_post")
+//                                }
+//                            ) {
+//                                Icon(imageVector = Icons.Filled.PostAdd, contentDescription = "")
+//                            }
+//                        }
                     ) {
                         val padding = it
                         Box(modifier = Modifier
@@ -87,7 +86,7 @@ class MainActivity : ComponentActivity() {
 //                                        gamePunkAlt,
 //                                        gamePunkPrimary
                                         gamePunkPrimaryLight,
-                                    gamePunkPrimaryDark,
+                                        gamePunkPrimaryDark,
                                     )
                                 )
                             )

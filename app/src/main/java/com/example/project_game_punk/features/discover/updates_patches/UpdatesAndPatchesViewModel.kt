@@ -1,10 +1,11 @@
 package com.example.project_game_punk.features.discover.updates_patches
 
 import androidx.lifecycle.viewModelScope
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameNewsEntity
-import com.example.game_punk_domain.domain.interactors.game.GetExcitedAndInterestedGamesInteractor
-import com.example.game_punk_domain.domain.interactors.game.GetNowPlayingGamesInteractor
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
+import com.example.game_punk_domain.domain.interactors.game.GetGameArtworksInteractor
+import com.example.game_punk_domain.domain.interactors.game.GetUserTrackedGamesInteractor
 import com.example.game_punk_domain.domain.interactors.news.GetNewsForGameInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import com.example.project_game_punk.features.common.dateToMillis
@@ -15,8 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UpdatesAndPatchesViewModel @Inject constructor(
-    private val getExcitedAndInterestedGamesInteractor: GetExcitedAndInterestedGamesInteractor,
-    private val getNowPlayingGamesInteractor: GetNowPlayingGamesInteractor,
+    private val getUserTrackedGamesInteractor: GetUserTrackedGamesInteractor,
+    private val getGameArtworksInteractor: GetGameArtworksInteractor,
     private val getNewsForGameInteractor: GetNewsForGameInteractor,
 ): StateViewModel<List<GameNewsEntityState>, Unit>()  {
 
@@ -25,14 +26,15 @@ class UpdatesAndPatchesViewModel @Inject constructor(
     }
 
     override suspend fun loadData(param: Unit?): List<GameNewsEntityState> {
-        val excitedGames = getExcitedAndInterestedGamesInteractor.execute()
-        val nowPlayingGames = getNowPlayingGamesInteractor.execute(null)
-        val gamesToGetNewsFor = mutableListOf<GameEntity>().apply {
-            addAll(excitedGames)
-            addAll(nowPlayingGames)
-        }.let {
-            if (it.size > 10) it.subList(0, 10) else it
-        }
+        val gamesToGetNewsFor = getUserTrackedGamesInteractor.execute(null)
+            .filter {
+                it.gameExperience?.gameProgressStatus == GameProgressStatus.excited
+                        || it.gameExperience?.gameProgressStatus == GameProgressStatus.playing
+                        || it.gameExperience?.gameProgressStatus == GameProgressStatus.replaying
+            }
+            .let {
+                if (it.size > 10) it.subList(0, 10) else it
+            }
         val topNowPlayingNews = gamesToGetNewsFor.map { game ->
             viewModelScope.async {
                 game.id?.let { gameId ->

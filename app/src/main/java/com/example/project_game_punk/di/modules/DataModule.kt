@@ -9,21 +9,24 @@ import com.example.game_punk_collection_data.data.game.idgb.GameIDGBDataSource
 import com.example.game_punk_collection_data.data.game.idgb.IGDBClientInterceptor
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
-import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgClientInterceptor
+import com.example.game_punk_collection_data.data.game.twitch.TwitchApi
 import com.example.game_punk_collection_data.data.game_collection.GameCollectionFireStoreSource
 import com.example.game_punk_collection_data.data.news.GameNewsDataSource
 import com.example.game_punk_collection_data.data.news.GamingNewsApi
 import com.example.game_punk_collection_data.data.news.SteamNewsApi
 import com.example.game_punk_collection_data.data.review.ReviewFireStoreSource
 import com.example.game_punk_collection_data.data.user.UserFireStoreDataSource
-import com.example.project_game_punk.R
+import com.example.game_punk_domain.domain.entity.post.PostEntity
+import com.example.game_punk_domain.domain.entity.post.PostQueryModel
 import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
 import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
 import com.example.game_punk_domain.domain.interfaces.GameRepository
+import com.example.game_punk_domain.domain.interfaces.PostRepository
 import com.example.game_punk_domain.domain.interfaces.ReviewRepository
 import com.example.game_punk_domain.domain.interfaces.UserRepository
+import com.example.project_game_punk.R
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,11 +34,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.GlobalScope
 import okhttp3.Cache
+import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -104,11 +109,17 @@ object DataModule {
 
         val cacheSize = (5 * 1024 * 1024).toLong()
         val cache = Cache(context.cacheDir, cacheSize)
+
+        val dispatcher = Dispatcher()
+        dispatcher.maxRequests = 4
+        dispatcher.maxRequestsPerHost = 1
+
         val idgbApi = Retrofit.Builder()
             .client(
                 OkHttpClient
                 .Builder()
                     .cache(cache)
+                    .dispatcher(dispatcher)
                 .addInterceptor(IGDBClientInterceptor())
                 .build()
             )
@@ -146,5 +157,22 @@ object DataModule {
             scope = GlobalScope,
             gameRepository
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provides(
+
+    ): PostRepository {
+        return object : PostRepository {
+            override suspend fun getPosts(postQuery: PostQueryModel): List<PostEntity> {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun createPost(post: PostEntity): PostEntity {
+                TODO("Not yet implemented")
+            }
+
+        }
     }
 }

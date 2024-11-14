@@ -13,6 +13,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -27,7 +28,7 @@ import androidx.palette.graphics.Palette
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.entity.GameProgressStatus
 import com.example.project_game_punk.R
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
@@ -37,7 +38,6 @@ import com.example.project_game_punk.features.common.composables.carousels.ItemC
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.common.game_progress.GameProgressBottomSheetController
 import com.example.project_game_punk.features.common.game_progress.GameProgressButton
-import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
 import com.example.project_game_punk.features.main.GamePunkNavigator
 import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
 import com.example.project_game_punk.ui.theme.gamePunkPrimaryLight
@@ -204,10 +204,8 @@ private fun FeaturedGameDetails(
 
         Box(
             modifier = Modifier
-                .size(
-                    250.dp,
-                    192.dp
-                )
+                .align(Alignment.BottomCenter)
+                .width(250.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(
 //                    Color.White.copy(alpha = 0.05f)
@@ -224,11 +222,10 @@ private fun FeaturedGameDetails(
                     Text(
                         text = name,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
+                        fontSize = 22.sp,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = game.gameGenres?.joinToString(" • ") { it.name } ?: "",
                         fontWeight = FontWeight.ExtraBold,
@@ -236,15 +233,6 @@ private fun FeaturedGameDetails(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = game.description ?: "",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White/*.copy(alpha = 0.5f)*/,
-                        fontSize = 14.sp,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
         }
@@ -253,22 +241,47 @@ private fun FeaturedGameDetails(
 
 @Composable
 private fun FeaturedGameScreenshot(screenshot: String) {
-    Box(
-        modifier = Modifier
-            .size(
-                280.dp,
-                192.dp
-            )
-            .clip(RoundedCornerShape(10.dp))
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(screenshot)
-                .crossfade(true)
-                .build(),
-            contentDescription = "",
-            contentScale = ContentScale.FillHeight,
+    if (screenshot.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .size(
+                    280.dp,
+                    192.dp
+                )
+                .clip(RoundedCornerShape(10.dp))
+                .background(shimmerBrush(showShimmer = true))
         )
+    } else {
+        Box(
+            modifier = Modifier
+                .size(
+                    280.dp,
+                    192.dp
+                )
+                .clip(RoundedCornerShape(10.dp))
+        ) {
+
+            if (screenshot.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .size(
+                            280.dp,
+                            192.dp
+                        )
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(shimmerBrush(showShimmer = true))
+                )
+            } else {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(screenshot)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillHeight,
+                )
+            }
+        }
     }
 }
 

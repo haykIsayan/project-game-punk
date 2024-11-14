@@ -1,6 +1,6 @@
 package com.example.game_punk_domain.domain.interactors.game
 
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 
 class GetUserFavoriteGamesInteractor(
     private val getUserTrackedGamesInteractor: GetUserTrackedGamesInteractor

@@ -1,6 +1,6 @@
 package com.example.project_game_punk.features.common.game_punk_grid
 
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.interactors.game.GetGamesInteractor
 import com.example.game_punk_domain.domain.models.GameQueryModel
 import com.example.project_game_punk.features.common.StateViewModel

@@ -3,7 +3,7 @@ package com.example.game_punk_collection_data.data.game_collection
 import com.example.game_punk_collection_data.data.models.game.GameExperienceModel
 import com.example.game_punk_collection_data.data.models.game.GameModel
 import com.example.game_punk_domain.domain.entity.GameCollectionEntity
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 
 data class GameCollectionModel(
     override val userId: String? = null,

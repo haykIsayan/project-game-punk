@@ -11,6 +11,7 @@ import com.example.project_game_punk.features.discover.DiscoverScreen
 import com.example.project_game_punk.features.discover.trending.TrendingGamesViewModel
 import com.example.project_game_punk.features.game_collection.game_collection_details.GameCollectionDetailsScreen
 import com.example.project_game_punk.features.game_details.GameDetailsScreen
+import com.example.project_game_punk.features.posts.CreatePostScreen
 import com.example.project_game_punk.features.profile.ProfileFollowersViewModel
 import com.example.project_game_punk.features.profile.ProfileFollowingViewModel
 import com.example.project_game_punk.features.profile.ProfileLibraryViewModel
@@ -89,6 +90,7 @@ fun NavigationComponent(
                 gamePlatformsViewModel = hiltViewModel(),
                 gameGenresViewModel = hiltViewModel(),
                 gameScreenshotsViewModel = hiltViewModel(),
+                gameArtworksViewModel = hiltViewModel(),
                 gameDLCsViewModel = hiltViewModel(),
                 gameDetailsSimilarGamesViewModel = hiltViewModel(),
                 gameUserReviewViewModel = hiltViewModel(),
@@ -151,6 +153,12 @@ fun NavigationComponent(
                 userId = userId,
                 title = "Followers",
                 stateViewModel = hiltViewModel<ProfileFollowersViewModel>()
+            )
+        }
+
+        composable(route = "create_post") {
+            CreatePostScreen(
+                viewModel = hiltViewModel()
             )
         }
     }

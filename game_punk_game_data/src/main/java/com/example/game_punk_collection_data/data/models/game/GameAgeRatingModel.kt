@@ -1,6 +1,6 @@
 package com.example.game_punk_collection_data.data.models.game
 
-import com.example.game_punk_domain.domain.entity.GameAgeRatingEntity
+import com.example.game_punk_domain.domain.entity.game.GameAgeRatingEntity
 
 data class GameAgeRatingModel(
     val rating_cover_url: String,

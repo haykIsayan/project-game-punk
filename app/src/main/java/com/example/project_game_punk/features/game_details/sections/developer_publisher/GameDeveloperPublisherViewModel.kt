@@ -1,6 +1,6 @@
 package com.example.project_game_punk.features.game_details.sections.developer_publisher
 
-import com.example.game_punk_domain.domain.entity.GameCompanyEntity
+import com.example.game_punk_domain.domain.entity.game.GameCompanyEntity
 import com.example.game_punk_domain.domain.interactors.game.GetGameCompaniesInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

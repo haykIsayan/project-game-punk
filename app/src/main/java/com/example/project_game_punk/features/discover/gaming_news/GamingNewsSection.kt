@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,6 +35,7 @@ import com.example.project_game_punk.features.common.composables.LoadableStateWr
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
+import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
 import com.example.project_game_punk.features.discover.updates_patches.GameNewsEntityState
@@ -42,13 +44,10 @@ import com.example.project_game_punk.features.discover.updates_patches.GameNewsE
 fun GamingNewsSection(
     gamingNewsViewModel: GamingNewsViewModel
 ) {
-    val state = gamingNewsViewModel.getState().value
+    val state = gamingNewsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
         failState = {
-            DiscoverGameFailState(it) {
-                gamingNewsViewModel.loadState(force = true)
-            }
         },
         loadingState = {
             GamingNewsSectionLoadingState()
@@ -105,6 +104,7 @@ private fun GamingNewsSectionLoadingState() {
 fun GamingNewsSectionLoadedState(states: List<GamingNewsEntityState>) {
     Column {
         SectionTitle(title = "Gaming news")
+
         ItemCarousel(
             items = states,
             itemDecorator = ItemCarouselDecorators.pillItemDecorator
@@ -122,20 +122,35 @@ private fun GamingNewsItem(state: GamingNewsEntityState) {
 
 
     Column {
-
-        AsyncImage(
-            modifier = Modifier
+        if (artwork.isNullOrEmpty()) {
+            Box(modifier = Modifier
                 .width(280.dp)
                 .height(160.dp)
-                .clip(RoundedCornerShape(10.dp)),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(artwork)
-                .crossfade(true)
-                .scale(Scale.FILL)
-                .build(),
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-        )
+//                .padding(
+//                    start = /*if (index == 0) 12.dp else*/ 6.dp,
+//                    end = 6.dp,
+//                    top = 6.dp,
+//                    bottom = 6.dp
+//                )
+                .clip(RoundedCornerShape(10.dp))
+                .background(shimmerBrush(showShimmer = true))
+            )
+        } else {
+            AsyncImage(
+                modifier = Modifier
+                    .width(280.dp)
+                    .height(160.dp)
+                    .clip(RoundedCornerShape(10.dp)),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(artwork)
+                    .crossfade(true)
+                    .scale(Scale.FILL)
+                    .build(),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+
+                )
+        }
         Spacer(modifier = Modifier.height(12.dp))
 
         Column(

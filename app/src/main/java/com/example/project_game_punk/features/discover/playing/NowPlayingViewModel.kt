@@ -1,7 +1,7 @@
 package com.example.project_game_punk.features.discover.playing
 
 import androidx.lifecycle.viewModelScope
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.interactors.game.GetGameArtworksInteractor
 import com.example.game_punk_domain.domain.interactors.game.GetGamesInteractor
 import com.example.game_punk_domain.domain.interactors.game.GetNowPlayingGamesInteractor
@@ -12,7 +12,6 @@ import com.example.project_game_punk.features.common.StateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

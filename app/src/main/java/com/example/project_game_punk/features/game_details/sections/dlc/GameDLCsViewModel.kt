@@ -1,6 +1,6 @@
 package com.example.project_game_punk.features.game_details.sections.dlc
 
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.interactors.game.GetGamesDLCsInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,4 +1,10 @@
-package com.example.game_punk_domain.domain.entity
+package com.example.game_punk_domain.domain.entity.game
+
+import com.example.game_punk_domain.domain.entity.GameExperienceEntity
+import com.example.game_punk_domain.domain.entity.GameGenreEntity
+import com.example.game_punk_domain.domain.entity.GamePlatformEntity
+import com.example.game_punk_domain.domain.entity.GameProgressStatus
+import com.example.game_punk_domain.domain.entity.GameVideoEntity
 
 interface GameEntity {
     val id: String?

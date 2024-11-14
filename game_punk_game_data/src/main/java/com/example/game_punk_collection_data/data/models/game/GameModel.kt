@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.game_punk_domain.domain.entity.*
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 
 @Entity
 data class GameModel(

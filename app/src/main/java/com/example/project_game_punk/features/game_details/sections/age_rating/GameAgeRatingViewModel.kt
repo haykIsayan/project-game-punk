@@ -1,6 +1,6 @@
 package com.example.project_game_punk.features.game_details.sections.age_rating
 
-import com.example.game_punk_domain.domain.entity.GameAgeRatingEntity
+import com.example.game_punk_domain.domain.entity.game.GameAgeRatingEntity
 import com.example.game_punk_domain.domain.interactors.game.GetGameAgeRatingInteractor
 import com.example.project_game_punk.features.common.StateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

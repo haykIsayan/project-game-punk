@@ -23,6 +23,10 @@ abstract class StateViewModel<DataType, Param>: ViewModel() {
         state.value = updatedState
     }
 
+    protected fun emitAsync(updatedState: ViewModelState<DataType>) {
+        state.postValue(updatedState)
+    }
+
     protected fun updateData(newData: DataType) {
         emit(ViewModelState.SuccessState(newData))
     }

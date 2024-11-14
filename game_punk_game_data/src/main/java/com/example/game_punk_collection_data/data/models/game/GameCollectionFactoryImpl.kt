@@ -3,7 +3,7 @@ package com.example.game_punk_collection_data.data.models.game
 import com.example.game_punk_collection_data.data.game_collection.GameCollectionModel
 import com.example.game_punk_domain.domain.entity.GameCollectionEntity
 import com.example.game_punk_domain.domain.entity.GameCollectionFactory
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 
 class GameCollectionFactoryImpl: GameCollectionFactory {
     override fun createGameCollection(

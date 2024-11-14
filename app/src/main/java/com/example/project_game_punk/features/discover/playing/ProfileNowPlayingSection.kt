@@ -1,10 +1,7 @@
 package com.example.project_game_punk.features.discover.playing
 
-import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -18,29 +15,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import androidx.palette.graphics.Palette
-import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.game_punk_domain.domain.entity.GameEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.project_game_punk.R
 import com.example.project_game_punk.features.common.composables.GameUserScoreDisplay
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
-import com.example.project_game_punk.features.common.composables.carousels.ItemPagerCarousel
-import com.example.project_game_punk.features.common.composables.grids.GamePunkGrid
 import com.example.project_game_punk.features.common.composables.shimmerBrush
 import com.example.project_game_punk.features.discover.components.DiscoverGameFailState
-import com.example.project_game_punk.features.game_details.largeRadialGradientBrush
-import com.example.project_game_punk.features.main.GamePunkNavigator
 import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
 
 //import com.example.project_game_punk.ui.theme.gamePunkPrimary

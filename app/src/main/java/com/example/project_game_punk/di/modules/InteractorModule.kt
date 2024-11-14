@@ -4,6 +4,8 @@ import com.example.game_punk_collection_data.data.models.game.GameCollectionFact
 import com.example.game_punk_collection_data.data.review.GameReviewFactoryImpl
 import com.example.game_punk_domain.domain.TrackedGamesCache
 import com.example.game_punk_domain.domain.entity.GameCollectionFactory
+import com.example.game_punk_domain.domain.entity.post.PostEntity
+import com.example.game_punk_domain.domain.entity.post.PostFactory
 import com.example.game_punk_domain.domain.interactors.GetAllAvailableGameGenresInteractor
 import com.example.game_punk_domain.domain.interactors.GetAllAvailableGamePlatformsInteractor
 import com.example.game_punk_domain.domain.interactors.game.*
@@ -16,6 +18,7 @@ import com.example.game_punk_domain.domain.interactors.game_collection.RemoveGam
 import com.example.game_punk_domain.domain.interactors.game_collection.UpdateGameCollectionInteractor
 import com.example.game_punk_domain.domain.interactors.game_collection.tracking.GetTrackedGamesInteractor
 import com.example.game_punk_domain.domain.interactors.news.GetNewsForGameInteractor
+import com.example.game_punk_domain.domain.interactors.post.CreatePostInteractor
 import com.example.game_punk_domain.domain.interactors.reviews.GameReviewFactory
 import com.example.game_punk_domain.domain.interactors.reviews.GetUserReviewForGameInteractor
 import com.example.game_punk_domain.domain.interactors.reviews.GetUserReviewsInteractor
@@ -24,6 +27,7 @@ import com.example.game_punk_domain.domain.interactors.user.*
 import com.example.game_punk_domain.domain.interfaces.GameCollectionRepository
 import com.example.game_punk_domain.domain.interfaces.GameNewsRepository
 import com.example.game_punk_domain.domain.interfaces.GameRepository
+import com.example.game_punk_domain.domain.interfaces.PostRepository
 import com.example.game_punk_domain.domain.interfaces.ReviewRepository
 import com.example.game_punk_domain.domain.interfaces.UserRepository
 import dagger.Module
@@ -50,12 +54,12 @@ object InteractorModule {
     @Provides
     @Singleton
     fun providesGetFeaturedGameInteractor(
-        gameRepository: GameRepository,
-        trackedGamesCache: TrackedGamesCache,
+        getRecentGamesInteractor: GetRecentGamesInteractor,
+        getGameInteractor: GetGameInteractor
     ): GetFeaturedGameInteractor {
         return GetFeaturedGameInteractor(
-            gameRepository,
-            trackedGamesCache
+            getRecentGamesInteractor,
+            getGameInteractor
         )
     }
 
@@ -648,5 +652,25 @@ object InteractorModule {
         return GetCurrentUserInteractor(userRepository)
     }
 
+    @Provides
+    @Singleton
+    fun provideCreatePostInteractor(
+        postRepository: PostRepository
+    ): CreatePostInteractor {
+        return CreatePostInteractor(postRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostFactory(
+
+    ): PostFactory {
+        return object : PostFactory {
+            override fun createEmpty(): PostEntity {
+                TODO("Not yet implemented")
+            }
+
+        }
+    }
 }
 

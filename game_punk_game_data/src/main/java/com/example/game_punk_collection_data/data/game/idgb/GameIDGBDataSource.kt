@@ -3,6 +3,7 @@ package com.example.game_punk_collection_data.data.game.idgb
 import android.os.Build
 import android.util.Log
 import com.example.game_punk_collection_data.data.game.GameCache
+import com.example.game_punk_collection_data.data.game.GameCacheState
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBApi
 import com.example.game_punk_collection_data.data.game.idgb.api.IDGBAuthApi
 import com.example.game_punk_collection_data.data.game.rawg.RawgApi
@@ -12,6 +13,10 @@ import com.example.game_punk_collection_data.data.models.game.GameRAWGModel
 import com.example.game_punk_collection_data.data.models.game.PlatformModel
 import com.example.game_punk_collection_data.data.models.game.availableStores
 import com.example.game_punk_domain.domain.entity.*
+import com.example.game_punk_domain.domain.entity.game.GameAchievementEntity
+import com.example.game_punk_domain.domain.entity.game.GameAgeRatingEntity
+import com.example.game_punk_domain.domain.entity.game.GameCompanyEntity
+import com.example.game_punk_domain.domain.entity.game.GameEntity
 import com.example.game_punk_domain.domain.interfaces.GameRepository
 import com.example.game_punk_domain.domain.models.GameFilter
 import com.example.game_punk_domain.domain.models.GameQueryModel
@@ -21,6 +26,10 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.HttpException
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -28,6 +37,9 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.collections.ArrayDeque
+import kotlin.coroutines.resume
 
 
 class GameIDGBDataSource(
@@ -39,7 +51,7 @@ class GameIDGBDataSource(
     private val twitchApi: TwitchApi,
     private val gameCache: GameCache,
     private val scope: CoroutineScope
-    ): GameRepository {
+) : GameRepository {
 
     private var idgbAuthModel: IDGBAuthModel? = null
 
@@ -51,9 +63,37 @@ class GameIDGBDataSource(
     }
 
     override suspend fun getGames(gameQuery: GameQueryModel): List<GameEntity> {
-//        val cachedGames = gameCache.getGames(gameQuery)
-//        if (cachedGames.isNotEmpty()) return cachedGames
+        println("[CachingTest] Fetching for ${gameQuery.filter}")
 
+        val cachedGames = gameCache.getGameCacheState(gameQuery)
+        return when (cachedGames.value) {
+            is GameCacheState.Available -> {
+                (cachedGames.value as GameCacheState.Available).games
+            }
+
+            is GameCacheState.Loading -> {
+                suspendCancellableCoroutine { cancellableContinuation ->
+                    scope.launch {
+                        cachedGames.collectLatest { cacheState ->
+                            if (cacheState is GameCacheState.Available) {
+                                cancellableContinuation.resume(cacheState.games)
+                            }
+                        }
+                    }
+                }
+            }
+            else -> {
+                gameCache.markForCaching(gameQuery)
+                val games = getGamesFromQuery(gameQuery)
+                gameCache.cacheGames(gameQuery, games)
+                games
+            }
+        }
+    }
+
+
+    private suspend fun getGamesFromQuery(gameQuery: GameQueryModel): List<GameEntity> {
+        println("[CachingTest] Network call for ${gameQuery.filter}")
         val games = withAuthenticatedHeaders { headers ->
             val fields = StringBuilder()
             val ids = when {
@@ -125,11 +165,6 @@ class GameIDGBDataSource(
             }
         }
 
-
-
-
-
-
         val gamesWithPlatforms = if (gameQuery.gameMetaQuery.platforms) {
             games.map { game ->
                 scope.async {
@@ -140,9 +175,6 @@ class GameIDGBDataSource(
                 }
             }.toList()/*.awaitAll()*/
         } else games.map { scope.async { it } }
-
-
-
 
         val gamesWithGenres = if (gameQuery.gameMetaQuery.genres) {
             games.map { game ->
@@ -166,11 +198,6 @@ class GameIDGBDataSource(
                 }
             }.toList()/*.awaitAll()*/
         } else games.map { scope.async { it } }
-
-
-//        gam
-
-
 
         val gamesWithSimilar = if (gameQuery.gameMetaQuery.similarGames) {
             games.map { game ->
@@ -297,8 +324,6 @@ class GameIDGBDataSource(
 
 
 
-
-
     override suspend fun getGameAgeRating(gameId: String): GameAgeRatingEntity {
 
         val gameWithAgeRatingsIds = (getGame(gameId, GameMetaQueryModel(ageRating = true)) as? GameModel)
@@ -358,9 +383,9 @@ class GameIDGBDataSource(
 
             idgbApi.getReleaseDates(header, fields.toString())
         }
-        return releaseDates.sortedBy { it.date.toLong() }.map {
-            it.date.unixToFormatted()
-        }.first()
+        return releaseDates.sortedBy { it.date?.toLong() }.map {
+            it.date?.unixToFormatted()
+        }.first() ?: ""
     }
 
     override suspend fun getGameStores(gameId: String): List<GameStoreEntity> {
@@ -1090,6 +1115,12 @@ class GameIDGBDataSource(
             put("Client-ID", clientId)
             put("Authorization", "Bearer ${idgbAuth.access_token}")
         }
+
+
+
+
+
+
         return try {
             onHeadersCreated.invoke(headers)
         } catch (e: Exception) {

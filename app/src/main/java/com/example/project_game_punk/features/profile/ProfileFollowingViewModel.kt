@@ -1,6 +1,5 @@
 package com.example.project_game_punk.features.profile
 
-import com.example.game_punk_domain.domain.entity.GameEntity
 import com.example.game_punk_domain.domain.entity.user.UserEntity
 import com.example.game_punk_domain.domain.interactors.user.GetUserFollowingInteractor
 import com.example.project_game_punk.features.common.StateViewModel

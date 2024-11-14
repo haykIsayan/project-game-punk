@@ -1,6 +1,5 @@
 package com.example.project_game_punk.features.game_details.sections.discussions
 
-import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,29 +23,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import androidx.palette.graphics.Palette
-import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.example.game_punk_domain.domain.entity.GameEntity
-import com.example.game_punk_domain.domain.entity.GameExperienceEntity
 import com.example.game_punk_domain.domain.entity.GameReviewEntity
 import com.example.game_punk_domain.domain.entity.user.UserEntity
-import com.example.project_game_punk.R
-import com.example.project_game_punk.features.common.composables.GameCarouselItem
-import com.example.project_game_punk.features.common.composables.GameUserScoreDisplay
 import com.example.project_game_punk.features.common.composables.LoadableStateWrapper
 import com.example.project_game_punk.features.common.composables.SectionTitle
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarousel
 import com.example.project_game_punk.features.common.composables.carousels.ItemCarouselDecorators
-import com.example.project_game_punk.features.common.game_progress.GameProgressButton
 import com.example.project_game_punk.features.main.GamePunkNavigator
 
 @Composable
