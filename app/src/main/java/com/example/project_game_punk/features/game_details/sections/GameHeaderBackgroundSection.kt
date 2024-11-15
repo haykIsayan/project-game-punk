@@ -57,13 +57,9 @@ fun GameHeaderBackgroundSection(
 
     Box(
         modifier = Modifier
-            .height(260.dp)
-            .clip(
-                RoundedCornerShape(
-                    topStart = 10.dp,
-                    topEnd = 10.dp
-                )
-            )
+            .padding(12.dp)
+            .height(240.dp)
+            .clip(RoundedCornerShape(10.dp))
     ) {
 
         HorizontalPager(
@@ -79,13 +75,6 @@ fun GameHeaderBackgroundSection(
                 .align(Alignment.TopCenter),
             pagerState = state
         )
-
-        GameDetailsTitle(
-            modifier = Modifier.align(Alignment.BottomStart),
-            gameDetailsViewModel
-        ) {
-
-        }
 
     }
 }
@@ -154,7 +143,7 @@ private fun GameScreenshotItem(screenshot: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(260.dp)
+            .height(240.dp)
     ) {
         AsyncImage(
             modifier = Modifier.fillMaxSize(),

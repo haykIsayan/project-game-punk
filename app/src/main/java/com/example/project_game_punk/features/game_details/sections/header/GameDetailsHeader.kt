@@ -26,11 +26,7 @@ import com.example.project_game_punk.features.game_details.sections.screenshots.
 @Composable
 fun GameDetailsHeader(
     gameDetailsViewModel: GameDetailsViewModel,
-    gameAgeRatingViewModel: GameAgeRatingViewModel,
-    gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
-    gameReleaseDateViewModel: GameReleaseDateViewModel,
-    gameArtworksViewModel: GameArtworksViewModel,
-    onColorLoaded: (Int) -> Unit
+    gameArtworksViewModel: GameArtworksViewModel
 ) {
 
     Box {
@@ -52,7 +48,6 @@ fun GameCoverWithInfo(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp),
-//            horizontalArrangement = Arrangement.SpaceBetween
                     horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             GameDetailsCover(
@@ -60,8 +55,6 @@ fun GameCoverWithInfo(
                 onColorLoaded
             )
             GameDetailsAdditional(
-                gameDetailsViewModel,
-//                gameAgeRatingViewModel,
                 gameDeveloperPublisherViewModel,
                 gameReleaseDateViewModel
             )
@@ -92,21 +85,15 @@ private fun GameScreenshotsPagerLoadingState() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(220.dp)
-            .clip(
-                RoundedCornerShape(
-                    topStart = 10.dp,
-                    topEnd = 10.dp
-                )
-            )
+            .height(240.dp)
+            .padding(12.dp)
+            .clip(RoundedCornerShape(10.dp))
             .background(shimmerBrush(showShimmer = showShimmer.value))
     )
 }
 
 @Composable
 private fun GameDetailsAdditional(
-    gameDetailsViewModel: GameDetailsViewModel,
-//    gameAgeRatingViewModel: GameAgeRatingViewModel,
     gameDeveloperPublisherViewModel: GameDeveloperPublisherViewModel,
     gameReleaseDateViewModel: GameReleaseDateViewModel
 ) {
@@ -118,15 +105,6 @@ private fun GameDetailsAdditional(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
-//        GameDetailsScore(
-//            gameDetailsViewModel
-//        )
-
-
-//        GameAgeRatingSection(
-//            gameAgeRatingViewModel
-//        )
-
         GameReleaseDateSection(
             gameReleaseDateViewModel
         )

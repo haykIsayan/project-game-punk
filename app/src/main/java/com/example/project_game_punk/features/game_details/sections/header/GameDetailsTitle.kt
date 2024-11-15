@@ -23,23 +23,17 @@ import com.example.project_game_punk.ui.theme.gamePunkPrimaryDark
 
 
 @Composable
-fun GameDetailsTitle(
-    modifier: Modifier,
-    gameDetailsViewModel: GameDetailsViewModel,
-    onBackPressed: () -> Unit
-) {
+fun GameDetailsTitle(gameDetailsViewModel: GameDetailsViewModel) {
     val state = gameDetailsViewModel.getState().observeAsState().value
     LoadableStateWrapper(
         state = state,
         loadingState = {
-//            GameTitleLoadingState()
+            GameTitleLoadingState()
         }
     ) { game ->
         game?.let {
             GameTitleLoadedState(
-                modifier,
                 game = game,
-                onBackPressed = onBackPressed,
             )
         }
     }
@@ -59,13 +53,11 @@ private fun GameTitleLoadingState() {
 
 @Composable
 private fun GameTitleLoadedState(
-    modifier: Modifier,
     game: GameEntity,
-    onBackPressed: () -> Unit,
 ) {
     game.name?.let { name ->
 
-        Box( modifier
+        Box( Modifier
             .clip(
                 RoundedCornerShape(
                     topStart = 10.dp,
@@ -84,11 +76,11 @@ private fun GameTitleLoadedState(
         )) {
             Text(
                 text = name,
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 24.sp,
+                fontSize = 20.sp,
                 color = Color.White,
             )
         }

@@ -40,6 +40,7 @@ import com.example.project_game_punk.features.game_details.sections.game_stores.
 import com.example.project_game_punk.features.game_details.sections.genre.GameGenresViewModel
 import com.example.project_game_punk.features.game_details.sections.genre.GameGenresSection
 import com.example.project_game_punk.features.game_details.sections.header.GameCoverWithInfo
+import com.example.project_game_punk.features.game_details.sections.header.GameDetailsTitle
 import com.example.project_game_punk.features.game_details.sections.news.GameDetailsNewsSection
 import com.example.project_game_punk.features.game_details.sections.news.GameDetailsNewsViewModel
 import com.example.project_game_punk.features.game_details.sections.platforms.GamePlatformsSection
@@ -172,19 +173,6 @@ private fun GameDetailsScreenContent(
             onBackPressed = onBackPressed,
             sheetController = sheetController
         )
-//        Box(
-//            modifier = Modifier
-//                .align(Alignment.BottomCenter)
-//                .background(
-//                    gamePunkPrimaryLight,
-//                    RoundedCornerShape(
-//                        topStart = 12.dp,
-//                        topEnd = 12.dp
-//                    )
-//                )
-//        ) {
-//
-//        }
         MainGameProgressBottomSheet(sheetController)
     }
 }
@@ -231,91 +219,20 @@ private fun GameDetailsScreenContentItems(
             )
             .fillMaxSize()
     ) {
-
-//        item {
-//            Spacer(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .height(60.dp)
-//            )
-//        }
-
         item {
-
             Box {
                 GameDetailsHeader(
                     gameDetailsViewModel = gameDetailsViewModel,
-                    gameAgeRatingViewModel = gameAgeRatingViewModel,
-                    gameDeveloperPublisherViewModel = gameDeveloperPublisherViewModel,
-                    gameReleaseDateViewModel = gameReleaseDateViewModel,
                     gameArtworksViewModel = gameArtworksViewModel
-                ) {
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .align(Alignment.BottomCenter)
-                        .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-                        .background(
-                            Brush.verticalGradient(
-                                listOf(
-                                    Color.Transparent,
-                                    gamePunkPrimaryDark.copy(alpha = 0.05f),
-                                    gamePunkPrimaryDark.copy(alpha = 0.1f),
-                                    gamePunkPrimaryDark.copy(alpha = 0.2f),
-                                    gamePunkPrimaryDark.copy(alpha = 0.3f),
-                                    gamePunkPrimaryDark.copy(alpha = 0.4f)
-                                ),
-                                startY = 0.0f,
-                                endY = 100.0f
-                            )
-                        ),
-
-                    )
-//                Box(modifier = Modifier
-//                    .align(Alignment.BottomCenter)
-//                    .fillMaxWidth()
-//                    .height(10.dp)
-//                    .clip(
-//                        RoundedCornerShape(
-//                            topStart = 10.dp,
-//                            topEnd = 10.dp
-//                        )
-//                    )
-//                    .background(colorOne.value)
-//                )
-
-//                Box(
-//                    modifier = Modifier
-//                        .padding(
-//                            10.dp
-////                            28.dp
-//                        )
-//                        .align(Alignment.BottomStart)
-//                        .background(Color.Transparent),
-//
-//                ) {
-//                    GameDetailsTitle(gameDetailsViewModel) {
-//
-//                    }
-//                }
-
+                )
             }
         }
 
-//        item {
-//            GameDetailsTitle(gameDetailsViewModel) {
-//
-//            }
-//        }
-
-//        item {
-//            GameDetailsProgressButton(
-//                gameDetailsViewModel = gameDetailsViewModel,
-//                controller = sheetController
-//            )
-//        }
+        item {
+            GameDetailsTitle(
+                gameDetailsViewModel
+            )
+        }
 
         item {
             GameDetailsProgressButton(
